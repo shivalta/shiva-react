@@ -29,6 +29,7 @@ const Navigator = () => {
     type ActiveNav = "history" | "profile" | "home"
 
     const getActiveNav = ():ActiveNav => {
+
         if(pathname.match(patternHistory)){
             return "history"
         }
