@@ -1,0 +1,659 @@
+openapi: 3.0.0
+
+info:
+  description: |
+    This is a sample Petstore server.  You can find
+    out more about Swagger at
+    [http://swagger.io](http://swagger.io) or on
+    [irc.freenode.net, #swagger](http://swagger.io/irc/).
+  version: "1.0.0"
+  title: Shiva-API
+  termsOfService: 'http://swagger.io/terms/'
+  contact:
+    email: apiteam@shiva.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/aprian1337/Shiva-API/1.0.0
+  - url: 'https://petstore.swagger.io/v2'
+tags:
+  - name: auth
+    description: Everything about your Auth
+    externalDocs:
+      description: Find out more
+      url: 'http://swagger.io'
+  - name: pulsa
+    description: Everything about pulsa
+  - name: listrik
+    description: Everything about listrik
+  - name: pdam
+    description: Everything about pdam
+  - name: class
+    description: Everything about your Classes
+  - name: products
+    description: Everything about your Products
+    externalDocs:
+      description: Find out more about our store
+      url: 'http://swagger.io'
+
+paths:
+  /auth/login:
+    post:
+      tags:
+        - auth
+      summary: Login endpoint
+      operationId: authLogin
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: Invalid username/password supplied
+      requestBody:
+        $ref: '#/components/requestBodies/AuthLogin'
+  /auth/logout:
+    post:
+      tags:
+        - auth
+      summary: Logout endpoint
+      operationId: authLogout
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthLogoutResponse'
+            application/xml:
+              schema:
+                type: string
+        '400':
+          description: Invalid
+      security:
+        - jwt_auth: [ ]
+  /auth/register:
+    post:
+      tags:
+        - auth
+      summary: Register endpoint
+      operationId: authRegister
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthRegisterResponse'
+            application/xml:
+              schema:
+                type: string
+        '400':
+          description: Invalid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthRegisterRequest'
+  /auth/forget:
+    post:
+      tags:
+        - auth
+      summary: Forget password endpoint
+      operationId: authForget
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForgetResponse'
+            application/xml:
+              schema:
+                type: string
+        '400':
+          description: Invalid
+  /auth/forget/{uniqueForgetCode}:
+    post:
+      parameters:
+        - name: uniqueForgetCode
+          in: path
+          description: Unique forget code from email
+          required: true
+          schema:
+            type: string
+      tags:
+        - auth
+      summary: Reset password endpoint
+      operationId: authVerifyForgetReset
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyForgetResponse'
+            application/xml:
+              schema:
+                type: string
+        '400':
+          description: Invalid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthResetPasswordRequest'
+        required: true
+    get:
+      parameters:
+        - name: uniqueForgetCode
+          in: path
+          description: Unique forget code from email
+          required: true
+          schema:
+            type: string
+      tags:
+        - auth
+      summary: Verify Forget password endpoint
+      operationId: authVerifyForget
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyForgetResponse'
+            application/xml:
+              schema:
+                type: string
+        '400':
+          description: Invalid
+
+  /class:
+    get:
+      tags:
+        - class
+      summary: Return all classes
+      operationId: getClass
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassResponse'
+  /class/{idClass}/categories:
+    get:
+      parameters:
+        - name: idClass
+          required: true
+          in: path
+          schema:
+            type: integer
+      tags:
+        - class
+      summary: Return all categories by product class id
+      operationId: getCategoriesByClassId
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryByClassIdResponse'
+  /pulsa:
+    get:
+      tags:
+        - pulsa
+      operationId: getPulsa
+      responses:
+        200:
+          description: successful operation
+          content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/GetPulsaResponse'
+
+
+  /listrik:
+    get:
+      tags:
+        - listrik
+      operationId: getListrik
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetListrikResponse'
+
+
+  /pdam:
+    get:
+      tags:
+        - pdam
+      operationId: getPDAM
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPDAMResponse'
+
+  /products:
+    get:
+      tags:
+        - products
+      parameters:
+        - in: query
+          name: cat_id
+          description: get products by category id
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductsUserResponse'
+
+components:
+  schemas:
+    BaseResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        message:
+          type: string
+          example: success or fail message
+        data:
+          type: object
+
+    AuthResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int64
+          example: success
+        message:
+          type: string
+          example: successfully logged in
+        data:
+          type: object
+          example: {
+            "session": dsoadjasiodjasoij
+          }
+    AuthLogoutResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        message:
+          type: string
+          example: successfully logged out
+        data:
+          type: object
+          example: { }
+    ForgetResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        message:
+          type: string
+          example: account recovery step was send it to your email
+        data:
+          type: object
+          example: { }
+    VerifyForgetResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        message:
+          type: string
+          example: enter your dream password and please be secret
+        data:
+          type: object
+          example: { }
+    AuthResetPasswordRequest:
+      type: object
+      properties:
+        password:
+          type: string
+          example: abc#@!
+        repassword:
+          type: string
+          example: abc#@!
+
+
+    AuthLogin:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          example: user@shive.com
+        password:
+          type: string
+          example: iojsioadjasiodjasaa
+    AuthRegisterRequest:
+      type: object
+      properties:
+        full_name:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+          example: user@shive.com
+        password:
+          type: string
+          example: iojsioadjasiodjasaa
+    AuthRegisterResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        message:
+          type: string
+          example: register successfuly
+        data:
+          type: object
+          required:
+            - full_name
+            - email
+            - phone
+            - password
+          properties:
+            full_name:
+              type: string
+            phone:
+              type: string
+            email:
+              type: string
+              example: user@shive.com
+
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        type:
+          type: string
+        message:
+          type: string
+    ClassResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        message:
+          type: string
+          example: successful while get the class data
+        data:
+          type: array
+          items:
+            properties:
+              name:
+                type: string
+              is_pasca:
+                type: boolean
+              image:
+                type: string
+    CategoryByClassIdResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        message:
+          type: string
+          example: successful while get categories data by product class id
+        data:
+          type: array
+          items:
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
+              image:
+                type: string
+              tax:
+                type: integer
+                format: float
+    ProductsUserResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        message:
+          type: string
+          example: successful to get all products
+        data:
+          type: array
+          items:
+            properties:
+              id:
+                type: integer
+              product_class:
+                type: array
+                items:
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    is_pasca:
+                      type: boolean
+                    image:
+                      type: string
+                    slug:
+                      type: string
+              product_categories:
+                type: array
+                items:
+                  properties:
+                    id:
+                      type: integer
+                    product_class_id:
+                      type: integer
+                    name:
+                      type: string
+                    image:
+                      type: string
+                    tax:
+                      type: integer
+                      format: float
+              sku:
+                type: string
+              name:
+                type: string
+              admin_fee:
+                type: integer
+                format: float
+              stock:
+                type: integer
+              price:
+                type: integer
+                format: double
+              is_active:
+                type: boolean
+              created_at:
+                type: string
+                format: 'date-time'
+              updated_at:
+                type: string
+                format: 'date-time'
+    GetPulsaResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - properties:
+            data:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  product_category:
+                      type: object
+                      properties:
+                          id:
+                            type: integer
+                          name:
+                            type: string
+                          image:
+                            type: string
+                          tax:
+                            type: integer
+                            format: float
+                  sku:
+                    type: string
+                  name:
+                    type: string
+                  admin_fee:
+                    type: integer
+                    format: float
+                  stock:
+                    type: integer
+                  price:
+                    type: integer
+                    format: double
+                  is_active:
+                    type: boolean
+                  created_at:
+                    type: string
+                    format: 'date-time'
+                  updated_at:
+                    type: string
+                    format: 'date-time'
+    GetPDAMResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - properties:
+            data:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  product_category:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      name:
+                        type: string
+                      image:
+                        type: string
+                      tax:
+                        type: integer
+                        format: float
+                  sku:
+                    type: string
+                  name:
+                    type: string
+                  admin_fee:
+                    type: integer
+                    format: float
+                  stock:
+                    type: integer
+                  price:
+                    type: integer
+                    format: double
+                  is_active:
+                    type: boolean
+                  created_at:
+                    type: string
+                    format: 'date-time'
+                  updated_at:
+                    type: string
+                    format: 'date-time'
+    GetListrikResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - properties:
+            data:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  product_category:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      name:
+                        type: string
+                      image:
+                        type: string
+                      tax:
+                        type: integer
+                        format: float
+                  sku:
+                    type: string
+                  name:
+                    type: string
+                  admin_fee:
+                    type: integer
+                    format: float
+                  stock:
+                    type: integer
+                  price:
+                    type: integer
+                    format: double
+                  is_active:
+                    type: boolean
+                  created_at:
+                    type: string
+                    format: 'date-time'
+                  updated_at:
+                    type: string
+                    format: 'date-time'
+
+  requestBodies:
+    AuthLogin:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AuthLogin'
+      description: Pet object that needs to be added to the store
+      required: true
+
+    AuthResetPassword:
+      content:
+        application/json:
+          schema:
+            type: object
+            items:
+              $ref: '#/components/schemas/AuthResponse'
+  securitySchemes:
+    jwt_auth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
