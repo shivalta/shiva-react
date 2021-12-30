@@ -44,7 +44,8 @@ function MyApp({ Component, pageProps }: AppProps) {
             bg="blue.100"
           >
             <Box
-              width='400px'
+              maxWidth="480px"
+              width="full"
               minHeight='100vh'
               bg='white'
               p='6'

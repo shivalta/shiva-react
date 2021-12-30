@@ -56,7 +56,8 @@ const Navigator = () => {
                 left="50%"
                 transform="translateX(-50%)"
                 bottom="0"
-                width="400px"
+                maxWidth="480px"
+                width="full"
                 height={isCheckout ? "auto" : "20"}
                 borderTopLeftRadius="navigator"
                 borderTopRightRadius="navigator"

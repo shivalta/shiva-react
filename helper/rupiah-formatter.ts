@@ -1,4 +1,4 @@
-export const rupiahFormatter = (angka:number, prefix:string)=>{
+export const rupiahFormatter = (angka:number, prefix:string) : string=>{
     var number_string = angka.toString(),
     split   		= number_string.split(','),
     sisa     		= split[0].length % 3,
