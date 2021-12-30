@@ -19,12 +19,12 @@ const Checkout = () => {
         {
             id:"1",
             name:"BCA virtual account",
-            logo:logoBCA
+            logo:"/../../../public/images/bca-2.png"
         },
         {
             id:"2",
             name:"Mandiri virtual account",
-            logo:logoMandiri
+            logo:"/../../../public/images/mandiri-2.png"
         }
     ]
 
