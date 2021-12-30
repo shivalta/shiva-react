@@ -1,14 +1,24 @@
-import { Flex, Box } from "@chakra-ui/react"
+import { Flex, Box, Text } from "@chakra-ui/react"
+import { v4 as uuidv4 } from "uuid"
 
-const DetailPayment = (props:any)=> {
+export type RecordDetailPayment = {
+    name:string | "Total pembayaran"
+    value:string
+}
+
+export type PropsDetailPayment = {
+    detailPayment: RecordDetailPayment[]
+}
+
+const DetailPayment = ({detailPayment}:PropsDetailPayment)=> {
     return(
-        <Flex shadow="base" p="4" borderRadius="lg" my="2" flexWrap="wrap">
+        <Box shadow="base" p="4" borderRadius="lg" my="2" width="full">
             {
-                props.detailBeliPulsa?.map((data:any,index:number)=>{
-                    if(index != props.detailBeliPulsa.length - 1){
+                detailPayment.map((data:RecordDetailPayment)=>{
+                    if(data.name !== "Total pembayaran"){
                         return(
-                            <>
-                                <Box
+                            <Flex flexWrap="wrap" key={uuidv4()}>
+                                <Text
                                     w="50%"
                                     height="8"
                                     fontWeight="semibold"
@@ -16,9 +26,9 @@ const DetailPayment = (props:any)=> {
                                     color="gray.500"
                                     fontSize="sm"
                                 >
-                                    {Object.keys(data)[0]}
-                                </Box>
-                                <Box
+                                    {data.name}
+                                </Text>
+                                <Text
                                     w="50%"
                                     height="8"
                                     fontWeight="bold"
@@ -26,15 +36,15 @@ const DetailPayment = (props:any)=> {
                                     fontSize="sm"
                                     pl="2"
                                 >
-                                    {data[Object.keys(data)[0]]}
-                                </Box>
-                            </>
+                                    {data.value}
+                                </Text>
+                            </Flex>
                         )
                     }
                     else{
                         return(
-                            <>
-                                <Box
+                            <Flex flexWrap="wrap" key={uuidv4()}>
+                                <Text
                                     w="50%"
                                     height="8"
                                     fontWeight="semibold"
@@ -44,9 +54,9 @@ const DetailPayment = (props:any)=> {
                                     display="flex"
                                     alignItems="center"
                                 >
-                                    {Object.keys(data)[0]}
-                                </Box>
-                                <Box
+                                    {data.name}
+                                </Text>
+                                <Text
                                     w="50%"
                                     fontWeight="bold"
                                     className="my-text"
@@ -56,14 +66,14 @@ const DetailPayment = (props:any)=> {
                                     p="2"
                                     borderRadius="md"
                                 >
-                                    {data[Object.keys(data)[0]]}
-                                </Box>
-                            </>
+                                    {data.value}
+                                </Text>
+                            </Flex>
                         )
                     }
                 })
             }
-        </Flex>
+        </Box>
     )
 }
 

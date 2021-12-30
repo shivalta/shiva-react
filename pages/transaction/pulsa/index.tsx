@@ -1,10 +1,10 @@
 import Service from '../../../components/service/service'
-import { Input, FormControl, FormLabel, Text, Flex } from '@chakra-ui/react'
+import { Input, FormControl, FormLabel, FormErrorMessage, Text, Flex } from '@chakra-ui/react'
 import Image from 'next/image'
 import { useState } from 'react'
 import Link from 'next/link'
 import { beliPulsa } from '../../../components/global-state/globalState'
-import { useRecoilState } from 'recoil'
+import { useSetRecoilState } from 'recoil'
 
 const dataProvider = {
     telkomsel:{
@@ -64,7 +64,7 @@ function Example() {
 
     const [handphoneValue, setHandphoneValue] = useState("")
     const [dataPulsa, setDataPulsa] = useState<ListDataProvider | undefined>(undefined)
-    const [dataBeliPulsa, setDataBeliPulsa] = useRecoilState(beliPulsa)
+    const setDataBeliPulsa = useSetRecoilState(beliPulsa)
 
     const handleChange = (e:React.ChangeEvent<HTMLInputElement>) : void => {
         if (e.target.value === '' || /^[0-9\b]+$/.test(e.target.value)) {
@@ -74,6 +74,9 @@ function Example() {
             }
             else if(e.target.value === "0815"){
                 setDataPulsa(dataProvider.indosat)
+            }
+            else{
+                setDataPulsa(undefined)
             }
         }
     }
@@ -90,15 +93,26 @@ function Example() {
         )
     }
 
+    const isHandphoneValueValid = (()=>{
+        if(handphoneValue.length < 10){
+            return false
+        }
+        return true
+    })()
+
+
     return (
         <>
             <Service my={8}/>
-            <FormControl>
+            <FormControl isIn>
                 <FormLabel htmlFor="handphone" textColor="base">No Handphone</FormLabel>
                 <Input
                     type="tel" onChange={handleChange} id="handphone" variant='outline'
                     placeholder='08xx' shadow="base" size="lg" value={handphoneValue}
                 />
+                {
+                    isHandphoneValueValid? <FormErrorMessage>No handphone is required</FormErrorMessage> : null
+                }
                 {
                     dataPulsa ? (
                         <>

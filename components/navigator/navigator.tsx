@@ -1,35 +1,27 @@
 import { AiFillHome } from "react-icons/ai"
-import { MdAccountBox, MdArticle, MdCheckCircle } from "react-icons/md"
-import { Box, Icon, Flex, Text, Divider, Button, Center, List, ListItem, ListIcon, Alert, AlertIcon} from "@chakra-ui/react"
-import { MotionBox } from "../motion-box/motion-box"
+import { MdAccountBox, MdArticle } from "react-icons/md"
+import { Box, Icon, Flex, Text, Divider, Button, Alert, AlertIcon} from "@chakra-ui/react"
 import Link from "next/link"
 import { useRouter } from "next/router"
+import { rupiahFormatter } from "../../helper/rupiah-formatter"
+import { useState } from "react"
+import BlackScreen from "./black-screen"
+import ConfirmPayment from "./confirm-payment"
 import { useRecoilValue } from "recoil"
 import { beliPulsa } from "../global-state/globalState"
-import { rupiahFormatter } from "../../helpers/rupiah-formatter"
-import { useState } from "react"
-import DetailPayment from "../detail-payment/detail-payment"
-import Image from "next/image"
 
 const Navigator = () => {
     const {pathname} = useRouter()
-    const [renderDetail, setRenderDetail] = useState(false)
+    const [isRenderDetail, setIsRenderDetail] = useState(false)
+    const dataBeliPulsa = useRecoilValue(beliPulsa)
     const patternHistory = /\/history-transaction/
     const patternProfile = /\/profile/
     const patternPulsaCheckout = /\/transaction\/pulsa\/checkout/
-    const dataBeliPulsa = useRecoilValue(beliPulsa)
-    const detailBeliPulsa = [
-        {"Nama produk" : dataBeliPulsa.nameProduct},
-        {"No handphone" : dataBeliPulsa.noHandphone},
-        {"Harga" : dataBeliPulsa.price? rupiahFormatter(dataBeliPulsa.price,"Rp.") : 0},
-        {"Biaya admin" : dataBeliPulsa.adminFee? rupiahFormatter(dataBeliPulsa.adminFee,"Rp.") : 0},
-        {"Total pembayaran" : dataBeliPulsa.total? rupiahFormatter(dataBeliPulsa.total,"Rp.") : 0}
-    ]
+
 
     type ActiveNav = "history" | "profile" | "home"
 
     const getActiveNav = ():ActiveNav => {
-
         if(pathname.match(patternHistory)){
             return "history"
         }
@@ -40,38 +32,32 @@ const Navigator = () => {
     }
 
 
-    const isCheckout = (): string => {
+    const getIsCheckout = (): string => {
         if(pathname.match(patternPulsaCheckout)){
             return dataBeliPulsa.total? rupiahFormatter(dataBeliPulsa.total, "Rp.") : ""
         }
+        if(isRenderDetail){
+            setIsRenderDetail(false)
+        }
         return ""
     }
+
+    const isCheckout = getIsCheckout()
 
     const activeNav = getActiveNav()
 
     return (
         <>
             {
-                renderDetail ? dataBeliPulsa.paymentMethod?
-                <Box
-                    position="fixed"
-                    height="100vh"
-                    left="50%"
-                    transform="translateX(-50%)"
-                    bottom="0"
-                    background="blackAlpha.600"
-                    width="400px"
-                >
-                </Box>
-                : null : null
+                isRenderDetail ? dataBeliPulsa.paymentMethod? <BlackScreen/>: null : null
             }
-            <MotionBox
+            <Box
                 position="fixed"
                 left="50%"
                 transform="translateX(-50%)"
                 bottom="0"
                 width="400px"
-                height={isCheckout() ? "auto" : "20"}
+                height={isCheckout ? "auto" : "20"}
                 borderTopLeftRadius="navigator"
                 borderTopRightRadius="navigator"
                 shadow="navigator"
@@ -84,67 +70,20 @@ const Navigator = () => {
                 flexWrap="wrap"
             >
                 {
-                    renderDetail?dataBeliPulsa.paymentMethod?
-                    <>
-                        <Flex width="full" py="2" mb="3" justify="space-between" alignItems="center">
-                            <Text as="h3" className="my-text" color="base" fontWeight="bold">
-                                Konfirmasi Pembayaran
-                            </Text>
-                            <Center
-                                height="5"
-                                width="5"
-                                shadow="base"
-                                onClick={()=>setRenderDetail(false)}
-                                p="4"
-                                borderRadius="lg"
-                                fontWeight="bold"
-                                color="base"
-                                as="button"
-                                className="my-text"
-                            >
-                                X
-                            </Center>
-                        </Flex>
-                        <DetailPayment  detailBeliPulsa={detailBeliPulsa}/>
-                        <Flex width="full" alignItems="center" py="4">
-                            <Image width={80} height={30} src={dataBeliPulsa.paymentMethod?.logo} alt={dataBeliPulsa.paymentMethod?.name}/>
-                            <Text as="h3" px="4" className="my-text" fontWeight="bold" fontSize="sm">
-                                {dataBeliPulsa.paymentMethod?.name}
-                            </Text>
-                        </Flex>
-                        <List spacing={3} width="full" pt="3" pb="6">
-                            <ListItem className="my-text" fontSize="xs" display="flex">
-                                <ListIcon as={MdCheckCircle} color='green.500' mt="1"/>
-                                <Text>
-                                    Transaksi ini akan otomatis menggantikan tagihan {dataBeliPulsa.paymentMethod?.name} yang belum dibayar
-                                </Text>
-                            </ListItem>
-                            <ListItem className="my-text" fontSize="xs" display="flex">
-                                <ListIcon as={MdCheckCircle} color='green.500' mt="1"/>
-                                <Text>
-                                    Dapatkan kode pembayaran setelah klik Bayar
-                                </Text>
-                            </ListItem>
-                            <ListItem className="my-text" fontSize="xs" display="flex">
-                                <ListIcon as={MdCheckCircle} color='green.500' mt="1"/>
-                                <Text>
-                                    Tidak disarankan bayar melalui bank lain agar transaksi dapat diproses tanpa kendala
-                                </Text>
-                            </ListItem>
-                        </List>
-                    </>
+                    isRenderDetail?dataBeliPulsa.paymentMethod?
+                    <ConfirmPayment setIsRenderDetail={setIsRenderDetail}/>
                     :
                     <Alert status="error" className="my-text" fontSize="xs" borderRadius="lg" variant="solid" padding="2" my="4">
                         <AlertIcon />
-                        There was an error processing your request
+                        Isi metode pembayaran dulu ya
                     </Alert> : null
                 }
                 {
-                    isCheckout() ? (
+                    isCheckout ? (
                         <>
                             <Flex justifyContent="space-between" width="full">
                                 <Text className="my-text" color="base_second" fontSize="sm" fontWeight="semibold">Total Pembayaran</Text>
-                                <Text className="my-text" color="base_second" fontSize="sm" fontWeight="semibold">{isCheckout()}</Text>
+                                <Text className="my-text" color="base_second" fontSize="sm" fontWeight="semibold">{isCheckout}</Text>
                             </Flex>
                             <Divider my="3" />
                         </>
@@ -166,7 +105,7 @@ const Navigator = () => {
                     </Box>
                 </Link>
                 {
-                    isCheckout() ?
+                    isCheckout ?
                         <Button
                             fontSize="xs"
                             bg="base"
@@ -175,12 +114,12 @@ const Navigator = () => {
                             width="24"
                             flexGrow="1"
                             _hover={{bg:"base"}}
-                            onClick={()=>setRenderDetail(true)}
+                            onClick={()=>setIsRenderDetail(true)}
                         >
                             Bayar
                         </Button> : null
                 }
-            </MotionBox>
+            </Box>
         </>
     )
 }

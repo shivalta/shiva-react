@@ -2,7 +2,7 @@ import { ChakraProvider, extendTheme, Flex, Box, Text } from '@chakra-ui/react'
 import type { AppProps } from 'next/app'
 import Navigator from '../components/navigator/navigator'
 import { AnimateSharedLayout } from 'framer-motion'
-import { RecoilRoot, atom } from 'recoil'
+import { RecoilRoot } from 'recoil'
 import '../styles/globals.css'
 import BackNav from '../components/back-nav/back-nav'
 
@@ -48,7 +48,7 @@ function MyApp({ Component, pageProps }: AppProps) {
               minHeight='100vh'
               bg='white'
               p='6'
-              pb="16"
+              pb="36"
               >
                 <Text
                     as="h1"

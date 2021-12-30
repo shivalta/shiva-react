@@ -2,24 +2,18 @@ import { beliPulsa } from "../../../components/global-state/globalState"
 import Service from "../../../components/service/service"
 import { Text, Flex, Box, Radio, RadioGroup, Divider } from "@chakra-ui/react"
 import DetailPayment from "../../../components/detail-payment/detail-payment"
-import { rupiahFormatter } from "../../../helpers/rupiah-formatter"
 import Image from "next/image"
 import logoMandiri from "../../../public/images/mandiri-2.png"
 import logoBCA from "../../../public/images/bca-2.png"
 import { useState } from "react"
-import { useRecoilState } from "recoil"
+import { useRecoilState, useRecoilValue } from "recoil"
+import { getDetailBeliPulsa } from "../../../components/global-state/globalState"
 
 const Checkout = () => {
 
     const [choicedMethod, setChoicedMethod] = useState("")
     const [dataBeliPulsa, setDataBeliPulsa] = useRecoilState(beliPulsa)
-    const detailBeliPulsa = [
-        {"Nama produk" : dataBeliPulsa.nameProduct},
-        {"No handphone" : dataBeliPulsa.noHandphone},
-        {"Harga" : dataBeliPulsa.price? rupiahFormatter(dataBeliPulsa.price,"Rp.") : 0},
-        {"Biaya admin" : dataBeliPulsa.adminFee? rupiahFormatter(dataBeliPulsa.adminFee,"Rp.") : 0},
-        {"Total pembayaran" : dataBeliPulsa.total? rupiahFormatter(dataBeliPulsa.total,"Rp.") : 0}
-    ]
+    const detailBeliPulsa = useRecoilValue(getDetailBeliPulsa)
 
     const listPaymentMethod = [
         {
@@ -40,7 +34,7 @@ const Checkout = () => {
             <Text as="h3" className="my-text" color="base" fontWeight="bold" mt="8">
                 Detail Pembayaran
             </Text>
-            <DetailPayment  detailBeliPulsa={detailBeliPulsa}/>
+            <DetailPayment  detailPayment={detailBeliPulsa}/>
             <Text as="h3" className="my-text" color="base" fontWeight="bold" mt="8">
                 Metode Pembayaran
             </Text>
