@@ -1,5 +1,6 @@
-import { Center } from "@chakra-ui/react"
+import { Center, Icon } from "@chakra-ui/react"
 import { useRouter } from "next/router"
+import { TiArrowBack } from "react-icons/ti";
 
 const BackNav = () => {
 
@@ -21,12 +22,12 @@ const BackNav = () => {
             onClick={router.back}
             p="5"
             borderRadius="lg"
-            mt="3"
+            mt="6"
             fontWeight="bold"
             color="base"
             as="button"
         >
-            🡨
+            <Icon as={TiArrowBack} color="base" h={5} width={5} />
         </Center> : null
     )
 

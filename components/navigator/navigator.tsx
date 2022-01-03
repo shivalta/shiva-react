@@ -1,5 +1,4 @@
-import { AiFillHome } from "react-icons/ai"
-import { MdAccountBox, MdArticle } from "react-icons/md"
+import { MdHome,MdAccountBox, MdArticle } from "react-icons/md"
 import { Box, Icon, Flex, Text, Divider, Button, Alert, AlertIcon} from "@chakra-ui/react"
 import Link from "next/link"
 import { useRouter } from "next/router"
@@ -11,13 +10,14 @@ import { useRecoilValue } from "recoil"
 import { beliPulsa } from "../global-state/globalState"
 
 const Navigator = () => {
-    const {pathname} = useRouter()
+    const router = useRouter()
+    const {pathname} = router
     const [isRenderDetail, setIsRenderDetail] = useState(false)
     const dataBeliPulsa = useRecoilValue(beliPulsa)
     const patternHistory = /\/history-transaction/
     const patternProfile = /\/profile/
     const patternPulsaCheckout = /\/transaction\/pulsa\/checkout/
-
+    const patternPulsaPayment = /\/transaction\/pulsa\/payment/
 
     type ActiveNav = "history" | "profile" | "home"
 
@@ -36,14 +36,21 @@ const Navigator = () => {
         if(pathname.match(patternPulsaCheckout)){
             return dataBeliPulsa.total? rupiahFormatter(dataBeliPulsa.total, "Rp.") : ""
         }
-        if(isRenderDetail){
+        else if(isRenderDetail && !getIsPayment()){
             setIsRenderDetail(false)
         }
         return ""
     }
 
-    const isCheckout = getIsCheckout()
+    const getIsPayment = (): boolean => {
+        if(pathname.match(patternPulsaPayment)){
+            return true
+        }
+        return false
+    }
 
+    const isCheckout = getIsCheckout()
+    const isPayment = getIsPayment()
     const activeNav = getActiveNav()
 
     return (
@@ -58,7 +65,7 @@ const Navigator = () => {
                 bottom="0"
                 maxWidth="480px"
                 width="full"
-                height={isCheckout ? "auto" : "20"}
+                height="auto"
                 borderTopLeftRadius="navigator"
                 borderTopRightRadius="navigator"
                 shadow="navigator"
@@ -92,17 +99,17 @@ const Navigator = () => {
                 }
                 <Link href="/" passHref>
                     <Box as="a" px="2">
-                        <Icon as={AiFillHome} color={activeNav==="home" ? "base" : "gray.300"} h={8} width={8} />
+                        <Icon as={MdHome} color={activeNav==="home" ? "base" : "gray.300"} h={10} width={10} />
                     </Box>
                 </Link>
                 <Link href="/history-transaction" passHref>
                     <Box as="a" px="2">
-                        <Icon as={MdArticle} color={activeNav==="history" ? "base" : "gray.300"} h={9} width={9} />
+                        <Icon as={MdArticle} color={activeNav==="history" ? "base" : "gray.300"} h={10} width={10} />
                     </Box>
                 </Link>
                 <Link href="/profile" passHref>
                     <Box as="a" px="2">
-                        <Icon as={MdAccountBox} color={activeNav==="profile" ? "base" : "gray.300"} h={9} width={9} />
+                        <Icon as={MdAccountBox} color={activeNav==="profile" ? "base" : "gray.300"} h={10} width={10} />
                     </Box>
                 </Link>
                 {
@@ -115,9 +122,33 @@ const Navigator = () => {
                             width="24"
                             flexGrow="1"
                             _hover={{bg:"base"}}
-                            onClick={()=>setIsRenderDetail(true)}
+                            onClick={()=>{
+                                if(isRenderDetail){
+                                    router.push("/transaction/pulsa/payment")
+                                }
+                                setIsRenderDetail(true)
+                            }}
+                            ml="2"
                         >
                             Bayar
+                        </Button> : null
+                }
+                {
+                    isPayment ?
+                        <Button
+                            fontSize="xs"
+                            bg="base"
+                            color="white"
+                            height="10"
+                            width="24"
+                            flexGrow="1"
+                            _hover={{bg:"base"}}
+                            onClick={()=>{
+                                setIsRenderDetail(true)
+                            }}
+                            ml="2"
+                        >
+                            Detail
                         </Button> : null
                 }
             </Box>

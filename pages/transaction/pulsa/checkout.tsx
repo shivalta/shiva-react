@@ -5,7 +5,7 @@ import DetailPayment from "../../../components/detail-payment/detail-payment"
 import Image from "next/image"
 import logoMandiri from "../../../public/images/mandiri-2.png"
 import logoBCA from "../../../public/images/bca-2.png"
-import { useState } from "react"
+import { useState, Fragment } from "react"
 import { useRecoilState, useRecoilValue } from "recoil"
 import { getDetailBeliPulsa } from "../../../components/global-state/globalState"
 
@@ -17,14 +17,14 @@ const Checkout = () => {
 
     const listPaymentMethod = [
         {
-            id:"1",
+            id:"BCA-1",
             name:"BCA virtual account",
-            logo:"/../../../public/images/bca-2.png"
+            logo:logoBCA
         },
         {
-            id:"2",
+            id:"MANDIRI-2",
             name:"Mandiri virtual account",
-            logo:"/../../../public/images/mandiri-2.png"
+            logo:logoMandiri
         }
     ]
 
@@ -38,12 +38,12 @@ const Checkout = () => {
             <Text as="h3" className="my-text" color="base" fontWeight="bold" mt="8">
                 Metode Pembayaran
             </Text>
-            <RadioGroup onChange={setChoicedMethod} value={choicedMethod}>
+            <RadioGroup value={choicedMethod}>
                 {
                     listPaymentMethod.map(({id,name,logo})=>{
                         return(
-                            <>
-                                <Flex alignItems="center" my="8" key={name}>
+                            <Fragment key={id}>
+                                <Flex alignItems="center" my="8">
                                     <Image src={logo} width={80} height={30} alt={name}/>
                                     <Box px="4" className="my-text" fontWeight="semibold" flexGrow="1" fontSize="sm">{name}</Box>
                                     <Radio value={id} onClick={()=>{
@@ -55,10 +55,11 @@ const Checkout = () => {
                                                 logo:logo
                                             }
                                         })
+                                        setChoicedMethod(id)
                                     }}/>
                                 </Flex>
-                                <Divider orientation='horizontal' my="8" key={`divider-${name}`}/>
-                            </>
+                                <Divider orientation='horizontal' my="8" />
+                            </Fragment>
                         )
                     })
                 }

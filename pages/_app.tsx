@@ -5,6 +5,8 @@ import { AnimateSharedLayout } from 'framer-motion'
 import { RecoilRoot } from 'recoil'
 import '../styles/globals.css'
 import BackNav from '../components/back-nav/back-nav'
+import Image from 'next/image'
+import shivaLogo from '../public/images/shiva.png'
 
 function MyApp({ Component, pageProps }: AppProps) {
   const theme = extendTheme({
@@ -51,15 +53,20 @@ function MyApp({ Component, pageProps }: AppProps) {
               p='6'
               pb="36"
               >
-                <Text
-                    as="h1"
-                    fontSize="xl"
-                    color="base"
-                    className="my-text-2"
-                    fontWeight="bold"
-                >
-                    SHIVA
-                </Text>
+                <Flex>
+                  <Box height="8" width="8" position="relative" borderRadius="md" overflow="hidden" mr="2">
+                    <Image src={shivaLogo} alt="shiva-logo" layout="fill" />
+                  </Box>
+                  <Text
+                      as="h1"
+                      fontSize="xl"
+                      color="base"
+                      className="my-text-2"
+                      fontWeight="bold"
+                  >
+                      SHIVA
+                  </Text>
+                </Flex>
                 <BackNav/>
                 <Component {...pageProps} />
                 <Navigator/>

@@ -12,6 +12,7 @@ export type BeliPulsa = {
     date?: Date
     status?: string
     total?: number
+    virtualAccount?: string
     paymentMethod?: {
         id:string
         name:string

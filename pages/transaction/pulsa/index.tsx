@@ -2,9 +2,11 @@ import Service from '../../../components/service/service'
 import { Input, FormControl, FormLabel, FormErrorMessage, Text, Flex } from '@chakra-ui/react'
 import Image from 'next/image'
 import { useState } from 'react'
-import Link from 'next/link'
 import { beliPulsa } from '../../../components/global-state/globalState'
 import { useSetRecoilState } from 'recoil'
+import { useRouter } from 'next/router'
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 
 const dataProvider = {
     telkomsel:{
@@ -62,56 +64,58 @@ function Example() {
         data: DataProvider[]
     }
 
-    const [handphoneValue, setHandphoneValue] = useState("")
+    const schema = Yup.object({
+        handphone: Yup.string()
+          .min(10, 'isi no handphone minimal 10 karakter ya')
+          .required('isi no handphone dulu ya')
+    })
+
+    const formik = useFormik({
+        initialValues:{
+            handphone:""
+        },
+        onSubmit:(values)=>console.log(values),
+        validationSchema: schema
+    })
+    const handphoneValue = formik.values.handphone
     const [dataPulsa, setDataPulsa] = useState<ListDataProvider | undefined>(undefined)
     const setDataBeliPulsa = useSetRecoilState(beliPulsa)
+    const router = useRouter()
 
-    const handleChange = (e:React.ChangeEvent<HTMLInputElement>) : void => {
-        if (e.target.value === '' || /^[0-9\b]+$/.test(e.target.value)) {
-            setHandphoneValue(e.target.value)
-            if(e.target.value === "0822"){
-                setDataPulsa(dataProvider.telkomsel)
-            }
-            else if(e.target.value === "0815"){
-                setDataPulsa(dataProvider.indosat)
-            }
-            else{
-                setDataPulsa(undefined)
-            }
-        }
-    }
-
-    const updateDataBeliPulsa = (data:DataProvider)=>{
-        setDataBeliPulsa(
-            {
-                nameProduct:data.name,
-                price:data.price,
-                adminFee:data.adminFee,
+    const handleClickNominal = ({name,price,adminFee}:DataProvider) => {
+        if(!(formik.errors.handphone && formik.touched.handphone)){
+            setDataBeliPulsa({
+                nameProduct:name,
+                price:price,
+                adminFee:adminFee,
                 noHandphone:handphoneValue,
-                total:data.price + data.adminFee
-            }
-        )
+                total:price + adminFee
+            })
+            router.push("/transaction/pulsa/checkout")
+        }
     }
 
-    const isHandphoneValueValid = (()=>{
-        if(handphoneValue.length < 10){
-            return false
+    const handleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+        if(e.target.value.match(/0822/)){
+            setDataPulsa(dataProvider.telkomsel)
         }
-        return true
-    })()
-
+        else if(e.target.value.match(/0815/)){
+        setDataPulsa(dataProvider.indosat)
+        }
+        formik.handleChange(e)
+    }
 
     return (
         <>
             <Service my={8}/>
-            <FormControl isIn>
+            <FormControl isInvalid={formik.errors.handphone && formik.touched.handphone ? true : false}>
                 <FormLabel htmlFor="handphone" textColor="base">No Handphone</FormLabel>
                 <Input
-                    type="tel" onChange={handleChange} id="handphone" variant='outline'
+                    type="tel" onChange={handleChange} onBlur={formik.handleBlur} id="handphone" variant='outline'
                     placeholder='08xx' shadow="base" size="lg" value={handphoneValue}
                 />
                 {
-                    isHandphoneValueValid? <FormErrorMessage>No handphone is required</FormErrorMessage> : null
+                    <FormErrorMessage>{formik.errors.handphone}</FormErrorMessage>
                 }
                 {
                     dataPulsa ? (
@@ -123,15 +127,13 @@ function Example() {
                             {
                                 dataPulsa.data.map(({name,price,adminFee})=>{
                                     return(
-                                        <Link href="/transaction/pulsa/checkout" key={name} passHref>
-                                            <Flex onClick={()=>updateDataBeliPulsa({name,price,adminFee})}
-                                                as="a" justify="space-between" alignItems="center" rounded="xl" shadow="base"
-                                                px="3" py="5" my="3"
-                                            >
-                                                <Text fontWeight="bold" className="my-text">{name}</Text>
-                                                <Text fontWeight="semibold" classname="my-text" fontSize="xl" color="base_second">Rp.{price}</Text>
-                                            </Flex>
-                                        </Link>
+                                        <Flex onClick={()=>handleClickNominal({name,price,adminFee})} key={name}
+                                            as="a" justify="space-between" alignItems="center" rounded="xl" shadow="base"
+                                            px="3" py="5" my="3" tabIndex={0} cursor="pointer"
+                                        >
+                                            <Text fontWeight="bold" className="my-text">{name}</Text>
+                                            <Text fontWeight="semibold" className="my-text" fontSize="xl" color="base_second">Rp.{price}</Text>
+                                        </Flex>
                                     )
                                 })
                             }

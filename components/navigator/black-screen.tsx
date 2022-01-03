@@ -7,7 +7,7 @@ const BlackScreen = () => {
 
     useEffect(()=>{
         return ()=>{
-            document.body.style.overflow = "scroll"
+            document.body.style.overflowY = "scroll"
         }
     })
 
@@ -19,7 +19,8 @@ const BlackScreen = () => {
             transform="translateX(-50%)"
             bottom="0"
             background="blackAlpha.600"
-            width="400px"
+            maxWidth="480px"
+            width="100%"
         >
         </Box>
     )
