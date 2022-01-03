@@ -1,6 +1,6 @@
 const ConfirmPayment = ()=> {
     return(
-
+        null
     )
 }
 
