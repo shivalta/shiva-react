@@ -5,9 +5,9 @@ import { useRouter } from "next/router"
 import { rupiahFormatter } from "../../helper/rupiah-formatter"
 import { useState } from "react"
 import BlackScreen from "./black-screen"
-import ConfirmPayment from "./confirm-payment"
 import { useRecoilValue } from "recoil"
 import { beliPulsa } from "../global-state/globalState"
+import PopUp from "./pop-up"
 
 const Navigator = () => {
     const router = useRouter()
@@ -79,7 +79,7 @@ const Navigator = () => {
             >
                 {
                     isRenderDetail?dataBeliPulsa.paymentMethod?
-                    <ConfirmPayment setIsRenderDetail={setIsRenderDetail}/>
+                    <PopUp setIsRenderDetail={setIsRenderDetail} title={"Konfirmasi Pembayaran"}/>
                     :
                     <Alert status="error" className="my-text" fontSize="xs" borderRadius="lg" variant="solid" padding="2" my="4">
                         <AlertIcon />
