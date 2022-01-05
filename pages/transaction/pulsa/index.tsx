@@ -1,12 +1,14 @@
 import Service from '../../../components/service/service'
-import { Input, FormControl, FormLabel, FormErrorMessage, Text, Flex } from '@chakra-ui/react'
-import Image from 'next/image'
+import { Input, FormControl, FormLabel, FormErrorMessage } from '@chakra-ui/react'
 import { useState } from 'react'
 import { beliPulsa } from '../../../components/global-state/globalState'
 import { useSetRecoilState } from 'recoil'
 import { useRouter } from 'next/router'
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import ChoiceNominal from '../../../components/choice-nominal/choice-nominal'
+import { DataNominal,  ListDataNominal} from '../../../components/choice-nominal/choice-nominal'
+import Image from 'next/image'
 
 const dataProvider = {
     telkomsel:{
@@ -51,63 +53,58 @@ const dataProvider = {
     }
 }
 
-function Example() {
+const Products = () => {
 
-    type DataProvider = {
-        name:string
-        price:number
-        adminFee:number
-    }
-
-    type ListDataProvider = {
-        logo:string
-        data: DataProvider[]
-    }
-
-    const schema = Yup.object({
-        handphone: Yup.string()
-          .min(10, 'isi no handphone minimal 10 karakter ya')
-          .required('isi no handphone dulu ya')
-    })
-
+    const router = useRouter()
     const formik = useFormik({
-        initialValues:{
+        initialValues: {
             handphone:""
         },
-        onSubmit:(values)=>console.log(values),
-        validationSchema: schema
+        validationSchema: Yup.object({
+            handphone: Yup.string()
+              .min(10, 'isi no handphone minimal 10 karakter ya')
+              .required('isi no handphone dulu ya')
+        }),
+        onSubmit:(values:any) => {
+            console.log(values)
+        }
     })
-    const handphoneValue = formik.values.handphone
-    const [dataPulsa, setDataPulsa] = useState<ListDataProvider | undefined>(undefined)
-    const setDataBeliPulsa = useSetRecoilState(beliPulsa)
-    const router = useRouter()
 
-    const handleClickNominal = ({name,price,adminFee}:DataProvider) => {
+    const handphoneValue = formik.values.handphone
+    const [dataPulsa, setDataPulsa] = useState<ListDataNominal | undefined>(undefined)
+    const setDataBeliPulsa = useSetRecoilState(beliPulsa)
+
+    const handleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+        if(e.target.value.match(/^[0-9]*$/)){
+            if(e.target.value.match(/0822/)){
+                setDataPulsa(dataProvider.telkomsel)
+            }
+            else if(e.target.value.match(/0815/)){
+                setDataPulsa(dataProvider.indosat)
+            }
+            else{
+                setDataPulsa(undefined)
+            }
+            formik.handleChange(e)
+        }
+    }
+
+    const handleClickNominal = ({name, price, adminFee}:DataNominal)=>{
         if(!(formik.errors.handphone && formik.touched.handphone)){
             setDataBeliPulsa({
                 nameProduct:name,
                 price:price,
                 adminFee:adminFee,
                 noHandphone:handphoneValue,
-                total:price + adminFee
+                total:price+adminFee
             })
             router.push("/transaction/pulsa/checkout")
         }
     }
 
-    const handleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
-        if(e.target.value.match(/0822/)){
-            setDataPulsa(dataProvider.telkomsel)
-        }
-        else if(e.target.value.match(/0815/)){
-        setDataPulsa(dataProvider.indosat)
-        }
-        formik.handleChange(e)
-    }
-
     return (
         <>
-            <Service my={8}/>
+            <Service my="8"/>
             <FormControl isInvalid={formik.errors.handphone && formik.touched.handphone ? true : false}>
                 <FormLabel htmlFor="handphone" textColor="base">No Handphone</FormLabel>
                 <Input
@@ -119,31 +116,17 @@ function Example() {
                 }
                 {
                     dataPulsa ? (
-                        <>
-                            <Text as="h3" className="my-text" color="base" fontWeight="bold" mt="5">
-                                Nominal pulsa
-                            </Text>
-                            <Image src={dataPulsa.logo} width={140} height={80} alt="logo provider"/>
-                            {
-                                dataPulsa.data.map(({name,price,adminFee})=>{
-                                    return(
-                                        <Flex onClick={()=>handleClickNominal({name,price,adminFee})} key={name}
-                                            as="a" justify="space-between" alignItems="center" rounded="xl" shadow="base"
-                                            px="3" py="5" my="3" tabIndex={0} cursor="pointer"
-                                        >
-                                            <Text fontWeight="bold" className="my-text">{name}</Text>
-                                            <Text fontWeight="semibold" className="my-text" fontSize="xl" color="base_second">Rp.{price}</Text>
-                                        </Flex>
-                                    )
-                                })
-                            }
-                        </>
+                        <ChoiceNominal
+                            title="Nominal Pulsa"
+                            dataNominal={dataPulsa.data}
+                            handleClickNominal={handleClickNominal}
+                            render={()=><Image src={dataPulsa.logo} width={140} height={80} alt="logo provider"/>}
+                        />
                     ) : null
                 }
-
             </FormControl>
         </>
     )
 }
 
-export default Example
+export default Products

@@ -4,19 +4,25 @@ import { beliPulsa } from "../global-state/globalState"
 import { MdOutlineFileCopy } from "react-icons/md"
 import Image from "next/image"
 import { rupiahFormatter } from "../../helper/rupiah-formatter"
+import { BeliPulsa } from "../global-state/globalState"
 
-const VirtualAccount = () => {
-    const dataBeliPulsa = useRecoilValue(beliPulsa)
+type PropsVirtualAccount = {
+    serviceState: BeliPulsa
+}
+
+const VirtualAccount = (props:PropsVirtualAccount) => {
+
+    const {serviceState} = props
 
     return(
         <Box p="5" borderRadius="xl" boxShadow="base" my="8">
             <Text textAlign="center" as="h2" fontWeight="bold" className="my-text" >
-                {dataBeliPulsa.nameProduct}
+                {serviceState.nameProduct}
             </Text>
             <Divider my="4"/>
             <Flex justifyContent="space-between">
-                <Image width={80} height={30} src={dataBeliPulsa.paymentMethod?.logo} alt={dataBeliPulsa.paymentMethod?.name}/>
-                <Text fontWeight="bold" className="my-text" fontSize="sm">{dataBeliPulsa.paymentMethod?.name}</Text>
+                <Image width={80} height={30} src={serviceState.paymentMethod?.logo} alt={serviceState.paymentMethod?.name}/>
+                <Text fontWeight="bold" className="my-text" fontSize="sm">{serviceState.paymentMethod?.name}</Text>
             </Flex>
             <Text as="h3" className="my-text" color="base" fontSize="sm" fontWeight="bold" mt="4" mb="2">Nomor Virtual Account</Text>
             <Flex justifyContent="space-between">
@@ -28,7 +34,7 @@ const VirtualAccount = () => {
             </Flex>
             <Text as="h3" className="my-text" color="base" fontSize="sm" fontWeight="bold" my="2">Total Pembayaran</Text>
             <Text as="h3" className="my-text" fontWeight="bold" my="2">
-                {rupiahFormatter(dataBeliPulsa.total?dataBeliPulsa.total:0,"Rp.")}
+                {rupiahFormatter(serviceState.total?serviceState.total:0,"Rp.")}
             </Text>
             <Divider my="4"/>
             <Text as="h3" className="my-text" color="base" fontSize="sm" fontWeight="bold" my="2">Pembayaran Berakhir Dalam</Text>

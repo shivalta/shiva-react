@@ -11,8 +11,9 @@ import PopUp from "./pop-up"
 
 const Navigator = () => {
     const router = useRouter()
-    const {pathname} = router
-    const [isRenderDetail, setIsRenderDetail] = useState(false)
+    const {asPath:pathname} = router
+    const [isRenderDetailCheckout, setIsRenderDetailCheckout] = useState(false)
+    const [isRenderDetailPayment, setIsRenderDetailPayment] = useState(false)
     const dataBeliPulsa = useRecoilValue(beliPulsa)
     const patternHistory = /\/history-transaction/
     const patternProfile = /\/profile/
@@ -36,8 +37,8 @@ const Navigator = () => {
         if(pathname.match(patternPulsaCheckout)){
             return dataBeliPulsa.total? rupiahFormatter(dataBeliPulsa.total, "Rp.") : ""
         }
-        else if(isRenderDetail && !getIsPayment()){
-            setIsRenderDetail(false)
+        else if(isRenderDetailCheckout){
+            setIsRenderDetailCheckout(false)
         }
         return ""
     }
@@ -56,7 +57,7 @@ const Navigator = () => {
     return (
         <>
             {
-                isRenderDetail ? dataBeliPulsa.paymentMethod? <BlackScreen/>: null : null
+                isRenderDetailCheckout || isRenderDetailPayment ? dataBeliPulsa.paymentMethod? <BlackScreen/>: null : null
             }
             <Box
                 position="fixed"
@@ -78,13 +79,17 @@ const Navigator = () => {
                 flexWrap="wrap"
             >
                 {
-                    isRenderDetail?dataBeliPulsa.paymentMethod?
-                    <PopUp setIsRenderDetail={setIsRenderDetail} title={"Konfirmasi Pembayaran"}/>
+                    isRenderDetailCheckout?dataBeliPulsa.paymentMethod?
+                    <PopUp setIsRenderDetail={setIsRenderDetailCheckout} title={"Konfirmasi Pembayaran"}/>
                     :
                     <Alert status="error" className="my-text" fontSize="xs" borderRadius="lg" variant="solid" padding="2" my="4">
                         <AlertIcon />
                         Isi metode pembayaran dulu ya
                     </Alert> : null
+                }
+                {
+                    isRenderDetailPayment?
+                    <PopUp setIsRenderDetail={setIsRenderDetailPayment} title={"Detail Pembayaran"}/>: null
                 }
                 {
                     isCheckout ? (
@@ -123,10 +128,11 @@ const Navigator = () => {
                             flexGrow="1"
                             _hover={{bg:"base"}}
                             onClick={()=>{
-                                if(isRenderDetail){
+                                if(isRenderDetailCheckout){
                                     router.push("/transaction/pulsa/payment")
+                                }else{
+                                    setIsRenderDetailCheckout(true)
                                 }
-                                setIsRenderDetail(true)
                             }}
                             ml="2"
                         >
@@ -144,7 +150,7 @@ const Navigator = () => {
                             flexGrow="1"
                             _hover={{bg:"base"}}
                             onClick={()=>{
-                                setIsRenderDetail(true)
+                                setIsRenderDetailPayment(true)
                             }}
                             ml="2"
                         >
