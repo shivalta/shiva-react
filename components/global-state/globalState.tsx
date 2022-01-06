@@ -1,5 +1,4 @@
-import { atom } from "recoil"
-import { selector } from "recoil"
+import { atom, selector, RecoilState } from "recoil"
 import { RecordDetailPayment } from "../detail-payment/detail-payment"
 import { rupiahFormatter } from "../../helper/rupiah-formatter"
 
@@ -20,9 +19,18 @@ export type BeliPulsa = {
     }
 }
 
-export const beliPulsa = atom({
+type BackNavEffects = {
+    effects:()=>void
+}
+
+export const backNavEffects: RecoilState<BackNavEffects> = atom({
+    key: "back-nav-effect",
+    default: {effects:()=>{console.log("HALO")}}
+})
+
+export const beliPulsa: RecoilState<BeliPulsa> = atom({
     key:"beli-pulsa",
-    default: {} as BeliPulsa
+    default: {}
 })
 
 export const getDetailBeliPulsa = selector({
@@ -33,6 +41,10 @@ export const getDetailBeliPulsa = selector({
             {
                 name:"Nama Produk",
                 value:dataBeliPulsa.nameProduct? dataBeliPulsa.nameProduct : "-"
+            },
+            {
+                name:"Metode Pembayaran",
+                value: dataBeliPulsa.paymentMethod? dataBeliPulsa.paymentMethod.name : "-"
             },
             {
                 name:"No handphone",

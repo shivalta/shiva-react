@@ -5,13 +5,32 @@ import DetailPayment from "../../../components/detail-payment/detail-payment"
 import { useRecoilState, useRecoilValue } from "recoil"
 import { getDetailBeliPulsa } from "../../../components/global-state/globalState"
 import ChoicePaymentMethod from "../../../components/choice-payment-method/choice-payment-method"
+import { backNavEffects } from "../../../components/global-state/globalState"
+import { useSetRecoilState } from "recoil"
 import logoMandiri from "../../../public/images/mandiri-2.png"
 import logoBCA from "../../../public/images/bca-2.png"
+import { useEffect } from "react"
 
 const Checkout = () => {
 
     const [dataBeliPulsa, setDataBeliPulsa] = useRecoilState(beliPulsa)
     const detailBeliPulsa = useRecoilValue(getDetailBeliPulsa)
+    const setBackNavEffects = useSetRecoilState(backNavEffects)
+
+    useEffect(()=>{
+        setBackNavEffects({
+            effects:()=>{
+                setDataBeliPulsa({
+                    ...dataBeliPulsa,
+                    nameProduct:"",
+                    price:0,
+                    adminFee:0,
+                    total:0,
+                    paymentMethod:undefined
+                })
+            }
+        })
+    })
 
     const listPaymentMethod = [
         {

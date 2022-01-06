@@ -1,8 +1,8 @@
 import Service from '../../../components/service/service'
 import { Input, FormControl, FormLabel, FormErrorMessage } from '@chakra-ui/react'
-import { useState } from 'react'
-import { beliPulsa } from '../../../components/global-state/globalState'
-import { useSetRecoilState } from 'recoil'
+import { useEffect, useState } from 'react'
+import { beliPulsa, backNavEffects } from '../../../components/global-state/globalState'
+import { useRecoilState, useSetRecoilState } from 'recoil'
 import { useRouter } from 'next/router'
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -56,9 +56,12 @@ const dataProvider = {
 const Products = () => {
 
     const router = useRouter()
+    const [dataBeliPulsa, setDataBeliPulsa] = useRecoilState(beliPulsa)
+    const [dataPulsa, setDataPulsa] = useState<ListDataNominal | undefined>(undefined)
+    const setBackNavEffects = useSetRecoilState(backNavEffects)
     const formik = useFormik({
         initialValues: {
-            handphone:""
+            handphone:dataBeliPulsa.noHandphone
         },
         validationSchema: Yup.object({
             handphone: Yup.string()
@@ -71,20 +74,22 @@ const Products = () => {
     })
 
     const handphoneValue = formik.values.handphone
-    const [dataPulsa, setDataPulsa] = useState<ListDataNominal | undefined>(undefined)
-    const setDataBeliPulsa = useSetRecoilState(beliPulsa)
+
+    const setListNominal = (handphone:string="") => {
+        if(handphone.match(/0822/)){
+            setDataPulsa(dataProvider.telkomsel)
+        }
+        else if(handphone.match(/0815/)){
+            setDataPulsa(dataProvider.indosat)
+        }
+        else{
+            setDataPulsa(undefined)
+        }
+    }
 
     const handleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
         if(e.target.value.match(/^[0-9]*$/)){
-            if(e.target.value.match(/0822/)){
-                setDataPulsa(dataProvider.telkomsel)
-            }
-            else if(e.target.value.match(/0815/)){
-                setDataPulsa(dataProvider.indosat)
-            }
-            else{
-                setDataPulsa(undefined)
-            }
+            setListNominal(e.target.value)
             formik.handleChange(e)
         }
     }
@@ -101,6 +106,20 @@ const Products = () => {
             router.push("/transaction/pulsa/checkout")
         }
     }
+
+    useEffect(()=>{
+        setBackNavEffects({
+            effects:()=>{
+                setDataBeliPulsa({
+                    ...dataBeliPulsa,
+                    noHandphone:""
+                })
+            }
+        })
+        setListNominal(handphoneValue)
+    },[])
+
+
 
     return (
         <>

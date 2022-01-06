@@ -6,19 +6,36 @@ import { rupiahFormatter } from "../../helper/rupiah-formatter"
 import { useState } from "react"
 import BlackScreen from "./black-screen"
 import { useRecoilValue } from "recoil"
-import { beliPulsa } from "../global-state/globalState"
+import { BeliPulsa, beliPulsa, getDetailBeliPulsa } from "../global-state/globalState"
 import PopUp from "./pop-up"
+import { RecordDetailPayment } from "../detail-payment/detail-payment"
+import DetailPayment from "../detail-payment/detail-payment"
+import InfoConFirmPayment from "./info-confirm-payment"
+
+const patternPulsaCheckout = /\/transaction\/pulsa\/checkout/
+const patternPulsaPayment = /\/transaction\/pulsa\/payment/
+
+const useServiceData = (): [BeliPulsa, RecordDetailPayment[]] => {
+    const router = useRouter()
+    const {asPath:pathname} = router
+    const dataBeliPulsa = useRecoilValue(beliPulsa)
+    const detailBeliPulsa = useRecoilValue(getDetailBeliPulsa)
+
+    if(pathname.match(patternPulsaCheckout) || pathname.match(patternPulsaPayment)){
+        return [dataBeliPulsa, detailBeliPulsa]
+    }
+
+    return [dataBeliPulsa, detailBeliPulsa]
+}
 
 const Navigator = () => {
     const router = useRouter()
     const {asPath:pathname} = router
     const [isRenderDetailCheckout, setIsRenderDetailCheckout] = useState(false)
     const [isRenderDetailPayment, setIsRenderDetailPayment] = useState(false)
-    const dataBeliPulsa = useRecoilValue(beliPulsa)
+    const [serviceState, detailServiceState] = useServiceData()
     const patternHistory = /\/history-transaction/
     const patternProfile = /\/profile/
-    const patternPulsaCheckout = /\/transaction\/pulsa\/checkout/
-    const patternPulsaPayment = /\/transaction\/pulsa\/payment/
 
     type ActiveNav = "history" | "profile" | "home"
 
@@ -35,7 +52,7 @@ const Navigator = () => {
 
     const getIsCheckout = (): string => {
         if(pathname.match(patternPulsaCheckout)){
-            return dataBeliPulsa.total? rupiahFormatter(dataBeliPulsa.total, "Rp.") : ""
+            return serviceState.total? rupiahFormatter(serviceState.total, "Rp.") : ""
         }
         else if(isRenderDetailCheckout){
             setIsRenderDetailCheckout(false)
@@ -47,6 +64,9 @@ const Navigator = () => {
         if(pathname.match(patternPulsaPayment)){
             return true
         }
+        else if(isRenderDetailPayment){
+            setIsRenderDetailPayment(false)
+        }
         return false
     }
 
@@ -57,7 +77,7 @@ const Navigator = () => {
     return (
         <>
             {
-                isRenderDetailCheckout || isRenderDetailPayment ? dataBeliPulsa.paymentMethod? <BlackScreen/>: null : null
+                isRenderDetailCheckout || isRenderDetailPayment ? serviceState.paymentMethod? <BlackScreen/>: null : null
             }
             <Box
                 position="fixed"
@@ -79,8 +99,17 @@ const Navigator = () => {
                 flexWrap="wrap"
             >
                 {
-                    isRenderDetailCheckout?dataBeliPulsa.paymentMethod?
-                    <PopUp setIsRenderDetail={setIsRenderDetailCheckout} title={"Konfirmasi Pembayaran"}/>
+                    isRenderDetailCheckout?serviceState.paymentMethod?
+                    <PopUp
+                        setIsRenderPopUp={setIsRenderDetailCheckout}
+                        title={"Konfirmasi Pembayaran"}
+                        render={
+                            <>
+                                <DetailPayment  detailPayment={detailServiceState}/>
+                                <InfoConFirmPayment serviceState={serviceState}/>
+                            </>
+                        }
+                    />
                     :
                     <Alert status="error" className="my-text" fontSize="xs" borderRadius="lg" variant="solid" padding="2" my="4">
                         <AlertIcon />
@@ -89,7 +118,11 @@ const Navigator = () => {
                 }
                 {
                     isRenderDetailPayment?
-                    <PopUp setIsRenderDetail={setIsRenderDetailPayment} title={"Detail Pembayaran"}/>: null
+                    <PopUp
+                        setIsRenderPopUp={setIsRenderDetailPayment}
+                        title={"Detail Pembayaran"}
+                        render={<DetailPayment  detailPayment={detailServiceState}/>}
+                    />: null
                 }
                 {
                     isCheckout ? (
