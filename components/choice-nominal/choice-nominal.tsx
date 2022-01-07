@@ -7,7 +7,7 @@ export type DataNominal = {
 }
 
 export type ListDataNominal = {
-    logo:string
+    logo?:string
     data: DataNominal[]
 }
 

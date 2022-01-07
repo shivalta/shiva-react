@@ -19,15 +19,6 @@ export type BeliPulsa = {
     }
 }
 
-type BackNavEffects = {
-    effects:()=>void
-}
-
-export const backNavEffects: RecoilState<BackNavEffects> = atom({
-    key: "back-nav-effect",
-    default: {effects:()=>{console.log("HALO")}}
-})
-
 export const beliPulsa: RecoilState<BeliPulsa> = atom({
     key:"beli-pulsa",
     default: {}

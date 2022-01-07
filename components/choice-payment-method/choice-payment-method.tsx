@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { Flex, Text, RadioGroup, Box, Radio, Divider } from "@chakra-ui/react"
 import Image from "next/image"
-import { BeliPulsa } from "../global-state/globalState"
+import { BeliPulsa } from "../global-state/pulsa"
 import { Fragment } from "react"
 
 type PaymentMethod = {
