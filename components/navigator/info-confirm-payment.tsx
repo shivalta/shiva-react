@@ -15,7 +15,7 @@ const InfoConFirmPayment = <T extends BeliPulsa>(props:PropsInfoConfirmPayment<T
     return(
         <>
             <Flex width="full" alignItems="center" py="4">
-                {/* <Image width={80} height={30} src={serviceState.paymentMethod?.logo} alt={serviceState.paymentMethod?.name}/> */}
+                <Image width={80} height={30} src={serviceState.paymentMethod?.logo} alt={serviceState.paymentMethod?.name}/>
                 <Text as="h3" px="4" className="my-text" fontWeight="bold" fontSize="sm">
                     {serviceState.paymentMethod?.name}
                 </Text>
