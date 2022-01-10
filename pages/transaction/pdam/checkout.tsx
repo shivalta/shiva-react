@@ -1,29 +1,30 @@
-import { beliPulsa } from "../../../components/global-state/pulsa"
+import { beliPDAM } from "../../../components/global-state/pdam"
 import Service from "../../../components/service/service"
 import { Text } from "@chakra-ui/react"
 import DetailPayment from "../../../components/detail-payment/detail-payment"
 import { useRecoilState, useRecoilValue } from "recoil"
-import { getDetailBeliPulsa } from "../../../components/global-state/pulsa"
+import { getDetailBeliPDAM } from "../../../components/global-state/pdam"
 import ChoicePaymentMethod from "../../../components/choice-payment-method/choice-payment-method"
 import { backNavEffects } from "../../../components/global-state/back-nav-effects"
 import { useSetRecoilState } from "recoil"
+import { useEffect } from "react"
 import logoMandiri from "../../../public/images/mandiri-2.png"
 import logoBCA from "../../../public/images/bca-2.png"
-import { useEffect } from "react"
+
 
 const Checkout = () => {
 
-    const [dataBeliPulsa, setDataBeliPulsa] = useRecoilState(beliPulsa)
-    const detailBeliPulsa = useRecoilValue(getDetailBeliPulsa)
+    const [dataBeliPDAM, setDataBeliPDAM] = useRecoilState(beliPDAM)
+    const detailBeliPDAM = useRecoilValue(getDetailBeliPDAM)
     const setBackNavEffects = useSetRecoilState(backNavEffects)
 
     useEffect(()=>{
         setBackNavEffects({
             effects:()=>{
-                setDataBeliPulsa({
-                    ...dataBeliPulsa,
+                setDataBeliPDAM({
+                    ...dataBeliPDAM,
                     nameProduct:"",
-                    price:0,
+                    bill:0,
                     adminFee:0,
                     total:0,
                     paymentMethod:undefined
@@ -47,15 +48,15 @@ const Checkout = () => {
 
     return(
         <>
-            <Service setting={{my:"8"}} title="pulsa"/>
+            <Service setting={{my:"8"}} title="pdam"/>
             <Text as="h3" className="my-text" color="base" fontWeight="bold" mt="8">
                 Detail Pembayaran
             </Text>
-            <DetailPayment  detailPayment={detailBeliPulsa}/>
+            <DetailPayment  detailPayment={detailBeliPDAM}/>
             <ChoicePaymentMethod
                 listPaymentMethod={listPaymentMethod}
-                setterServiceState={setDataBeliPulsa}
-                serviceState={dataBeliPulsa}
+                setterServiceState={setDataBeliPDAM}
+                serviceState={dataBeliPDAM}
             />
         </>
     )

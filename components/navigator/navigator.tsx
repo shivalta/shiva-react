@@ -5,27 +5,50 @@ import { useRouter } from "next/router"
 import { rupiahFormatter } from "../../helper/rupiah-formatter"
 import { useState } from "react"
 import BlackScreen from "./black-screen"
-import { useRecoilValue } from "recoil"
-import { BeliPulsa, beliPulsa, getDetailBeliPulsa } from "../global-state/globalState"
+import { useRecoilValue, useRecoilState, SetterOrUpdater } from "recoil"
+import { BeliPulsa, beliPulsa, getDetailBeliPulsa } from "../global-state/pulsa"
+import { BeliToken, beliToken, getDetailBeliToken } from "../global-state/token"
+import { BeliPDAM, beliPDAM, getDetailBeliPDAM } from "../global-state/pdam"
 import PopUp from "./pop-up"
 import { RecordDetailPayment } from "../detail-payment/detail-payment"
 import DetailPayment from "../detail-payment/detail-payment"
 import InfoConFirmPayment from "./info-confirm-payment"
 
-const patternPulsaCheckout = /\/transaction\/pulsa\/checkout/
-const patternPulsaPayment = /\/transaction\/pulsa\/payment/
+const patternCheckout = /\/transaction\/+[a-zA-Z]+\/checkout/
+const patternPayment = /\/transaction\/+[a-zA-Z]+\/payment/
 
-const useServiceData = (): [BeliPulsa, RecordDetailPayment[]] => {
+const useServiceData = (): [BeliPulsa | BeliToken, SetterOrUpdater<BeliPulsa | BeliToken | BeliPDAM>, RecordDetailPayment[], string] => {
     const router = useRouter()
     const {asPath:pathname} = router
-    const dataBeliPulsa = useRecoilValue(beliPulsa)
+    const [dataBeliPulsa, setDataBeliPulsa] = useRecoilState(beliPulsa)
+    const [dataBeliToken, setDataBeliToken] = useRecoilState(beliToken)
+    const [dataBeliPDAM, setDataBeliPDAM] = useRecoilState(beliPDAM)
     const detailBeliPulsa = useRecoilValue(getDetailBeliPulsa)
+    const detailBeliToken = useRecoilValue(getDetailBeliToken)
+    const detailBeliPDAM = useRecoilValue(getDetailBeliPDAM)
 
-    if(pathname.match(patternPulsaCheckout) || pathname.match(patternPulsaPayment)){
-        return [dataBeliPulsa, detailBeliPulsa]
+    let matchedPath : RegExpMatchArray | null = null
+    let currentService = ""
+    if(pathname.match(patternCheckout)){
+        matchedPath = pathname.match(patternCheckout)
+        currentService = matchedPath? matchedPath[0].split("/")[2] : ""
+    }
+    else if(pathname.match(patternPayment)){
+        matchedPath = pathname.match(patternPayment)
+        currentService = matchedPath? matchedPath[0].split("/")[2] : ""
     }
 
-    return [dataBeliPulsa, detailBeliPulsa]
+    if(currentService === "pulsa"){
+        return [dataBeliPulsa, setDataBeliPulsa, detailBeliPulsa, currentService]
+    }
+    else if(currentService === "token"){
+        return [dataBeliToken, setDataBeliToken, detailBeliToken, currentService]
+    }
+    else if(currentService === "pdam"){
+        return [dataBeliPDAM, setDataBeliPDAM, detailBeliPDAM, currentService]
+    }
+
+    return [dataBeliPulsa, setDataBeliPulsa, detailBeliPulsa, currentService]
 }
 
 const Navigator = () => {
@@ -33,7 +56,7 @@ const Navigator = () => {
     const {asPath:pathname} = router
     const [isRenderDetailCheckout, setIsRenderDetailCheckout] = useState(false)
     const [isRenderDetailPayment, setIsRenderDetailPayment] = useState(false)
-    const [serviceState, detailServiceState] = useServiceData()
+    const [serviceState, setterServiceState, detailServiceState, currentService] = useServiceData()
     const patternHistory = /\/history-transaction/
     const patternProfile = /\/profile/
 
@@ -51,7 +74,7 @@ const Navigator = () => {
 
 
     const getIsCheckout = (): string => {
-        if(pathname.match(patternPulsaCheckout)){
+        if(pathname.match(patternCheckout)){
             return serviceState.total? rupiahFormatter(serviceState.total, "Rp.") : ""
         }
         else if(isRenderDetailCheckout){
@@ -61,7 +84,7 @@ const Navigator = () => {
     }
 
     const getIsPayment = (): boolean => {
-        if(pathname.match(patternPulsaPayment)){
+        if(pathname.match(patternPayment)){
             return true
         }
         else if(isRenderDetailPayment){
@@ -136,17 +159,17 @@ const Navigator = () => {
                     ): null
                 }
                 <Link href="/" passHref>
-                    <Box as="a" px="2">
+                    <Box as="a" px="2" onClick={()=>setterServiceState({})} >
                         <Icon as={MdHome} color={activeNav==="home" ? "base" : "gray.300"} h={10} width={10} />
                     </Box>
                 </Link>
                 <Link href="/history-transaction" passHref>
-                    <Box as="a" px="2">
+                    <Box as="a" px="2" onClick={()=>setterServiceState({})}>
                         <Icon as={MdArticle} color={activeNav==="history" ? "base" : "gray.300"} h={10} width={10} />
                     </Box>
                 </Link>
                 <Link href="/profile" passHref>
-                    <Box as="a" px="2">
+                    <Box as="a" px="2" onClick={()=>setterServiceState({})}>
                         <Icon as={MdAccountBox} color={activeNav==="profile" ? "base" : "gray.300"} h={10} width={10} />
                     </Box>
                 </Link>
@@ -162,7 +185,7 @@ const Navigator = () => {
                             _hover={{bg:"base"}}
                             onClick={()=>{
                                 if(isRenderDetailCheckout){
-                                    router.push("/transaction/pulsa/payment")
+                                    router.push(`/transaction/${currentService}/payment`)
                                 }else{
                                     setIsRenderDetailCheckout(true)
                                 }
@@ -183,6 +206,7 @@ const Navigator = () => {
                             flexGrow="1"
                             _hover={{bg:"base"}}
                             onClick={()=>{
+                                // setterServiceState({})
                                 setIsRenderDetailPayment(true)
                             }}
                             ml="2"

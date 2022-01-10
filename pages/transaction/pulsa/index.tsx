@@ -1,7 +1,8 @@
 import Service from '../../../components/service/service'
 import { Input, FormControl, FormLabel, FormErrorMessage } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
-import { beliPulsa, backNavEffects } from '../../../components/global-state/globalState'
+import { beliPulsa } from '../../../components/global-state/pulsa'
+import { backNavEffects } from '../../../components/global-state/back-nav-effects'
 import { useRecoilState, useSetRecoilState } from 'recoil'
 import { useRouter } from 'next/router'
 import { useFormik } from 'formik';
@@ -10,7 +11,7 @@ import ChoiceNominal from '../../../components/choice-nominal/choice-nominal'
 import { DataNominal,  ListDataNominal} from '../../../components/choice-nominal/choice-nominal'
 import Image from 'next/image'
 
-const dataProvider = {
+const listNominalPulsa = {
     telkomsel:{
         logo: "/../public/images/telkomsel.png",
         data: [
@@ -53,37 +54,35 @@ const dataProvider = {
     }
 }
 
-const Products = () => {
+const Index = () => {
 
     const router = useRouter()
     const [dataBeliPulsa, setDataBeliPulsa] = useRecoilState(beliPulsa)
-    const [dataPulsa, setDataPulsa] = useState<ListDataNominal | undefined>(undefined)
+    const [dataNominalPulsa, setDataNominalPulsa] = useState<ListDataNominal | undefined>(undefined)
     const setBackNavEffects = useSetRecoilState(backNavEffects)
     const formik = useFormik({
         initialValues: {
-            handphone:dataBeliPulsa.noHandphone
+            handphone:dataBeliPulsa.noHandphone? dataBeliPulsa.noHandphone : ""
         },
         validationSchema: Yup.object({
             handphone: Yup.string()
               .min(10, 'isi no handphone minimal 10 karakter ya')
               .required('isi no handphone dulu ya')
         }),
-        onSubmit:(values:any) => {
-            console.log(values)
-        }
+        onSubmit:(values:any) => {}
     })
 
     const handphoneValue = formik.values.handphone
 
     const setListNominal = (handphone:string="") => {
         if(handphone.match(/0822/)){
-            setDataPulsa(dataProvider.telkomsel)
+            setDataNominalPulsa(listNominalPulsa.telkomsel)
         }
         else if(handphone.match(/0815/)){
-            setDataPulsa(dataProvider.indosat)
+            setDataNominalPulsa(listNominalPulsa.indosat)
         }
         else{
-            setDataPulsa(undefined)
+            setDataNominalPulsa(undefined)
         }
     }
 
@@ -123,23 +122,23 @@ const Products = () => {
 
     return (
         <>
-            <Service my="8"/>
+            <Service setting={{my:"8"}} title="pulsa"/>
             <FormControl isInvalid={formik.errors.handphone && formik.touched.handphone ? true : false}>
                 <FormLabel htmlFor="handphone" textColor="base">No Handphone</FormLabel>
                 <Input
                     type="tel" onChange={handleChange} onBlur={formik.handleBlur} id="handphone" variant='outline'
-                    placeholder='08xx' shadow="base" size="lg" value={handphoneValue}
+                    placeholder='08xx' shadow="base" size="lg" value={handphoneValue} name="handphone"
                 />
                 {
                     <FormErrorMessage>{formik.errors.handphone}</FormErrorMessage>
                 }
                 {
-                    dataPulsa ? (
+                    dataNominalPulsa ? (
                         <ChoiceNominal
                             title="Nominal Pulsa"
-                            dataNominal={dataPulsa.data}
+                            dataNominal={dataNominalPulsa.data}
                             handleClickNominal={handleClickNominal}
-                            render={()=><Image src={dataPulsa.logo} width={140} height={80} alt="logo provider"/>}
+                            render={()=><Image src={dataNominalPulsa.logo!} width={140} height={80} alt="logo provider"/>}
                         />
                     ) : null
                 }
@@ -148,4 +147,4 @@ const Products = () => {
     )
 }
 
-export default Products
+export default Index

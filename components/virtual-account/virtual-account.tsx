@@ -2,13 +2,14 @@ import { Box, Divider, Flex, Icon, Spacer, Text} from "@chakra-ui/react"
 import { MdOutlineFileCopy } from "react-icons/md"
 import Image from "next/image"
 import { rupiahFormatter } from "../../helper/rupiah-formatter"
-import { BeliPulsa } from "../global-state/globalState"
+import { BeliPulsa } from "../global-state/pulsa"
+import { BeliToken } from "../global-state/token"
 
-type PropsVirtualAccount = {
-    serviceState: BeliPulsa
+type PropsVirtualAccount<T> = {
+    serviceState: T
 }
 
-const VirtualAccount = (props:PropsVirtualAccount) => {
+const VirtualAccount = <T extends BeliPulsa | BeliToken>(props:PropsVirtualAccount<T>) => {
 
     const {serviceState} = props
 

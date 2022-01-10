@@ -1,27 +1,27 @@
-import { beliPulsa } from "../../../components/global-state/pulsa"
+import { beliToken } from "../../../components/global-state/token"
 import Service from "../../../components/service/service"
 import { Text } from "@chakra-ui/react"
 import DetailPayment from "../../../components/detail-payment/detail-payment"
 import { useRecoilState, useRecoilValue } from "recoil"
-import { getDetailBeliPulsa } from "../../../components/global-state/pulsa"
+import { getDetailBeliToken } from "../../../components/global-state/token"
 import ChoicePaymentMethod from "../../../components/choice-payment-method/choice-payment-method"
 import { backNavEffects } from "../../../components/global-state/back-nav-effects"
 import { useSetRecoilState } from "recoil"
+import { useEffect } from "react"
 import logoMandiri from "../../../public/images/mandiri-2.png"
 import logoBCA from "../../../public/images/bca-2.png"
-import { useEffect } from "react"
 
 const Checkout = () => {
 
-    const [dataBeliPulsa, setDataBeliPulsa] = useRecoilState(beliPulsa)
-    const detailBeliPulsa = useRecoilValue(getDetailBeliPulsa)
+    const [dataBeliToken, setDataBeliToken] = useRecoilState(beliToken)
+    const detailBeliToken = useRecoilValue(getDetailBeliToken)
     const setBackNavEffects = useSetRecoilState(backNavEffects)
 
     useEffect(()=>{
         setBackNavEffects({
             effects:()=>{
-                setDataBeliPulsa({
-                    ...dataBeliPulsa,
+                setDataBeliToken({
+                    ...dataBeliToken,
                     nameProduct:"",
                     price:0,
                     adminFee:0,
@@ -47,15 +47,15 @@ const Checkout = () => {
 
     return(
         <>
-            <Service setting={{my:"8"}} title="pulsa"/>
+            <Service setting={{my:"8"}} title="token"/>
             <Text as="h3" className="my-text" color="base" fontWeight="bold" mt="8">
                 Detail Pembayaran
             </Text>
-            <DetailPayment  detailPayment={detailBeliPulsa}/>
+            <DetailPayment  detailPayment={detailBeliToken}/>
             <ChoicePaymentMethod
                 listPaymentMethod={listPaymentMethod}
-                setterServiceState={setDataBeliPulsa}
-                serviceState={dataBeliPulsa}
+                setterServiceState={setDataBeliToken}
+                serviceState={dataBeliToken}
             />
         </>
     )

@@ -1,12 +1,12 @@
 import VirtualAccount from "../../../components/virtual-account/virtual-account"
-import { beliPulsa } from "../../../components/global-state/pulsa"
+import { beliPDAM } from "../../../components/global-state/pdam"
 import { backNavEffects } from "../../../components/global-state/back-nav-effects"
 import { useRecoilValue, useSetRecoilState } from "recoil"
 import { useEffect } from "react"
 
 const Payment = () => {
 
-    const dataBeliPulsa = useRecoilValue(beliPulsa)
+    const dataBeliPDAM = useRecoilValue(beliPDAM)
     const setBackNavEffects = useSetRecoilState(backNavEffects)
 
     useEffect(()=>{
@@ -16,7 +16,7 @@ const Payment = () => {
     })
 
     return(
-        <VirtualAccount serviceState={dataBeliPulsa}/>
+        <VirtualAccount serviceState={dataBeliPDAM}/>
     )
 
 }

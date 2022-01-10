@@ -36,9 +36,9 @@ const Home: NextPage = () => {
                 Masuk
         </Button>
         <SimpleGrid columns={3} spacing={5} my="8" px="8">
-            <Service/>
-            <Service/>
-            <Service/>
+            <Service title="pulsa" href="/transaction/pulsa" />
+            <Service title="token" href="/transaction/token"/>
+            <Service title="PDAM" href="/transaction/pdam"/>
         </SimpleGrid>
     </>
   )
