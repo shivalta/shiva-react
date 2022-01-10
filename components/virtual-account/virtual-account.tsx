@@ -1,6 +1,4 @@
 import { Box, Divider, Flex, Icon, Spacer, Text} from "@chakra-ui/react"
-import { useRecoilValue } from "recoil"
-import { beliPulsa } from "../global-state/globalState"
 import { MdOutlineFileCopy } from "react-icons/md"
 import Image from "next/image"
 import { rupiahFormatter } from "../../helper/rupiah-formatter"

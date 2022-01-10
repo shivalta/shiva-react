@@ -12,7 +12,7 @@ export type PropsDetailPayment = {
 
 const DetailPayment = ({detailPayment}:PropsDetailPayment)=> {
     return(
-        <Box shadow="base" p="4" borderRadius="lg" my="2" width="full">
+        <Box shadow="base" p="4" borderRadius="lg" my="5" width="full">
             {
                 detailPayment.map((data:RecordDetailPayment)=>{
                     if(data.name !== "Total pembayaran"){

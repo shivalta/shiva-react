@@ -19,13 +19,13 @@ const HomeSlider = () => {
         <Box width="full" my="5">
             <Slider {...settings}>
                 <Box height="48" borderRadius="lg" overflow="hidden">
-                    <Image src="https://d3p235fl1l9i1u.cloudfront.net/img/banner/1c2395608c1e3ef19880e7dc70bb5d5f.jfif-tbnl"/>
+                    <Image src="https://d3p235fl1l9i1u.cloudfront.net/img/banner/1c2395608c1e3ef19880e7dc70bb5d5f.jfif-tbnl" alt="coba"/>
                 </Box>
                 <Box height="48" borderRadius="lg" overflow="hidden">
-                    <Image src="https://d3p235fl1l9i1u.cloudfront.net/img/banner/1c2395608c1e3ef19880e7dc70bb5d5f.jfif-tbnl"/>
+                    <Image src="https://d3p235fl1l9i1u.cloudfront.net/img/banner/1c2395608c1e3ef19880e7dc70bb5d5f.jfif-tbnl" alt="coba"/>
                 </Box>
                 <Box height="48" borderRadius="lg" overflow="hidden">
-                    <Image src="https://d3p235fl1l9i1u.cloudfront.net/img/banner/1c2395608c1e3ef19880e7dc70bb5d5f.jfif-tbnl"/>
+                    <Image src="https://d3p235fl1l9i1u.cloudfront.net/img/banner/1c2395608c1e3ef19880e7dc70bb5d5f.jfif-tbnl" alt="coba"/>
                 </Box>
             </Slider>
         </Box>
