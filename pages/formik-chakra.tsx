@@ -16,7 +16,7 @@ const FormikChakra = () => {
                 handphone:""
             }}
             onSubmit={(values, actions) => {
-                console.log(values)
+                (values)
                 console.log(actions)
             }}
             validationSchema={schema}

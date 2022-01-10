@@ -20,7 +20,7 @@ const VirtualAccount = <T extends BeliPulsa | BeliToken>(props:PropsVirtualAccou
             </Text>
             <Divider my="4"/>
             <Flex justifyContent="space-between">
-                {/* <Image width={80} height={30} src={serviceState.paymentMethod?.logo} alt={serviceState.paymentMethod?.name}/> */}
+                <Image width={80} height={30} src={serviceState.paymentMethod?.logo} alt={serviceState.paymentMethod?.name}/>
                 <Text fontWeight="bold" className="my-text" fontSize="sm">{serviceState.paymentMethod?.name}</Text>
             </Flex>
             <Text as="h3" className="my-text" color="base" fontSize="sm" fontWeight="bold" mt="4" mb="2">Nomor Virtual Account</Text>

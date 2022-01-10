@@ -8,6 +8,7 @@ import BlackScreen from "./black-screen"
 import { useRecoilValue, useRecoilState, SetterOrUpdater } from "recoil"
 import { BeliPulsa, beliPulsa, getDetailBeliPulsa } from "../global-state/pulsa"
 import { BeliToken, beliToken, getDetailBeliToken } from "../global-state/token"
+import { BeliPDAM, beliPDAM, getDetailBeliPDAM } from "../global-state/pdam"
 import PopUp from "./pop-up"
 import { RecordDetailPayment } from "../detail-payment/detail-payment"
 import DetailPayment from "../detail-payment/detail-payment"
@@ -16,13 +17,15 @@ import InfoConFirmPayment from "./info-confirm-payment"
 const patternCheckout = /\/transaction\/+[a-zA-Z]+\/checkout/
 const patternPayment = /\/transaction\/+[a-zA-Z]+\/payment/
 
-const useServiceData = (): [BeliPulsa | BeliToken, SetterOrUpdater<BeliPulsa | BeliToken>, RecordDetailPayment[], string] => {
+const useServiceData = (): [BeliPulsa | BeliToken, SetterOrUpdater<BeliPulsa | BeliToken | BeliPDAM>, RecordDetailPayment[], string] => {
     const router = useRouter()
     const {asPath:pathname} = router
     const [dataBeliPulsa, setDataBeliPulsa] = useRecoilState(beliPulsa)
     const [dataBeliToken, setDataBeliToken] = useRecoilState(beliToken)
+    const [dataBeliPDAM, setDataBeliPDAM] = useRecoilState(beliPDAM)
     const detailBeliPulsa = useRecoilValue(getDetailBeliPulsa)
     const detailBeliToken = useRecoilValue(getDetailBeliToken)
+    const detailBeliPDAM = useRecoilValue(getDetailBeliPDAM)
 
     let matchedPath : RegExpMatchArray | null = null
     let currentService = ""
@@ -41,6 +44,9 @@ const useServiceData = (): [BeliPulsa | BeliToken, SetterOrUpdater<BeliPulsa | B
     else if(currentService === "token"){
         return [dataBeliToken, setDataBeliToken, detailBeliToken, currentService]
     }
+    else if(currentService === "pdam"){
+        return [dataBeliPDAM, setDataBeliPDAM, detailBeliPDAM, currentService]
+    }
 
     return [dataBeliPulsa, setDataBeliPulsa, detailBeliPulsa, currentService]
 }
@@ -51,7 +57,6 @@ const Navigator = () => {
     const [isRenderDetailCheckout, setIsRenderDetailCheckout] = useState(false)
     const [isRenderDetailPayment, setIsRenderDetailPayment] = useState(false)
     const [serviceState, setterServiceState, detailServiceState, currentService] = useServiceData()
-    console.log(detailServiceState)
     const patternHistory = /\/history-transaction/
     const patternProfile = /\/profile/
 
