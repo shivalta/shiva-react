@@ -8,6 +8,7 @@ import { useRouter } from 'next/router'
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import ChoiceNominal from '../../../components/choice-nominal/choice-nominal'
+import { UserLayout } from "../../_app"
 import { DataNominal,  ListDataNominal} from '../../../components/choice-nominal/choice-nominal'
 
 const listNominalToken = {
@@ -122,3 +123,5 @@ const Index = () => {
 }
 
 export default Index
+
+Index.getLayout = UserLayout

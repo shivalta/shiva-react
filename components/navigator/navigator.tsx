@@ -13,6 +13,7 @@ import PopUp from "./pop-up"
 import { RecordDetailPayment } from "../detail-payment/detail-payment"
 import DetailPayment from "../detail-payment/detail-payment"
 import InfoConFirmPayment from "./info-confirm-payment"
+import { user } from "../global-state/user"
 
 const patternCheckout = /\/transaction\/+[a-zA-Z]+\/checkout/
 const patternPayment = /\/transaction\/+[a-zA-Z]+\/payment/
@@ -57,6 +58,7 @@ const Navigator = () => {
     const [isRenderDetailCheckout, setIsRenderDetailCheckout] = useState(false)
     const [isRenderDetailPayment, setIsRenderDetailPayment] = useState(false)
     const [serviceState, setterServiceState, detailServiceState, currentService] = useServiceData()
+    const [userState, setUserState] = useRecoilState(user)
     const patternHistory = /\/history-transaction/
     const patternProfile = /\/profile/
 
@@ -185,7 +187,16 @@ const Navigator = () => {
                             _hover={{bg:"base"}}
                             onClick={()=>{
                                 if(isRenderDetailCheckout){
-                                    router.push(`/transaction/${currentService}/payment`)
+                                    if(userState.valid){
+                                        router.push(`/transaction/${currentService}/payment`)
+                                    }
+                                    else{
+                                        setUserState({
+                                            ...userState,
+                                            afterLogin:pathname
+                                        })
+                                        router.push("/login")
+                                    }
                                 }else{
                                     setIsRenderDetailCheckout(true)
                                 }
@@ -206,7 +217,6 @@ const Navigator = () => {
                             flexGrow="1"
                             _hover={{bg:"base"}}
                             onClick={()=>{
-                                // setterServiceState({})
                                 setIsRenderDetailPayment(true)
                             }}
                             ml="2"

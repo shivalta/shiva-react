@@ -2,6 +2,7 @@ import VirtualAccount from "../../../components/virtual-account/virtual-account"
 import { beliPDAM } from "../../../components/global-state/pdam"
 import { backNavEffects } from "../../../components/global-state/back-nav-effects"
 import { useRecoilValue, useSetRecoilState } from "recoil"
+import { UserLayout } from "../../_app"
 import { useEffect } from "react"
 
 const Payment = () => {
@@ -22,3 +23,5 @@ const Payment = () => {
 }
 
 export default Payment
+
+Payment.getLayout = UserLayout

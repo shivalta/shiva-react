@@ -1,3 +1,5 @@
+import { UserLayout } from "./_app"
+
 const HistoryTransaction = () => {
     return(
         <h1>HISTORY</h1>
@@ -5,3 +7,5 @@ const HistoryTransaction = () => {
 }
 
 export default HistoryTransaction
+
+HistoryTransaction.getLayout = UserLayout

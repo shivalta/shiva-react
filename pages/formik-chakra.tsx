@@ -1,6 +1,7 @@
 import { useFormik ,Field, Formik, FieldProps } from "formik"
 import * as Yup from "yup"
 import { Input, FormControl, FormLabel, FormErrorMessage, Divider } from "@chakra-ui/react"
+import { ReactElement } from "react"
 
 const FormikChakra = () => {
 
@@ -72,6 +73,15 @@ const FormikChakraHooks = () => {
         </form>
     )
 
+}
+
+FormikChakraHooks.getLayout = function getLayout(page: ReactElement) {
+    return(
+        <>
+            <div>JANCOK KOWE</div>
+            {page}
+        </>
+    )
 }
 
 export default FormikChakraHooks

@@ -7,6 +7,7 @@ import { getDetailBeliPulsa } from "../../../components/global-state/pulsa"
 import ChoicePaymentMethod from "../../../components/choice-payment-method/choice-payment-method"
 import { backNavEffects } from "../../../components/global-state/back-nav-effects"
 import { useSetRecoilState } from "recoil"
+import { UserLayout } from "../../_app"
 import logoMandiri from "../../../public/images/mandiri-2.png"
 import logoBCA from "../../../public/images/bca-2.png"
 import { useEffect } from "react"
@@ -62,3 +63,5 @@ const Checkout = () => {
 }
 
 export default Checkout
+
+Checkout.getLayout = UserLayout

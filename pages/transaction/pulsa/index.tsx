@@ -9,6 +9,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import ChoiceNominal from '../../../components/choice-nominal/choice-nominal'
 import { DataNominal,  ListDataNominal} from '../../../components/choice-nominal/choice-nominal'
+import { UserLayout } from "../../_app"
 import Image from 'next/image'
 
 const listNominalPulsa = {
@@ -69,7 +70,7 @@ const Index = () => {
               .min(10, 'isi no handphone minimal 10 karakter ya')
               .required('isi no handphone dulu ya')
         }),
-        onSubmit:(values:any) => {}
+        onSubmit:(values) => {}
     })
 
     const handphoneValue = formik.values.handphone
@@ -148,3 +149,5 @@ const Index = () => {
 }
 
 export default Index
+
+Index.getLayout = UserLayout
