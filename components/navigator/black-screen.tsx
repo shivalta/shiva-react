@@ -1,8 +1,13 @@
-import { Box } from "@chakra-ui/react"
-import { useEffect } from "react"
+import { Box, Text } from "@chakra-ui/react"
+import React, { useEffect } from "react"
 
-const BlackScreen = () => {
+type PropsBlackScreen = {
+    child?: React.ReactNode
+}
 
+const BlackScreen = (props:PropsBlackScreen) => {
+
+    const { child } = props
     document.body.style.overflow = "hidden"
 
     useEffect(()=>{
@@ -21,7 +26,12 @@ const BlackScreen = () => {
             background="blackAlpha.600"
             maxWidth="480px"
             width="100%"
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            px="5"
         >
+            {child || null}
         </Box>
     )
 }

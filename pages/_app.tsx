@@ -8,6 +8,7 @@ import Image from 'next/image'
 import { NextPage } from 'next'
 import React, { ReactElement, ReactNode } from 'react'
 import shivaLogo from '../public/images/shiva.png'
+import NewNavigator from '../components/navigator/new-navigator'
 
 export type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode
@@ -50,6 +51,44 @@ export const UserLayout = (page: ReactElement) => {
         <BackNav/>
         {page}
         <Navigator/>
+      </Box>
+    </Flex>
+  )
+}
+
+export const NewUserLayout = (page: ReactElement) => {
+  return(
+    <Flex
+      alignItems="center"
+      flexDirection="column"
+      width="full"
+      bg="blue.100"
+    >
+    <Box
+      maxWidth="480px"
+      width="full"
+      minHeight='100vh'
+      bg='white'
+      p='6'
+      pb="36"
+      >
+        <Flex>
+          <Box height="8" width="8" position="relative" borderRadius="md" overflow="hidden" mr="2">
+            <Image src={shivaLogo} alt="shiva-logo" layout="fill" />
+          </Box>
+          <Text
+              as="h1"
+              fontSize="xl"
+              color="base"
+              className="my-text-2"
+              fontWeight="bold"
+          >
+              SHIVA
+          </Text>
+        </Flex>
+        <BackNav/>
+        {page}
+        <NewNavigator/>
       </Box>
     </Flex>
   )

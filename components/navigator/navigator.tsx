@@ -18,7 +18,7 @@ import { user } from "../global-state/user"
 const patternCheckout = /\/transaction\/+[a-zA-Z]+\/checkout/
 const patternPayment = /\/transaction\/+[a-zA-Z]+\/payment/
 
-const useServiceData = (): [BeliPulsa | BeliToken, SetterOrUpdater<BeliPulsa | BeliToken | BeliPDAM>, RecordDetailPayment[], string] => {
+const useServiceData = (): [BeliPulsa | BeliToken | BeliPDAM, SetterOrUpdater<BeliPulsa | BeliToken | BeliPDAM>, RecordDetailPayment[], string] => {
     const router = useRouter()
     const {asPath:pathname} = router
     const [dataBeliPulsa, setDataBeliPulsa] = useRecoilState(beliPulsa)

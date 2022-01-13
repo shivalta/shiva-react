@@ -4,13 +4,14 @@ import { Text, FormControl, FormLabel, Input, FormErrorMessage, Button } from "@
 import * as Yup from 'yup';
 import { useRouter } from "next/router"
 import Link from "next/link";
-import { useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { user } from "../components/global-state/user";
 import { useEffect } from "react";
 
 const Login = () => {
 
     const router = useRouter()
+    const [userState, setterUserState] = useRecoilState(user)
     const formik = useFormik({
         initialValues:{
             email:"",
@@ -29,6 +30,10 @@ const Login = () => {
         }),
         onSubmit:(values)=>{
             // hit api for check token validity
+            setterUserState({
+                ...userState,
+                valid:true
+            })
             if(values.afterLogin){
                 router.push(values.afterLogin)
             }else{
@@ -36,8 +41,6 @@ const Login = () => {
             }
         }
     })
-
-    const userState = useRecoilValue(user)
 
     useEffect(()=>{
         formik.setFieldValue("afterLogin", userState.afterLogin)

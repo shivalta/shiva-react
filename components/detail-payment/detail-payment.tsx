@@ -8,11 +8,16 @@ export type RecordDetailPayment = {
 
 export type PropsDetailPayment = {
     detailPayment: RecordDetailPayment[]
+    topChild?: React.ReactNode
+    bottomChild?: React.ReactNode
 }
 
-const DetailPayment = ({detailPayment}:PropsDetailPayment)=> {
+const DetailPayment = ({detailPayment, topChild, bottomChild}:PropsDetailPayment)=> {
     return(
-        <Box shadow="base" p="4" borderRadius="lg" my="5" width="full">
+        <Box background="white" shadow="base" p="4" borderRadius="lg" my="5" width="full">
+            {
+                topChild || null
+            }
             {
                 detailPayment.map((data:RecordDetailPayment)=>{
                     if(data.name !== "Total pembayaran"){
@@ -72,6 +77,9 @@ const DetailPayment = ({detailPayment}:PropsDetailPayment)=> {
                         )
                     }
                 })
+            }
+            {
+                bottomChild || null
             }
         </Box>
     )
