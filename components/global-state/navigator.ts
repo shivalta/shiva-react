@@ -2,8 +2,9 @@ import { atom, RecoilState } from "recoil"
 
 export type Navigator = {
     button?: React.ReactNode
-    isOpenPopUP?: boolean
+    isOpenPopUp?: boolean
     renderPopUp?: React.ReactNode
+    renderContent?: React.ReactNode
 }
 
 export const navigator: RecoilState<Navigator> = atom({

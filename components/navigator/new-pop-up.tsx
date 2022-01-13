@@ -25,7 +25,7 @@ const NewPopUp = (props:PropsPopUp)=> {
                     shadow="base"
                     onClick={()=>setterNavigatorState({
                         ...navigatorState,
-                        isOpenPopUP: !navigatorState.isOpenPopUP
+                        isOpenPopUp: !navigatorState.isOpenPopUp
                     })}
                     p="4"
                     borderRadius="lg"

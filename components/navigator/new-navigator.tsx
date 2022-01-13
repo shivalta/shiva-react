@@ -59,7 +59,10 @@ const NewNavigator = ()=>{
             flexWrap="wrap"
         >
             {
-                navigatorState.isOpenPopUP? navigatorState.renderPopUp || null : null
+                navigatorState.isOpenPopUp? navigatorState.renderPopUp || null : null
+            }
+            {
+                navigatorState.renderContent || null
             }
             <Link href="/" passHref>
                 <Box as="a" px="2" onClick={handleClick} >
