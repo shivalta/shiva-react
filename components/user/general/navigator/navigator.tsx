@@ -2,15 +2,15 @@ import { Box, Icon } from "@chakra-ui/react"
 import Link from "next/link"
 import { MdHome, MdArticle, MdAccountBox } from "react-icons/md"
 import { useRecoilValue, useSetRecoilState } from "recoil"
-import { beliPulsa } from "../global-state/pulsa"
-import { beliToken } from "../global-state/token"
-import { beliPDAM } from "../global-state/pdam"
+import { beliPulsa } from "../../global-state/pulsa"
+import { beliToken } from "../../global-state/token"
+import { beliPDAM } from "../../global-state/pdam"
 import { useRouter } from "next/router"
-import { navigator } from "../global-state/navigator"
+import { navigator } from "../../global-state/navigator"
 
 type ActiveNav = "history" | "profile" | "home"
 
-const NewNavigator = ()=>{
+const Navigator = ()=>{
 
     const navigatorState = useRecoilValue(navigator)
     const setDataBeliPulsa = useSetRecoilState(beliPulsa)
@@ -86,4 +86,4 @@ const NewNavigator = ()=>{
     )
 }
 
-export default NewNavigator
+export default Navigator

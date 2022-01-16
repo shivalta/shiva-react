@@ -1,16 +1,20 @@
 import { UserLayout } from "./_app"
-import DetailPayment from "../components/detail-payment/detail-payment"
-import { Text, Flex, Badge, Divider } from "@chakra-ui/react"
-import BlackScreen from "../components/navigator/black-screen"
-import { useState } from "react"
-import { RecordDetailPayment } from "../components/detail-payment/detail-payment"
-import { BeliPulsa, generateDetailBeliPulsa } from "../components/global-state/pulsa"
-import { BeliToken, generateDetailBeliToken } from "../components/global-state/token"
-import { BeliPDAM, generateDetailBeliPDAM } from "../components/global-state/pdam"
+import DetailTransaction from "../components/user/transaction/detail-transaction/detail-transaction"
+import { Text, Flex, Badge, Box } from "@chakra-ui/react"
+import PopUp from "../components/user/general/navigator/pop-up"
+import { RecordDetailTransaction } from "../components/user/transaction/detail-transaction/detail-transaction"
+import { BeliPulsa, generateDetailBeliPulsa } from "../components/user/global-state/pulsa"
+import { BeliToken, generateDetailBeliToken } from "../components/user/global-state/token"
+import { rupiahFormatter } from "../helper/rupiah-formatter"
+import { blackScreen } from "../components/user/global-state/black-screen"
+import { navigator } from "../components/user/global-state/navigator"
+import { useRecoilState, useSetRecoilState } from "recoil"
+import { useEffect } from "react"
+import { BeliPDAM, generateDetailBeliPDAM } from "../components/user/global-state/pdam"
 
-type DataHistory = (BeliPulsa | BeliToken | BeliPDAM)[]
+type DataHistoryTransaction = (BeliPulsa | BeliToken | BeliPDAM)[]
 
-const dataHistory:DataHistory= [
+const dataHistory:DataHistoryTransaction= [
     {
         id: "1234",
         noHandphone : "1213131",
@@ -18,7 +22,7 @@ const dataHistory:DataHistory= [
         nameProduct : "Telkomsel Rp5.000",
         price : 5000,
         adminFee : 1000,
-        date: "MBOH",
+        date: "2021-06-02",
         status: true,
         total: 6000,
         virtualAccount: "23232323232",
@@ -29,13 +33,13 @@ const dataHistory:DataHistory= [
         }
     },
     {
-        id: "1234",
+        id: "12345",
         noPLN : "1213131",
         nameCategory: "token",
         nameProduct : "Telkomsel Rp5.000",
         price : 5000,
         adminFee : 1000,
-        date: "MBOH",
+        date: "2021-06-02",
         status: true,
         total: 6000,
         virtualAccount: "23232323232",
@@ -49,17 +53,35 @@ const dataHistory:DataHistory= [
 
 const HistoryTransaction = () => {
 
-    const [detailTransaction, setDetailTransaction] = useState<RecordDetailPayment[]>()
+    const [navigatorState, setterNavigatorState] = useRecoilState(navigator)
+    const setIsBlackScreenRender = useSetRecoilState(blackScreen)
+
+    useEffect(()=>{
+        return ()=>{
+            setIsBlackScreenRender({
+                isBlackScreenRender:false
+            })
+            setterNavigatorState({})
+        }
+    },[])
+
+    const handleClick = (detailServiceState:RecordDetailTransaction[])=>{
+        setIsBlackScreenRender({
+            isBlackScreenRender: true
+        })
+        setterNavigatorState({
+            ...navigatorState,
+            isOpenPopUp: true,
+            renderPopUp:
+                <PopUp
+                    title={"Detail Pembayaran"}
+                    render={<DetailTransaction detailTransaction={detailServiceState}/>}
+                />
+        })
+    }
 
     return(
         <>
-            {detailTransaction?
-                <BlackScreen
-                    child={
-                        <DetailPayment detailPayment={detailTransaction}/>
-                    }
-                />
-                : null}
             <Text
                 as="h2"
                 className="my-text-2"
@@ -72,19 +94,27 @@ const HistoryTransaction = () => {
                 Riwayat Transaksi
             </Text>
             {
-                dataHistory.map((history,index)=>{
-                    let detailPayment:RecordDetailPayment[] = []
+                dataHistory.map((history)=>{
+                    let detailTransaction:RecordDetailTransaction[] = []
+                    let generalDetailTransaction:RecordDetailTransaction[] = [
+                        {name:"ID transaksi", value:history.id!},
+                        {name:"Nama produk", value:history.nameProduct!},
+                        {name:"Total pembayaran", value:rupiahFormatter(history.total!, "Rp.")},
+                    ]
                     switch(history.nameCategory){
                         case "pulsa":
-                            detailPayment = generateDetailBeliPulsa(history as BeliPulsa)
+                            detailTransaction = generateDetailBeliPulsa(history as BeliPulsa)
+                            break
                         case "token":
-                            detailPayment = generateDetailBeliToken(history as BeliToken)
+                            detailTransaction = generateDetailBeliToken(history as BeliToken)
+                            break
                         case "pdam":
-                            detailPayment = generateDetailBeliPDAM(history as BeliPDAM)
+                            detailTransaction = generateDetailBeliPDAM(history as BeliPDAM)
+                            break
                     }
                     return(
-                        <DetailPayment
-                            detailPayment={detailPayment} key={history.id}
+                        <DetailTransaction
+                            detailTransaction={generalDetailTransaction} key={history.id}
                             topChild={
                                 <>
                                     <Flex height="10" justifyContent="space-between">
@@ -113,13 +143,17 @@ const HistoryTransaction = () => {
                                             Berhasil
                                         </Badge>
                                     </Flex>
-                                    <Divider my="4"/>
+                                    <Box
+                                        height="0.5"
+                                        width="full"
+                                        background="gray.100"
+                                        borderRadius="base"
+                                        my="4"
+                                    />
                                 </>
                             }
                             bottomChild={
-                                <Text onClick={(e)=>{
-                                    setDetailTransaction(detailPayment)
-                                }} className="my-text" color="base" fontSize="xs" fontWeight="bold" textAlign="right" mt="5">
+                                <Text onClick={()=>handleClick(detailTransaction)} className="my-text" color="base" fontSize="xs" fontWeight="bold" textAlign="right" mt="5">
                                     Detail
                                 </Text>
                             }

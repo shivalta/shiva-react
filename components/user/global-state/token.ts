@@ -1,6 +1,6 @@
 import { atom, selector, RecoilState } from "recoil"
-import { RecordDetailPayment } from "../detail-payment/detail-payment"
-import { rupiahFormatter } from "../../helper/rupiah-formatter"
+import { RecordDetailTransaction } from "../transaction/detail-transaction/detail-transaction"
+import { rupiahFormatter } from "../../../helper/rupiah-formatter"
 
 export type BeliToken = {
     id? : string
@@ -25,8 +25,8 @@ export const beliToken: RecoilState<BeliToken> = atom({
     default: {}
 })
 
-export const generateDetailBeliToken = (dataBeliToken:BeliToken) :RecordDetailPayment[]=> {
-    const detailBeliToken:RecordDetailPayment[] = [
+export const generateDetailBeliToken = (dataBeliToken:BeliToken) :RecordDetailTransaction[]=> {
+    const detailBeliToken:RecordDetailTransaction[] = [
         {
             name:"Nama Produk",
             value:dataBeliToken.nameProduct? dataBeliToken.nameProduct : "-"

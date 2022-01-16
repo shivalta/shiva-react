@@ -1,15 +1,16 @@
 import { Box, Divider, Flex, Icon, Spacer, Text} from "@chakra-ui/react"
 import { MdOutlineFileCopy } from "react-icons/md"
 import Image from "next/image"
-import { rupiahFormatter } from "../../helper/rupiah-formatter"
-import { BeliPulsa } from "../global-state/pulsa"
-import { BeliToken } from "../global-state/token"
+import { rupiahFormatter } from "../../../../helper/rupiah-formatter"
+import { BeliPulsa } from "../../global-state/pulsa"
+import { BeliToken } from "../../global-state/token"
+import { BeliPDAM } from "../../global-state/pdam"
 
 type PropsVirtualAccount<T> = {
     serviceState: T
 }
 
-const VirtualAccount = <T extends BeliPulsa | BeliToken>(props:PropsVirtualAccount<T>) => {
+const VirtualAccount = <T extends BeliPulsa | BeliToken | BeliPDAM>(props:PropsVirtualAccount<T>) => {
 
     const {serviceState} = props
 
@@ -20,7 +21,7 @@ const VirtualAccount = <T extends BeliPulsa | BeliToken>(props:PropsVirtualAccou
             </Text>
             <Divider my="4"/>
             <Flex justifyContent="space-between">
-                <Image width={80} height={30} src={serviceState.paymentMethod?.logo} alt={serviceState.paymentMethod?.name}/>
+                <Image width={80} height={30} src={serviceState.paymentMethod?.logo || ""} alt={serviceState.paymentMethod?.name}/>
                 <Text fontWeight="bold" className="my-text" fontSize="sm">{serviceState.paymentMethod?.name}</Text>
             </Flex>
             <Text as="h3" className="my-text" color="base" fontSize="sm" fontWeight="bold" mt="4" mb="2">Nomor Virtual Account</Text>

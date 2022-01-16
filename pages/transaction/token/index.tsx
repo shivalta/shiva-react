@@ -1,15 +1,15 @@
-import Service from '../../../components/service/service'
+import Service from '../../../components/user/general/service-icon/service-icon'
 import { Input, FormControl, FormLabel, FormErrorMessage } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
-import { beliToken } from '../../../components/global-state/token'
-import { backNavEffects } from '../../../components/global-state/back-nav-effects'
+import { beliToken } from '../../../components/user/global-state/token'
+import { backNavEffects } from '../../../components/user/global-state/back-nav-effects'
 import { useRecoilState, useSetRecoilState } from 'recoil'
 import { useRouter } from 'next/router'
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import ChoiceNominal from '../../../components/choice-nominal/choice-nominal'
+import ChoiceNominal from '../../../components/user/transaction/choice-nominal/choice-nominal'
 import { UserLayout } from "../../_app"
-import { DataNominal,  ListDataNominal} from '../../../components/choice-nominal/choice-nominal'
+import { DataNominal,  ListDataNominal} from '../../../components/user/transaction/choice-nominal/choice-nominal'
 
 const listNominalToken = {
     data:[

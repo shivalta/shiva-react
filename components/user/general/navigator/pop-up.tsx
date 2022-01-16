@@ -1,5 +1,6 @@
-import { useRecoilState } from "recoil"
-import { navigator } from "../global-state/navigator"
+import { useRecoilState, useSetRecoilState } from "recoil"
+import { navigator } from "../../global-state/navigator"
+import { blackScreen } from "../../global-state/black-screen"
 import { Flex, Text, Center } from "@chakra-ui/react"
 
 
@@ -8,10 +9,11 @@ type PropsPopUp = {
     render: React.ReactNode
 }
 
-const NewPopUp = (props:PropsPopUp)=> {
+const PopUp = (props:PropsPopUp)=> {
 
     const {title, render} = props
     const [navigatorState, setterNavigatorState] = useRecoilState(navigator)
+    const setIsBlackScreenRender = useSetRecoilState(blackScreen)
 
     return(
         <>
@@ -23,10 +25,15 @@ const NewPopUp = (props:PropsPopUp)=> {
                     height="5"
                     width="5"
                     shadow="base"
-                    onClick={()=>setterNavigatorState({
-                        ...navigatorState,
-                        isOpenPopUp: !navigatorState.isOpenPopUp
-                    })}
+                    onClick={()=>{
+                        setIsBlackScreenRender({
+                            isBlackScreenRender:false
+                        })
+                        setterNavigatorState({
+                            ...navigatorState,
+                            isOpenPopUp: !navigatorState.isOpenPopUp
+                        })
+                    }}
                     p="4"
                     borderRadius="lg"
                     fontWeight="bold"
@@ -44,4 +51,4 @@ const NewPopUp = (props:PropsPopUp)=> {
     )
 }
 
-export default NewPopUp
+export default PopUp

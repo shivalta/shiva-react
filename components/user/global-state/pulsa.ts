@@ -1,6 +1,6 @@
 import { atom, selector, RecoilState } from "recoil"
-import { RecordDetailPayment } from "../detail-payment/detail-payment"
-import { rupiahFormatter } from "../../helper/rupiah-formatter"
+import { RecordDetailTransaction } from "../transaction/detail-transaction/detail-transaction"
+import { rupiahFormatter } from "../../../helper/rupiah-formatter"
 
 export type BeliPulsa = {
     id? : string
@@ -25,8 +25,8 @@ export const beliPulsa: RecoilState<BeliPulsa> = atom({
     default: {}
 })
 
-export const generateDetailBeliPulsa = (dataBeliPulsa:BeliPulsa):RecordDetailPayment[]=> {
-    const detailBeliPulsa:RecordDetailPayment[] = [
+export const generateDetailBeliPulsa = (dataBeliPulsa:BeliPulsa):RecordDetailTransaction[]=> {
+    const detailBeliPulsa:RecordDetailTransaction[] = [
         {
             name:"Nama Produk",
             value:dataBeliPulsa.nameProduct? dataBeliPulsa.nameProduct : "-"

@@ -1,6 +1,6 @@
 import { atom, selector, RecoilState } from "recoil"
-import { RecordDetailPayment } from "../detail-payment/detail-payment"
-import { rupiahFormatter } from "../../helper/rupiah-formatter"
+import { RecordDetailTransaction } from "../transaction/detail-transaction/detail-transaction"
+import { rupiahFormatter } from "../../../helper/rupiah-formatter"
 
 export type BeliPDAM = {
     id? : string
@@ -26,8 +26,8 @@ export const beliPDAM: RecoilState<BeliPDAM> = atom({
     default: {}
 })
 
-export const generateDetailBeliPDAM = (dataBeliPDAM:BeliPDAM) :RecordDetailPayment[]=> {
-    const detailBeliPDAM:RecordDetailPayment[] = [
+export const generateDetailBeliPDAM = (dataBeliPDAM:BeliPDAM) :RecordDetailTransaction[]=> {
+    const detailBeliPDAM:RecordDetailTransaction[] = [
         {
             name:"Nama Produk",
             value:dataBeliPDAM.nameProduct? dataBeliPDAM.nameProduct : "-"

@@ -1,6 +1,6 @@
 import { Flex,Box,Text } from "@chakra-ui/react"
 import Image from "next/image"
-import pulsaPicture from "../../public/images/phone-call.png"
+import pulsaPicture from "../../../../public/images/phone-call.png"
 import Link from 'next/link'
 import { FlexProps } from '@chakra-ui/react'
 
@@ -10,7 +10,7 @@ type PropsService = {
     href?: string
 }
 
-const Service = (props:PropsService)=> {
+const ServiceIcon = (props:PropsService)=> {
 
     const {setting, title, href} = props
 
@@ -26,4 +26,4 @@ const Service = (props:PropsService)=> {
     )
 }
 
-export default Service
+export default ServiceIcon

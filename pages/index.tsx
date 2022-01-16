@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import { Text, Button, SimpleGrid } from "@chakra-ui/react"
-import Service from "../components/service/service"
-import HomeSlider from "../components/home-slider/homeSlider"
+import Service from "../components/user/general/service-icon/service-icon"
+import HomeSlider from "../components/user/home-slider/home-slider"
 import { UserLayout } from './_app'
 import Link from 'next/link'
 
@@ -39,7 +39,7 @@ const Home = () => {
           </Button>
         </Link>
         <SimpleGrid columns={3} spacing={5} my="8" px="8">
-            <Service title="pulsa" href="/transaction/new-pulsa" />
+            <Service title="pulsa" href="/transaction/pulsa" />
             <Service title="token" href="/transaction/token"/>
             <Service title="pdam" href="/transaction/pdam"/>
         </SimpleGrid>

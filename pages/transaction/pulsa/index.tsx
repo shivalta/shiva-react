@@ -1,14 +1,14 @@
-import Service from '../../../components/service/service'
+import ServiceIcon from '../../../components/user/general/service-icon/service-icon'
 import { Input, FormControl, FormLabel, FormErrorMessage } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
-import { beliPulsa } from '../../../components/global-state/pulsa'
-import { backNavEffects } from '../../../components/global-state/back-nav-effects'
+import { beliPulsa } from '../../../components/user/global-state/pulsa'
+import { backNavEffects } from '../../../components/user/global-state/back-nav-effects'
 import { useRecoilState, useSetRecoilState } from 'recoil'
 import { useRouter } from 'next/router'
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import ChoiceNominal from '../../../components/choice-nominal/choice-nominal'
-import { DataNominal,  ListDataNominal} from '../../../components/choice-nominal/choice-nominal'
+import ChoiceNominal from '../../../components/user/transaction/choice-nominal/choice-nominal'
+import { DataNominal,  ListDataNominal} from '../../../components/user/transaction/choice-nominal/choice-nominal'
 import { UserLayout } from "../../_app"
 import Image from 'next/image'
 
@@ -123,7 +123,7 @@ const Index = () => {
 
     return (
         <>
-            <Service setting={{my:"8"}} title="pulsa"/>
+            <ServiceIcon setting={{my:"8"}} title="pulsa"/>
             <FormControl isInvalid={formik.errors.handphone && formik.touched.handphone ? true : false}>
                 <FormLabel htmlFor="handphone" textColor="base">No Handphone</FormLabel>
                 <Input

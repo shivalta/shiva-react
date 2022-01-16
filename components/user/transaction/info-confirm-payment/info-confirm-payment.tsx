@@ -1,9 +1,9 @@
 import { ListItem, List, ListIcon, Text, Flex } from "@chakra-ui/react"
 import Image from "next/image"
 import { MdCheckCircle } from "react-icons/md"
-import { BeliPDAM } from "../global-state/pdam"
-import { BeliPulsa } from "../global-state/pulsa"
-import { BeliToken } from "../global-state/token"
+import { BeliPDAM } from "../../global-state/pdam"
+import { BeliPulsa } from "../../global-state/pulsa"
+import { BeliToken } from "../../global-state/token"
 
 
 type PropsInfoConfirmPayment<T> = {

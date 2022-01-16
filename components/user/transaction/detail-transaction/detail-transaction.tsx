@@ -1,25 +1,25 @@
 import { Flex, Box, Text } from "@chakra-ui/react"
 import { v4 as uuidv4 } from "uuid"
 
-export type RecordDetailPayment = {
+export type RecordDetailTransaction = {
     name:string | "Total pembayaran"
     value:string
 }
 
-export type PropsDetailPayment = {
-    detailPayment: RecordDetailPayment[]
+type PropsDetailTransaction = {
+    detailTransaction: RecordDetailTransaction[]
     topChild?: React.ReactNode
     bottomChild?: React.ReactNode
 }
 
-const DetailPayment = ({detailPayment, topChild, bottomChild}:PropsDetailPayment)=> {
+const DetailTransaction = ({detailTransaction, topChild, bottomChild}:PropsDetailTransaction)=> {
     return(
         <Box background="white" shadow="base" p="4" borderRadius="lg" my="5" width="full">
             {
                 topChild || null
             }
             {
-                detailPayment.map((data:RecordDetailPayment)=>{
+                detailTransaction.map((data:RecordDetailTransaction)=>{
                     if(data.name !== "Total pembayaran"){
                         return(
                             <Flex flexWrap="wrap" key={uuidv4()}>
@@ -85,4 +85,4 @@ const DetailPayment = ({detailPayment, topChild, bottomChild}:PropsDetailPayment
     )
 }
 
-export default DetailPayment
+export default DetailTransaction

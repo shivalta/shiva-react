@@ -4,16 +4,16 @@ import Link from "next/link"
 import { useRouter } from "next/router"
 import { rupiahFormatter } from "../../helper/rupiah-formatter"
 import { useState } from "react"
-import BlackScreen from "./black-screen"
+import BlackScreen from "../user/general/black-screen/black-screen"
 import { useRecoilValue, useRecoilState, SetterOrUpdater } from "recoil"
-import { BeliPulsa, beliPulsa, getDetailBeliPulsa } from "../global-state/pulsa"
-import { BeliToken, beliToken, getDetailBeliToken } from "../global-state/token"
-import { BeliPDAM, beliPDAM, getDetailBeliPDAM } from "../global-state/pdam"
+import { BeliPulsa, beliPulsa, getDetailBeliPulsa } from "../user/global-state/pulsa"
+import { BeliToken, beliToken, getDetailBeliToken } from "../user/global-state/token"
+import { BeliPDAM, beliPDAM, getDetailBeliPDAM } from "../user/global-state/pdam"
 import PopUp from "./pop-up"
-import { RecordDetailPayment } from "../detail-payment/detail-payment"
-import DetailPayment from "../detail-payment/detail-payment"
-import InfoConFirmPayment from "./info-confirm-payment"
-import { user } from "../global-state/user"
+import { RecordDetailPayment } from "../user/transaction/detail-transaction/detail-transaction"
+import DetailTransaction from "../user/transaction/detail-transaction/detail-transaction"
+import InfoConFirmPayment from "../user/transaction/info-confirm-payment/info-confirm-payment"
+import { user } from "../user/global-state/user"
 
 const patternCheckout = /\/transaction\/+[a-zA-Z]+\/checkout/
 const patternPayment = /\/transaction\/+[a-zA-Z]+\/payment/
@@ -130,7 +130,7 @@ const Navigator = () => {
                         title={"Konfirmasi Pembayaran"}
                         render={
                             <>
-                                <DetailPayment  detailPayment={detailServiceState}/>
+                                <DetailTransaction  detailTransaction={detailServiceState}/>
                                 <InfoConFirmPayment serviceState={serviceState}/>
                             </>
                         }
@@ -146,7 +146,7 @@ const Navigator = () => {
                     <PopUp
                         setIsRenderPopUp={setIsRenderDetailPayment}
                         title={"Detail Pembayaran"}
-                        render={<DetailPayment  detailPayment={detailServiceState}/>}
+                        render={<DetailTransaction  detailTransaction={detailServiceState}/>}
                     />: null
                 }
                 {

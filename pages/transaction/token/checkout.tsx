@@ -1,24 +1,33 @@
-import { beliToken } from "../../../components/global-state/token"
-import Service from "../../../components/service/service"
+import { beliToken } from "../../../components/user/global-state/token"
+import Service from "../../../components/user/general/service-icon/service-icon"
 import { Text } from "@chakra-ui/react"
-import DetailPayment from "../../../components/detail-payment/detail-payment"
+import DetailTransaction from "../../../components/user/transaction/detail-transaction/detail-transaction"
 import { useRecoilState, useRecoilValue } from "recoil"
-import { getDetailBeliToken } from "../../../components/global-state/token"
-import ChoicePaymentMethod from "../../../components/choice-payment-method/choice-payment-method"
-import { backNavEffects } from "../../../components/global-state/back-nav-effects"
+import { getDetailBeliToken } from "../../../components/user/global-state/token"
+import ChoicePaymentMethod from "../../../components/user/transaction/choice-payment-method/choice-payment-method"
+import { backNavEffects } from "../../../components/user/global-state/back-nav-effects"
 import { useSetRecoilState } from "recoil"
 import { useEffect } from "react"
 import { UserLayout } from "../../_app"
+import ButtonCheckout from "../../../components/user/transaction/button-checkout/button-checkout"
+import { navigator } from "../../../components/user/global-state/navigator"
+import InfoTotalPayment from "../../../components/user/transaction/info-total-payment/info-total-payment"
 import logoMandiri from "../../../public/images/mandiri-2.png"
 import logoBCA from "../../../public/images/bca-2.png"
 
 const Checkout = () => {
 
     const [dataBeliToken, setDataBeliToken] = useRecoilState(beliToken)
+    const [navigatorState, setterNavigatorState] = useRecoilState(navigator)
     const detailBeliToken = useRecoilValue(getDetailBeliToken)
     const setBackNavEffects = useSetRecoilState(backNavEffects)
 
     useEffect(()=>{
+        setterNavigatorState({
+            ...navigatorState,
+            button: <ButtonCheckout serviceState={dataBeliToken} detailServiceState={detailBeliToken} serviceName="pulsa"/>,
+            renderContent: <InfoTotalPayment total={dataBeliToken.total || 0}/>
+        })
         setBackNavEffects({
             effects:()=>{
                 setDataBeliToken({
@@ -31,7 +40,10 @@ const Checkout = () => {
                 })
             }
         })
-    })
+        return ()=>{
+            setterNavigatorState({})
+        }
+    },[dataBeliToken, dataBeliToken])
 
     const listPaymentMethod = [
         {
@@ -52,7 +64,7 @@ const Checkout = () => {
             <Text as="h3" className="my-text" color="base" fontWeight="bold" mt="8">
                 Detail Pembayaran
             </Text>
-            <DetailPayment  detailPayment={detailBeliToken}/>
+            <DetailTransaction  detailTransaction={detailBeliToken}/>
             <ChoicePaymentMethod
                 listPaymentMethod={listPaymentMethod}
                 setterServiceState={setDataBeliToken}

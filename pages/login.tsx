@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import { useRouter } from "next/router"
 import Link from "next/link";
 import { useRecoilState } from "recoil";
-import { user } from "../components/global-state/user";
+import { user } from "../components/user/global-state/user";
 import { useEffect } from "react";
 
 const Login = () => {
