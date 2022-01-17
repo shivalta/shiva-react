@@ -1,4 +1,4 @@
-import { Box, Divider, Flex, Icon, Spacer, Text} from "@chakra-ui/react"
+import { Box, Flex, Icon, Text} from "@chakra-ui/react"
 import { MdOutlineFileCopy } from "react-icons/md"
 import Image from "next/image"
 import { rupiahFormatter } from "../../../../helper/rupiah-formatter"
@@ -19,7 +19,7 @@ const VirtualAccount = <T extends BeliPulsa | BeliToken | BeliPDAM>(props:PropsV
             <Text textAlign="center" as="h2" fontWeight="bold" className="my-text" >
                 {serviceState.nameProduct}
             </Text>
-            <Divider my="4"/>
+            <Box height="0.1" width="full" background="gray.100" borderRadius="base" my="4"/>
             <Flex justifyContent="space-between">
                 <Image width={80} height={30} src={serviceState.paymentMethod?.logo || ""} alt={serviceState.paymentMethod?.name}/>
                 <Text fontWeight="bold" className="my-text" fontSize="sm">{serviceState.paymentMethod?.name}</Text>
@@ -36,7 +36,7 @@ const VirtualAccount = <T extends BeliPulsa | BeliToken | BeliPDAM>(props:PropsV
             <Text as="h3" className="my-text" fontWeight="bold" my="2">
                 {rupiahFormatter(serviceState.total?serviceState.total:0,"Rp.")}
             </Text>
-            <Divider my="4"/>
+            <Box height="0.1" width="full" background="gray.100" borderRadius="base" my="4"/>
             <Text as="h3" className="my-text" color="base" fontSize="sm" fontWeight="bold" my="2">Pembayaran Berakhir Dalam</Text>
             <Text as="h3" className="my-text" fontWeight="bold" my="2" color="base_second">
                 23:40:45

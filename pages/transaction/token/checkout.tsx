@@ -12,6 +12,7 @@ import { UserLayout } from "../../_app"
 import ButtonCheckout from "../../../components/user/transaction/button-checkout/button-checkout"
 import { navigator } from "../../../components/user/global-state/navigator"
 import InfoTotalPayment from "../../../components/user/transaction/info-total-payment/info-total-payment"
+import { useRouter } from "next/router"
 import logoMandiri from "../../../public/images/mandiri-2.png"
 import logoBCA from "../../../public/images/bca-2.png"
 
@@ -21,11 +22,18 @@ const Checkout = () => {
     const [navigatorState, setterNavigatorState] = useRecoilState(navigator)
     const detailBeliToken = useRecoilValue(getDetailBeliToken)
     const setBackNavEffects = useSetRecoilState(backNavEffects)
+    const router = useRouter()
+
+    useEffect(()=>{
+        if(dataBeliToken.noPLN === undefined){
+            router.push("/transaction/token")
+        }
+    },[])
 
     useEffect(()=>{
         setterNavigatorState({
             ...navigatorState,
-            button: <ButtonCheckout serviceState={dataBeliToken} detailServiceState={detailBeliToken} serviceName="pulsa"/>,
+            button: <ButtonCheckout serviceState={dataBeliToken} detailServiceState={detailBeliToken} serviceName="token"/>,
             renderContent: <InfoTotalPayment total={dataBeliToken.total || 0}/>
         })
         setBackNavEffects({

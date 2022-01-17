@@ -4,9 +4,10 @@ import { Text, FormControl, FormLabel, Input, FormErrorMessage, Button } from "@
 import * as Yup from 'yup';
 import { useRouter } from "next/router"
 import Link from "next/link";
-import { useRecoilState } from "recoil";
-import { user } from "../components/user/global-state/user";
-import { useEffect } from "react";
+import { useRecoilState } from "recoil"
+import { user } from "../components/user/global-state/user"
+import { MdOutlineLogin } from "react-icons/md"
+import { useEffect } from "react"
 
 const Login = () => {
 
@@ -90,6 +91,7 @@ const Login = () => {
                 height="10"
                 my="8"
                 _hover={{bg:"base"}}
+                leftIcon={<MdOutlineLogin/>}
                 onClick={(e)=>{
                     formik.handleSubmit()
                 }}

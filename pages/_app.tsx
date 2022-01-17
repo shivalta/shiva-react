@@ -72,6 +72,9 @@ const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
     shadows: {
       navigator: "0px 5px 20px rgba(0, 0, 0, 0.25)"
     },
+    sizes: {
+      "0.1": "0.005rem"
+    },
     styles:{
       global: (props:any) => ({
         '.my-text': {

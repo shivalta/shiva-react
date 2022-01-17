@@ -144,7 +144,7 @@ const HistoryTransaction = () => {
                                         </Badge>
                                     </Flex>
                                     <Box
-                                        height="0.5"
+                                        height="0.1"
                                         width="full"
                                         background="gray.100"
                                         borderRadius="base"
