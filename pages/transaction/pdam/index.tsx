@@ -1,11 +1,12 @@
-import Service from '../../../components/service/service'
+import Service from '../../../components/user/general/service-icon/service-icon'
 import { Input, FormControl, FormLabel, FormErrorMessage, Select, Button } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
-import { beliPDAM } from '../../../components/global-state/pdam'
-import { backNavEffects } from '../../../components/global-state/back-nav-effects'
+import { beliPDAM } from '../../../components/user/global-state/pdam'
+import { backNavEffects } from '../../../components/user/global-state/back-nav-effects'
 import { useRecoilState, useSetRecoilState } from 'recoil'
 import { useRouter } from 'next/router'
 import { useFormik } from 'formik';
+import { UserLayout } from "../../_app"
 import * as Yup from 'yup';
 
 const listRegion = ["Sidoarjo", "Surabaya", "Malang"]
@@ -78,9 +79,9 @@ const Index = () => {
                 {
                     <FormErrorMessage>{formik.touched.noPDAM? formik.errors.noPDAM : ""}</FormErrorMessage>
                 }
-                <FormLabel htmlFor="region" textColor="base" mt="3">Wilayah</FormLabel>
             </FormControl>
             <FormControl isInvalid={formik.errors.region && formik.touched.region ? true : false}>
+                <FormLabel htmlFor="region" textColor="base" mt="3">Wilayah</FormLabel>
                 <Select
                     placeholder='pilih wilayah' name="region" variant="outline"
                     value={region} onChange={formik.handleChange} onBlur={formik.handleBlur}
@@ -113,3 +114,5 @@ const Index = () => {
 }
 
 export default Index
+
+Index.getLayout = UserLayout

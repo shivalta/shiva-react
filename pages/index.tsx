@@ -1,11 +1,11 @@
-import type { NextPage } from 'next'
 import Head from 'next/head'
 import { Text, Button, SimpleGrid } from "@chakra-ui/react"
-import Service from "../components/service/service"
-import HomeSlider from "../components/home-slider/homeSlider"
+import Service from "../components/user/general/service-icon/service-icon"
+import HomeSlider from "../components/user/home-slider/home-slider"
+import { UserLayout } from './_app'
+import Link from 'next/link'
 
-
-const Home: NextPage = () => {
+const Home = () => {
   return (
     <>
       <Head>
@@ -25,23 +25,28 @@ const Home: NextPage = () => {
         >
             Hi saat ini kamu masih guest lho, masuk ke akun kamu yuk
         </Text>
-        <Button
-            fontSize="xs"
-            bg="base"
-            color="white"
-            width="full"
-            height="10"
-            _hover={{bg:"base"}}
-            >
-                Masuk
-        </Button>
+        <Link href="/login" passHref>
+          <Button
+              fontSize="xs"
+              bg="base"
+              color="white"
+              width="full"
+              height="10"
+              _hover={{bg:"base"}}
+              as="a"
+              >
+                  Masuk
+          </Button>
+        </Link>
         <SimpleGrid columns={3} spacing={5} my="8" px="8">
             <Service title="pulsa" href="/transaction/pulsa" />
             <Service title="token" href="/transaction/token"/>
-            <Service title="PDAM" href="/transaction/pdam"/>
+            <Service title="pdam" href="/transaction/pdam"/>
         </SimpleGrid>
     </>
   )
 }
 
 export default Home
+
+Home.getLayout = UserLayout

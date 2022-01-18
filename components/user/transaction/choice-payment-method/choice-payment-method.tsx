@@ -1,7 +1,9 @@
 import { useState } from "react"
 import { Flex, Text, RadioGroup, Box, Radio, Divider } from "@chakra-ui/react"
 import Image from "next/image"
-import { BeliPulsa } from "../global-state/pulsa"
+import { BeliPulsa } from "../../global-state/pulsa"
+import { BeliToken } from "../../global-state/token"
+import { BeliPDAM } from "../../global-state/pdam"
 import { Fragment } from "react"
 
 type PaymentMethod = {
@@ -16,18 +18,17 @@ type PropsChoicePaymentMethod<T> = {
     serviceState: T
 }
 
-const ChoicePaymentMethod =<T extends BeliPulsa>(props: PropsChoicePaymentMethod<T>)=>{
+const ChoicePaymentMethod =<T extends BeliPulsa | BeliToken | BeliPDAM>(props: PropsChoicePaymentMethod<T>)=>{
 
     const {listPaymentMethod, setterServiceState, serviceState} = props
-
-    const [choicedMethod, setChoicedMethod] = useState("")
+    const currentPaymentMethod = serviceState.paymentMethod?.id || ""
 
     return(
         <>
             <Text as="h3" className="my-text" color="base" fontWeight="bold" mt="8">
                 Metode Pembayaran
             </Text>
-            <RadioGroup value={choicedMethod}>
+            <RadioGroup value={currentPaymentMethod}>
                 {
                     listPaymentMethod.map(({id,name,logo})=>{
                         return(
@@ -44,7 +45,6 @@ const ChoicePaymentMethod =<T extends BeliPulsa>(props: PropsChoicePaymentMethod
                                                 logo:logo
                                             }
                                         })
-                                        setChoicedMethod(id)
                                     }}/>
                                 </Flex>
                                 <Divider orientation='horizontal' my="8" />

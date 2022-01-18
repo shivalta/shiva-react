@@ -4,20 +4,21 @@ import Link from "next/link"
 import { useRouter } from "next/router"
 import { rupiahFormatter } from "../../helper/rupiah-formatter"
 import { useState } from "react"
-import BlackScreen from "./black-screen"
+import BlackScreen from "../user/general/black-screen/black-screen"
 import { useRecoilValue, useRecoilState, SetterOrUpdater } from "recoil"
-import { BeliPulsa, beliPulsa, getDetailBeliPulsa } from "../global-state/pulsa"
-import { BeliToken, beliToken, getDetailBeliToken } from "../global-state/token"
-import { BeliPDAM, beliPDAM, getDetailBeliPDAM } from "../global-state/pdam"
+import { BeliPulsa, beliPulsa, getDetailBeliPulsa } from "../user/global-state/pulsa"
+import { BeliToken, beliToken, getDetailBeliToken } from "../user/global-state/token"
+import { BeliPDAM, beliPDAM, getDetailBeliPDAM } from "../user/global-state/pdam"
 import PopUp from "./pop-up"
-import { RecordDetailPayment } from "../detail-payment/detail-payment"
-import DetailPayment from "../detail-payment/detail-payment"
-import InfoConFirmPayment from "./info-confirm-payment"
+import { RecordDetailPayment } from "../user/transaction/detail-transaction/detail-transaction"
+import DetailTransaction from "../user/transaction/detail-transaction/detail-transaction"
+import InfoConFirmPayment from "../user/transaction/info-confirm-payment/info-confirm-payment"
+import { user } from "../user/global-state/user"
 
 const patternCheckout = /\/transaction\/+[a-zA-Z]+\/checkout/
 const patternPayment = /\/transaction\/+[a-zA-Z]+\/payment/
 
-const useServiceData = (): [BeliPulsa | BeliToken, SetterOrUpdater<BeliPulsa | BeliToken | BeliPDAM>, RecordDetailPayment[], string] => {
+const useServiceData = (): [BeliPulsa | BeliToken | BeliPDAM, SetterOrUpdater<BeliPulsa | BeliToken | BeliPDAM>, RecordDetailPayment[], string] => {
     const router = useRouter()
     const {asPath:pathname} = router
     const [dataBeliPulsa, setDataBeliPulsa] = useRecoilState(beliPulsa)
@@ -57,6 +58,7 @@ const Navigator = () => {
     const [isRenderDetailCheckout, setIsRenderDetailCheckout] = useState(false)
     const [isRenderDetailPayment, setIsRenderDetailPayment] = useState(false)
     const [serviceState, setterServiceState, detailServiceState, currentService] = useServiceData()
+    const [userState, setUserState] = useRecoilState(user)
     const patternHistory = /\/history-transaction/
     const patternProfile = /\/profile/
 
@@ -128,7 +130,7 @@ const Navigator = () => {
                         title={"Konfirmasi Pembayaran"}
                         render={
                             <>
-                                <DetailPayment  detailPayment={detailServiceState}/>
+                                <DetailTransaction  detailTransaction={detailServiceState}/>
                                 <InfoConFirmPayment serviceState={serviceState}/>
                             </>
                         }
@@ -144,7 +146,7 @@ const Navigator = () => {
                     <PopUp
                         setIsRenderPopUp={setIsRenderDetailPayment}
                         title={"Detail Pembayaran"}
-                        render={<DetailPayment  detailPayment={detailServiceState}/>}
+                        render={<DetailTransaction  detailTransaction={detailServiceState}/>}
                     />: null
                 }
                 {
@@ -185,7 +187,16 @@ const Navigator = () => {
                             _hover={{bg:"base"}}
                             onClick={()=>{
                                 if(isRenderDetailCheckout){
-                                    router.push(`/transaction/${currentService}/payment`)
+                                    if(userState.valid){
+                                        router.push(`/transaction/${currentService}/payment`)
+                                    }
+                                    else{
+                                        setUserState({
+                                            ...userState,
+                                            afterLogin:pathname
+                                        })
+                                        router.push("/login")
+                                    }
                                 }else{
                                     setIsRenderDetailCheckout(true)
                                 }
@@ -206,7 +217,6 @@ const Navigator = () => {
                             flexGrow="1"
                             _hover={{bg:"base"}}
                             onClick={()=>{
-                                // setterServiceState({})
                                 setIsRenderDetailPayment(true)
                             }}
                             ml="2"
