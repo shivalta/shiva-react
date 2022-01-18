@@ -1,17 +1,17 @@
-import { UserLayout } from "./_app"
-import { useFormik } from "formik"
 import { Text, FormControl, FormLabel, Input, FormErrorMessage, Button } from "@chakra-ui/react"
-import * as Yup from 'yup'
+import { useFormik } from "formik"
+import * as Yup from "yup"
+import { UserLayout } from "../_app"
 import { useRouter } from "next/router"
 
-const Register = () => {
+const EditProfile = ()=>{
 
     const router = useRouter()
     const formik = useFormik({
         initialValues:{
-            name:"",
-            email:"",
-            handphone:"",
+            name:"Naufal Ghani Achmani",
+            email:"naufalghaniachmani@gmail.com",
+            handphone:"082236486879",
             password:""
         },
         validationSchema: Yup.object({
@@ -27,10 +27,9 @@ const Register = () => {
                 .required('isi handphone dulu ya'),
             password: Yup.string()
                 .min(10, 'isi password minimal 10 karakter ya')
-                .required('isi password dulu ya'),
         }),
         onSubmit:(values)=>{
-            router.push("/login")
+            router.push("/profile")
         }
     })
 
@@ -44,11 +43,10 @@ const Register = () => {
                 textAlign="center"
                 color="base"
                 fontWeight="bold"
-                fontSize="xl"
                 mt="20"
                 mb="10"
             >
-                DAFTAR
+                Profil
             </Text>
             <FormControl isInvalid={formik.errors.name && formik.touched.name ? true : false}>
                 <FormLabel htmlFor="name" textColor="base" mt="3">nama lengkap</FormLabel>
@@ -102,12 +100,12 @@ const Register = () => {
                     formik.handleSubmit()
                 }}
             >
-                Daftar
+                Edit Profil
             </Button>
         </>
     )
 }
 
-export default Register
+export default EditProfile
 
-Register.getLayout = UserLayout
+EditProfile.getLayout = UserLayout

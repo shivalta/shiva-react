@@ -12,6 +12,7 @@ import { navigator } from "../../../components/user/global-state/navigator"
 import { UserLayout } from "../../_app"
 import ButtonCheckout from "../../../components/user/transaction/button-checkout/button-checkout"
 import InfoTotalPayment from "../../../components/user/transaction/info-total-payment/info-total-payment"
+import { useRouter } from "next/router"
 import logoMandiri from "../../../public/images/mandiri-2.png"
 import logoBCA from "../../../public/images/bca-2.png"
 
@@ -22,6 +23,13 @@ const Checkout = () => {
     const [navigatorState, setterNavigatorState] = useRecoilState(navigator)
     const detailBeliPDAM = useRecoilValue(getDetailBeliPDAM)
     const setBackNavEffects = useSetRecoilState(backNavEffects)
+    const router = useRouter()
+
+    useEffect(()=>{
+        if(dataBeliPDAM.noPDAM === undefined){
+            router.push("/transaction/pdam")
+        }
+    },[])
 
     useEffect(()=>{
         setterNavigatorState({

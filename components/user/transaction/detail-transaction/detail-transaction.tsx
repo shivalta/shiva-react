@@ -22,10 +22,9 @@ const DetailTransaction = ({detailTransaction, topChild, bottomChild}:PropsDetai
                 detailTransaction.map((data:RecordDetailTransaction)=>{
                     if(data.name !== "Total pembayaran"){
                         return(
-                            <Flex flexWrap="wrap" key={uuidv4()}>
+                            <Flex flexWrap="wrap" my="2" key={uuidv4()}>
                                 <Text
                                     w="50%"
-                                    height="8"
                                     fontWeight="semibold"
                                     className="my-text"
                                     color="gray.500"
@@ -35,7 +34,6 @@ const DetailTransaction = ({detailTransaction, topChild, bottomChild}:PropsDetai
                                 </Text>
                                 <Text
                                     w="50%"
-                                    height="8"
                                     fontWeight="bold"
                                     className="my-text"
                                     fontSize="sm"
@@ -48,10 +46,9 @@ const DetailTransaction = ({detailTransaction, topChild, bottomChild}:PropsDetai
                     }
                     else{
                         return(
-                            <Flex flexWrap="wrap" key={uuidv4()}>
+                            <Flex flexWrap="wrap" my="2" key={uuidv4()}>
                                 <Text
                                     w="50%"
-                                    height="8"
                                     fontWeight="semibold"
                                     className="my-text"
                                     color="gray.500"

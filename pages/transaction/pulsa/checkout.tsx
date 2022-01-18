@@ -13,6 +13,7 @@ import { useEffect } from "react"
 import { navigator } from "../../../components/user/global-state/navigator"
 import ButtonCheckout from "../../../components/user/transaction/button-checkout/button-checkout"
 import InfoTotalPayment from "../../../components/user/transaction/info-total-payment/info-total-payment"
+import { useRouter } from "next/router"
 
 const Checkout = () => {
 
@@ -20,6 +21,13 @@ const Checkout = () => {
     const [navigatorState, setterNavigatorState] = useRecoilState(navigator)
     const detailBeliPulsa = useRecoilValue(getDetailBeliPulsa)
     const setBackNavEffects = useSetRecoilState(backNavEffects)
+    const router = useRouter()
+
+    useEffect(()=>{
+        if(dataBeliPulsa.noHandphone === undefined){
+            router.push("/transaction/pulsa")
+        }
+    },[])
 
     useEffect(()=>{
         setterNavigatorState({

@@ -2,6 +2,7 @@ import Head from 'next/head'
 import { Text, Button, SimpleGrid } from "@chakra-ui/react"
 import Service from "../components/user/general/service-icon/service-icon"
 import HomeSlider from "../components/user/home-slider/home-slider"
+import { MdOutlineLogin } from "react-icons/md"
 import { UserLayout } from './_app'
 import Link from 'next/link'
 
@@ -34,6 +35,7 @@ const Home = () => {
               height="10"
               _hover={{bg:"base"}}
               as="a"
+              leftIcon={<MdOutlineLogin/>}
               >
                   Masuk
           </Button>
