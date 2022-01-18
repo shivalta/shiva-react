@@ -50,6 +50,7 @@ const useServiceData = (): [BeliPulsa | BeliToken | BeliPDAM, SetterOrUpdater<Be
     }
 
     return [dataBeliPulsa, setDataBeliPulsa, detailBeliPulsa, currentService]
+
 }
 
 const Navigator = () => {
