@@ -13,6 +13,7 @@ type ActiveNav = "history" | "profile" | "home"
 const Navigator = ()=>{
 
     const navigatorState = useRecoilValue(navigator)
+
     const setDataBeliPulsa = useSetRecoilState(beliPulsa)
     const setDataBeliToken = useSetRecoilState(beliToken)
     const setDataBeliPDAM = useSetRecoilState(beliPDAM)
