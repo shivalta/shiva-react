@@ -7,6 +7,7 @@ const ButtonLogout = () => {
     const router = useRouter()
 
     const handleClick = () => {
+        localStorage.removeItem("user-persist")
         router.push("/")
     }
 

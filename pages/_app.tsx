@@ -1,4 +1,5 @@
-import { ChakraProvider, extendTheme, Flex, Box, Text } from '@chakra-ui/react'
+import { ChakraProvider, extendTheme, Flex, Box, Text, Button } from '@chakra-ui/react'
+import { MdProductionQuantityLimits } from 'react-icons/md'
 import type { AppProps } from 'next/app'
 import { RecoilRoot } from 'recoil'
 import '../styles/globals.css'
@@ -6,9 +7,11 @@ import BackNav from '../components/user/general/back-nav/back-nav'
 import BlackScreen from '../components/user/general/black-screen/black-screen'
 import Image from 'next/image'
 import { NextPage } from 'next'
-import React, { ReactElement, ReactNode } from 'react'
+import { ReactElement, ReactNode,useEffect,useState } from 'react'
 import shivaLogo from '../public/images/shiva.png'
 import Navigator from '../components/user/general/navigator/navigator'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 export type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode
@@ -57,6 +60,75 @@ export const UserLayout = (page: ReactElement) => {
   )
 }
 
+export const AdminLayout = (page: ReactElement) => {
+
+  type ListKeyCRUD = {
+    [key:string]:number
+  }
+
+  const listKeyCRUD:ListKeyCRUD = {
+    "products":0,
+    "product-class":1,
+    "product-categories":2
+  }
+
+  const router = useRouter()
+  const { asPath } = router
+  const [activeCRUD, setActiveCRUD] = useState(listKeyCRUD[asPath.slice(12)])
+  const listCRUD = [
+    {
+      path:"products",
+      name:"products",
+      key:0
+    },
+    {
+      path:"product-class",
+      name:"product class",
+      key:1
+    },
+    {
+      path:"product-categories",
+      name:"product categories",
+      key:2
+    }
+  ]
+
+  useEffect(()=>{
+    setActiveCRUD(listKeyCRUD[asPath.slice(12)])
+  },[asPath])
+
+  return(
+    <Flex>
+      <Box width="300px" minHeight="100vh" background="base" py="10" px="4">
+        {
+          listCRUD.map(({path,name,key})=>{
+            return(
+              <Link href={`/admin/crud/${path}`} passHref key={`crud-${key}`}>
+                <Button
+                    as="a"
+                    colorScheme={activeCRUD === key ? "gray" : ""}
+                    className="my-text"
+                    width="full"
+                    justifyContent="flex-start"
+                    textTransform="capitalize"
+                    fontWeight="bold"
+                    leftIcon={<MdProductionQuantityLimits/>}
+                    my="2"
+                >
+                        {name}
+                </Button>
+              </Link>
+            )
+          })
+        }
+      </Box>
+      <Box width="calc(100% - 300px)" p="10">
+        {page}
+      </Box>
+    </Flex>
+  )
+}
+
 const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
   const theme = extendTheme({
     config: {
@@ -64,7 +136,8 @@ const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
     },
     colors: {
       base: '#0007B0',
-      base_second: '#FA591D'
+      base_second: '#FA591D',
+      base_admin:"#11CBE1"
     },
     radii: {
       navigator: "40px"
@@ -91,11 +164,11 @@ const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
   const page = getLayout(<Component {...pageProps} />)
 
   return (
-    <ChakraProvider theme={theme}>
-      <RecoilRoot>
-        {page}
-      </RecoilRoot>
-    </ChakraProvider>
+      <ChakraProvider theme={theme}>
+        <RecoilRoot>
+          {page}
+        </RecoilRoot>
+      </ChakraProvider>
   )
 }
 

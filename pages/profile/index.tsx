@@ -5,8 +5,57 @@ import { UserLayout } from "../_app"
 import { MdEditNote } from "react-icons/md"
 import Link from "next/link"
 import ButtonLogout from "../../components/user/profile/button-logout"
+import { baseRequest, BaseResponse } from "../../helper/base-request"
+import BeforeLogin from "../../components/user/general/before-login/before-login"
+import { User } from "../../components/user/global-state/user"
+import { useEffect, useState } from "react"
+
+type DataUser = {
+    id: number
+    name: string
+    email: string
+    handphone: string
+    address: string
+}
 
 const Profile = () => {
+
+    const [dataUser, setDataUser] = useState<BaseResponse<DataUser>>()   //data user from api
+    const [userPersisted, setUserPersisted] = useState<User | null>() //data user from local storage
+
+    useEffect(()=>{
+        if(localStorage.getItem("user-persist")){
+          setUserPersisted(JSON.parse(localStorage.getItem("user-persist") || ""))
+        }else{
+            setUserPersisted(null)
+        }
+    },[])
+
+    useEffect(()=>{
+        const getDataUser = async () =>{
+            const userPersisted = JSON.parse(localStorage.getItem("user-persist") || "")
+            const dataUser = await baseRequest<DataUser>({
+                url:`users/${userPersisted?.data?.user.id}`,
+                method:"GET",
+            })
+            setDataUser(dataUser)
+        }
+        getDataUser()
+    },[])
+
+    if(userPersisted === null){
+        return <BeforeLogin/>
+    }
+
+    if(dataUser === undefined){
+        return null
+    }
+
+    if(dataUser.status === "error"){
+        return <BeforeLogin/>
+    }
+
+    const { name, email, handphone } = dataUser.data
 
     return(
         <>
@@ -33,10 +82,10 @@ const Profile = () => {
                         fontWeight="bold"
                         mb="2"
                     >
-                        Naufal Ghani Achmani
+                        {name}
                     </Text>
-                    <Text className="my-text" fontSize="sm" color="gray.600">naufalghaniachmani@gmail.com</Text>
-                    <Text className="my-text" fontSize="xs" color="gray.600">082236486879</Text>
+                    <Text className="my-text" fontSize="sm" color="gray.600">{email}</Text>
+                    <Text className="my-text" fontSize="xs" color="gray.600">{handphone}</Text>
                 </Box>
             </Flex>
             <Flex justifyContent="space-between">

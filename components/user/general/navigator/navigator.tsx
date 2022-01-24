@@ -57,6 +57,7 @@ const Navigator = ()=>{
             justifyContent="space-evenly"
             alignItems="center"
             flexWrap="wrap"
+            zIndex="10"
         >
             {
                 navigatorState.isOpenPopUp? navigatorState.renderPopUp || null : null
