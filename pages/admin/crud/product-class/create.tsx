@@ -54,31 +54,33 @@ const CreateProductClass = () => {
         formik.setFieldValue("image", hiddenImageInput.current?.files)
     }
 
-    // async function toDataUrl(url:string, callback:(file:any)=>void) {
-    //     var xhr = new XMLHttpRequest();
-    //     xhr.onload = function() {
-    //         callback(xhr.response);
-    //     };
-    //     xhr.open('GET', url);
-    //     xhr.responseType = 'blob';
-    //     xhr.send();
-    // }
+    async function toDataUrl(url:string, callback:(file:any)=>void) {
+        var xhr = new XMLHttpRequest();
+        xhr.onload = function() {
+            callback(xhr.response);
+        };
+        xhr.open('GET', url);
+        xhr.responseType = 'blob';
+        xhr.send();
+    }
 
     const { name, is_pasca } = formik.values
 
-    // useEffect(()=>{
-    //     const getImage = async()=>{
-    //         const image = await baseRequest({
-    //             method:"GET",
-    //             url:"https://shivalta-bucket.s3.us-east-2.amazonaws.com/visi%20misi%20alterra.png"
-    //         })
-    //         const dT = new ClipboardEvent('').clipboardData || // Firefox < 62 workaround exploiting https://bugzilla.mozilla.org/show_bug.cgi?id=1422655
-    //         new DataTransfer(); // specs compliant (as of March 2018 only Chrome)
-    //         dT.items.add(new File([image], 'myNewFile'));
-    //         document.querySelector('#input-image').files = dT.files;
-    //     }
-    //     getImage()
-    // },[])
+    useEffect(()=>{
+        const getImage = async()=>{
+            const image = await baseRequest<any>({
+                method:"GET",
+                url:"https://shivalta-bucket.s3.us-east-2.amazonaws.com/visi%20misi%20alterra.png"
+            })
+            const dT = new ClipboardEvent('').clipboardData || // Firefox < 62 workaround exploiting https://bugzilla.mozilla.org/show_bug.cgi?id=1422655
+            new DataTransfer(); // specs compliant (as of March 2018 only Chrome)
+            dT.items.add(new File([image], 'myNewFile'));
+            // document.querySelector('#input-image').value = "halo"
+            document.querySelector('#input-image').files = dT.files
+            handleChangeUploadImage()
+        }
+        getImage()
+    },[])
 
 
     return(

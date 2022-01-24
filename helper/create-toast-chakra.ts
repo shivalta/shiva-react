@@ -2,7 +2,7 @@ import { BaseResponse } from "./base-request"
 import { NextRouter } from "next/router"
 
 type ParamsUseToastChakra = {
-    response: BaseResponse
+    response: BaseResponse<any>
     path?: string
     toast: any
     router: NextRouter
