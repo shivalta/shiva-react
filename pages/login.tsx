@@ -1,18 +1,21 @@
 import { UserLayout } from "./_app"
 import { useFormik } from "formik"
-import { Text, FormControl, FormLabel, Input, FormErrorMessage, Button } from "@chakra-ui/react"
+import { Text, FormControl, FormLabel, Input, FormErrorMessage, Button, useToast } from "@chakra-ui/react"
 import * as Yup from 'yup';
 import { useRouter } from "next/router"
 import Link from "next/link";
 import { useRecoilState } from "recoil"
-import { user } from "../components/user/global-state/user"
+import { user, ResponseDataUser } from "../components/user/global-state/user"
 import { MdOutlineLogin } from "react-icons/md"
+import { baseRequest } from "../helper/base-request"
+import { createToastChakra } from "../helper/create-toast-chakra"
 import { useEffect } from "react"
 
 const Login = () => {
 
     const router = useRouter()
     const [userState, setterUserState] = useRecoilState(user)
+    const toast = useToast()
     const formik = useFormik({
         initialValues:{
             email:"",
@@ -29,21 +32,39 @@ const Login = () => {
                 .required('isi password dulu ya'),
             afterLogin: Yup.string()
         }),
-        onSubmit:(values)=>{
-            // hit api for check token validity
-            setterUserState({
-                ...userState,
-                valid:true
+        onSubmit:async (values)=>{
+            const response = await baseRequest<ResponseDataUser>({
+                url:"/auth/login",
+                method:"POST",
+                body:{
+                    email: values.email,
+                    password: values.password
+                }
             })
-            if(values.afterLogin){
-                router.push(values.afterLogin)
-            }else{
-                router.push("/")
+            if(response.status === "success"){
+                setterUserState({
+                    ...userState,
+                    data:response.data,
+                    valid:true
+                })
+                if(values.afterLogin){
+                    router.push(values.afterLogin)
+                }else{
+                    router.push("/")
+                }
+            }
+            else{
+                createToastChakra({
+                    response:response,
+                    router:router,
+                    toast: toast
+                })
             }
         }
     })
 
     useEffect(()=>{
+        localStorage.setItem("user-persist", JSON.stringify(userState))
         formik.setFieldValue("afterLogin", userState.afterLogin)
     },[userState])
 

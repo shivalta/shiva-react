@@ -9,12 +9,15 @@ import { rupiahFormatter } from "../helper/rupiah-formatter"
 import { blackScreen } from "../components/user/global-state/black-screen"
 import { navigator } from "../components/user/global-state/navigator"
 import { useRecoilState, useSetRecoilState } from "recoil"
-import { useEffect } from "react"
+import { BaseResponse } from "../helper/base-request"
+import { useEffect, useState } from "react"
+import BeforeLogin from "../components/user/general/before-login/before-login"
+import { User } from "../components/user/global-state/user"
 import { BeliPDAM, generateDetailBeliPDAM } from "../components/user/global-state/pdam"
 
 type DataHistoryTransaction = (BeliPulsa | BeliToken | BeliPDAM)[]
 
-const dataHistory:DataHistoryTransaction= [
+const mockDataHistory:DataHistoryTransaction= [
     {
         id: "1234",
         noHandphone : "1213131",
@@ -55,8 +58,32 @@ const HistoryTransaction = () => {
 
     const [navigatorState, setterNavigatorState] = useRecoilState(navigator)
     const setIsBlackScreenRender = useSetRecoilState(blackScreen)
+    const [dataHistory, setDataHistory] = useState<BaseResponse<any>>()
+    const [userPersisted, setUserPersisted] = useState<User | null>()
 
     useEffect(()=>{
+        if(localStorage.getItem("user-persist")){
+            setUserPersisted(JSON.parse(localStorage.getItem("user-persist") || ""))
+        }else{
+            setUserPersisted(null)
+        }
+    },[])
+
+
+    useEffect(()=>{
+
+        const getDataHistory = async () =>{
+            // const dataHistory = await blablabla
+            const dataHistory = {
+                status: "success",
+                message: "suke",
+                data: mockDataHistory
+            }
+            setDataHistory(dataHistory as BaseResponse<any>)
+        }
+
+        getDataHistory()
+
         return ()=>{
             setIsBlackScreenRender({
                 isBlackScreenRender:false
@@ -80,6 +107,43 @@ const HistoryTransaction = () => {
         })
     }
 
+    if(userPersisted === null){
+        return <BeforeLogin/>
+    }
+
+    if(dataHistory === undefined){
+        return null
+    }
+
+    if(dataHistory.status === "error"){
+        return <BeforeLogin/>
+    }
+
+    if(dataHistory.data.length === 0){
+        return(
+            <>
+                <Text
+                    as="h2"
+                    className="my-text"
+                    color="base"
+                    fontWeight="bold"
+                    fontSize="4xl"
+                    textAlign="center"
+                    mt="20"
+                >
+                    OOPS
+                </Text>
+                <Text
+                    className="my-text"
+                    textAlign="center"
+                    color="base"
+                >
+                    kamu belum punya riwayat transaksi
+                </Text>
+            </>
+        )
+    }
+
     return(
         <>
             <Text
@@ -94,7 +158,7 @@ const HistoryTransaction = () => {
                 Riwayat Transaksi
             </Text>
             {
-                dataHistory.map((history)=>{
+                dataHistory?.data.map((history: BeliPulsa | BeliToken | BeliPDAM)=>{
                     let detailTransaction:RecordDetailTransaction[] = []
                     let generalDetailTransaction:RecordDetailTransaction[] = [
                         {name:"ID transaksi", value:history.id!},
@@ -153,7 +217,16 @@ const HistoryTransaction = () => {
                                 </>
                             }
                             bottomChild={
-                                <Text onClick={()=>handleClick(detailTransaction)} className="my-text" color="base" fontSize="xs" fontWeight="bold" textAlign="right" mt="5">
+                                <Text
+                                    onClick={()=>handleClick(detailTransaction)}
+                                    className="my-text"
+                                    color="base"
+                                    fontSize="xs"
+                                    fontWeight="bold"
+                                    textAlign="right"
+                                    mt="5"
+                                    cursor="pointer"
+                                >
                                     Detail
                                 </Text>
                             }
@@ -165,6 +238,7 @@ const HistoryTransaction = () => {
     )
 }
 
+HistoryTransaction.getLayout = UserLayout
+
 export default HistoryTransaction
 
-HistoryTransaction.getLayout = UserLayout

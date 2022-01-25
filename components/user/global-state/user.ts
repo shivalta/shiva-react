@@ -1,16 +1,29 @@
 import { atom, RecoilState } from "recoil"
 
 export type User = {
-    token?: string
+    data?: ResponseDataUser
     valid: boolean
     afterLogin?:string
+}
+
+export type ResponseDataUser = {
+    token: string
+    user:{
+        id: string
+        name: string
+        email: string
+        handphone: string
+        address: string
+    }
 }
 
 export const user: RecoilState<User> = atom({
     key:"user",
     default: {
-        token: "",
         valid: false,
         afterLogin:""
     } as User
 })
+
+
+
