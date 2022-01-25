@@ -3,13 +3,14 @@ import { NextRouter } from "next/router"
 
 type ParamsUseToastChakra = {
     response: BaseResponse<any>
-    path?: string
+    pathReload?: string
+    isReload?: boolean
     toast: any
     router: NextRouter
 }
 
 export const createToastChakra = (params:ParamsUseToastChakra)=>{
-    const { response, path, toast, router } = params
+    const { response, pathReload, toast, router, isReload } = params
 
     if(response.status === "success"){
         toast({
@@ -19,10 +20,12 @@ export const createToastChakra = (params:ParamsUseToastChakra)=>{
             duration:2000,
             position: 'top',
         })
-        if(path){
+        if(pathReload){
             setTimeout(()=>{
-                router.push(path)
+                router.push(pathReload)
             },2000)
+        }else if(isReload){
+            router.reload()
         }
     }
     else{

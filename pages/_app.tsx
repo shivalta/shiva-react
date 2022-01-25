@@ -100,27 +100,39 @@ export const AdminLayout = (page: ReactElement) => {
   return(
     <Flex>
       <Box width="300px" minHeight="100vh" background="base" py="10" px="4">
-        {
-          listCRUD.map(({path,name,key})=>{
-            return(
-              <Link href={`/admin/crud/${path}`} passHref key={`crud-${key}`}>
-                <Button
-                    as="a"
-                    colorScheme={activeCRUD === key ? "gray" : ""}
-                    className="my-text"
-                    width="full"
-                    justifyContent="flex-start"
-                    textTransform="capitalize"
-                    fontWeight="bold"
-                    leftIcon={<MdProductionQuantityLimits/>}
-                    my="2"
-                >
-                        {name}
-                </Button>
-              </Link>
-            )
-          })
-        }
+        <Box position="sticky" top="10">
+          <Text
+            as="h1"
+            fontSize="xl"
+            color="white"
+            className="my-text-2"
+            fontWeight="bold"
+            mb="10"
+          >
+            SHIVA ADMIN
+          </Text>
+          {
+            listCRUD.map(({path,name,key})=>{
+              return(
+                <Link href={`/admin/crud/${path}`} passHref key={`crud-${key}`}>
+                  <Button
+                      as="a"
+                      colorScheme={activeCRUD === key ? "gray" : ""}
+                      className="my-text"
+                      width="full"
+                      justifyContent="flex-start"
+                      textTransform="capitalize"
+                      fontWeight="bold"
+                      leftIcon={<MdProductionQuantityLimits/>}
+                      my="2"
+                  >
+                          {name}
+                  </Button>
+                </Link>
+              )
+            })
+          }
+        </Box>
       </Box>
       <Box width="calc(100% - 300px)" p="10">
         {page}

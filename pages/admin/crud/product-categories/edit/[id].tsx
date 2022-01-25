@@ -9,39 +9,44 @@ import { createToastChakra } from "../../../../../helper/create-toast-chakra"
 import * as Yup from "yup"
 import { useRouter } from "next/router"
 
-type DataProductClass = {
+type DataProductCategories = {
     id: number
     name: string
-    is_pasca: string
     image: string
+    product_class_id: number
+    tax: number
+    slug: string
 }
 
-const EditProductClass = ()=>{
+const EditProductCategories = ()=>{
 
-    const hiddenImageInput = useRef<HTMLInputElement>(null)
+    const imageInputRef = useRef<HTMLInputElement>(null)
     const toast = useToast()
     const router = useRouter()
     const formRef = useRef<HTMLFormElement>(null)
-    const [dataProductClass, setDataProductClass] = useState<DataProductClass>()
+    const [dataProductCategories, setDataProductCategories] = useState<DataProductCategories>()
     const formik = useFormik({
         initialValues:{
-            image:"",
-            ...dataProductClass,
+            ...dataProductCategories
         },
         enableReinitialize:true,
         validationSchema: Yup.object({
             name: Yup.string()
-                .min(5, 'isi nama minimal 5 karakter ya')
+                .min(4, 'isi nama minimal 4 karakter ya')
                 .required('isi nama dulu ya'),
-            is_pasca: Yup.boolean()
-                .required('isi is_pasca dulu ya'),
-            image: Yup.mixed().required("isi gambar dulu ya")
+            product_class_id: Yup.string()
+                .required('isi product class id dulu ya'),
+            image: Yup.mixed()
+                .required("isi gambar dulu ya"),
+            tax: Yup.string()
+                .min(1, 'isi tax minimal 1 karakter ya')
+                .required('isi tax dulu ya'),
         }),
         onSubmit:async ()=>{
             const formData = new FormData(formRef.current!)
             const response = await baseRequest({
                 method:"PUT",
-                url:`/class/${router.query.id}`,
+                url:`/categories/${router.query.id}`,
                 acceptType:"form-data",
                 body:formData
             })
@@ -49,17 +54,16 @@ const EditProductClass = ()=>{
                 response:response,
                 router:router,
                 toast:toast,
-                pathReload:"/admin/crud/product-class"
+                pathReload:"/admin/crud/product-categories"
             })
         }
     })
-
     const handleClickUploadImage = () => {
-        hiddenImageInput.current?.click()
+        imageInputRef.current?.click()
     }
 
     const handleChangeUploadImage = () => {
-        formik.setFieldValue("image", hiddenImageInput.current?.files)
+        formik.setFieldValue("image", imageInputRef.current?.files)
     }
 
     // useEffect(()=>{
@@ -78,65 +82,53 @@ const EditProductClass = ()=>{
     // },[])
 
     useEffect(()=>{
-        const getDataProductClass = async ()=>{
-            const response = await baseRequest<DataProductClass>({
+        const getDataProductCategories = async ()=>{
+            const response = await baseRequest<DataProductCategories>({
                 method:"GET",
-                url:`/class/${router.query.id}`
+                url:`/categories/${router.query.id}`
             })
-            const is_pasca = response.data.is_pasca? "1" : "0"
-            const dataResponse = {
-                ...response.data,
-                is_pasca
-            }
-            setDataProductClass(dataResponse)
+            setDataProductCategories(response.data)
         }
         if(router.query.id){
-            getDataProductClass()
+            getDataProductCategories()
         }
     },[router])
 
-    const { name, is_pasca } = formik.values
+    const { name, product_class_id, tax } = formik.values
 
     return(
         <form ref={formRef}>
             <Text as="h2" fontWeight="bold" className="my-text" color="base" fontSize="2xl" mb="10">
-                Edit Product Class
+                Edit Product Categories
             </Text>
             <FormControl isInvalid={formik.errors.name && formik.touched.name ? true : false}>
                 <FormLabel htmlFor="name" textColor="base" mt="3">name</FormLabel>
                 <Input
                     onChange={formik.handleChange} onBlur={formik.handleBlur} id="name" variant='outline'
-                    placeholder='ex: pulsa' shadow="base" size="lg" value={name} name="name"
+                    placeholder='ex: telkomsel' shadow="base" size="lg" value={name} name="name"
                 />
                 {
                     <FormErrorMessage>{formik.touched.name? formik.errors.name : ""}</FormErrorMessage>
                 }
             </FormControl>
-            <FormControl isInvalid={formik.errors.is_pasca && formik.touched.is_pasca ? true : false}>
-                <FormLabel htmlFor="name" textColor="base" mt="3">is pasca</FormLabel>
-                <RadioGroup onChange={formik.handleChange} value={formik.values.is_pasca} onBlur={formik.handleBlur}>
-                    <Stack direction='row'>
-                        <Radio
-                            onChange={formik.handleChange}
-                            value="1" checked={is_pasca==="1"}
-                            onBlur={formik.handleBlur}
-                            name="is_pasca"
-                        >
-                            true
-                        </Radio>
-                        <Radio
-                            onChange={formik.handleChange}
-                            value="0"
-                            checked={is_pasca==="0"}
-                            onBlur={formik.handleBlur}
-                            name="is_pasca"
-                        >
-                            false
-                        </Radio>
-                    </Stack>
-                </RadioGroup>
+            <FormControl isInvalid={formik.errors.product_class_id && formik.touched.product_class_id ? true : false}>
+                <FormLabel htmlFor="product_class_id" textColor="base" mt="3">product class id</FormLabel>
+                <Input
+                    onChange={formik.handleChange} onBlur={formik.handleBlur} id="product_class_id" variant='outline'
+                    placeholder='ex: 2' shadow="base" size="lg" value={product_class_id} name="product_class_id"
+                />
                 {
-                    <FormErrorMessage>{formik.touched.is_pasca? formik.errors.is_pasca : ""}</FormErrorMessage>
+                    <FormErrorMessage>{formik.touched.product_class_id? formik.errors.product_class_id : ""}</FormErrorMessage>
+                }
+            </FormControl>
+            <FormControl isInvalid={formik.errors.tax && formik.touched.tax ? true : false}>
+                <FormLabel htmlFor="tax" textColor="base" mt="3">tax</FormLabel>
+                <Input
+                    onChange={formik.handleChange} onBlur={formik.handleBlur} id="tax" variant='outline'
+                    placeholder='ex: 2000' shadow="base" size="lg" value={tax} name="tax"
+                />
+                {
+                    <FormErrorMessage>{formik.touched.tax? formik.errors.tax : ""}</FormErrorMessage>
                 }
             </FormControl>
             <FormControl isInvalid={formik.errors.image && formik.touched.image ? true : false}>
@@ -154,9 +146,9 @@ const EditProductClass = ()=>{
                         >
                         upload image
                     </Button>
-                    {/* <Text ml="2">{formik.values.image[0]?.name || ""}</Text> */}
+                    <Text ml="2">{}</Text>
                 </Flex>
-                <Input id="input-image" onChange={handleChangeUploadImage} type="file" name="image" accept="image/*" ref={hiddenImageInput} hidden/>
+                <Input id="input-image" onChange={handleChangeUploadImage} type="file" name="image" accept="image/*" ref={imageInputRef} hidden/>
                 {
                     <FormErrorMessage>{formik.touched.image? formik.errors.image : ""}</FormErrorMessage>
                 }
@@ -174,12 +166,12 @@ const EditProductClass = ()=>{
                 leftIcon={<MdOutlineCreateNewFolder/>}
                 onClick={()=>formik.handleSubmit()}
                 >
-                    Edit
+                    Create
             </Button>
         </form>
     )
 }
 
-export default EditProductClass
+export default EditProductCategories
 
-EditProductClass.getLayout = AdminLayout
+EditProductCategories.getLayout = AdminLayout

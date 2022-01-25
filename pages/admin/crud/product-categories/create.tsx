@@ -9,7 +9,7 @@ import { createToastChakra } from "../../../../helper/create-toast-chakra"
 import * as Yup from "yup"
 import { useRouter } from "next/router"
 
-const CreateProductClass = () => {
+const CreateProductCategories = () => {
 
     const imageInputRef = useRef<HTMLInputElement>(null)
     const imageInputFiles:FileList = imageInputRef.current?.files!
@@ -19,22 +19,27 @@ const CreateProductClass = () => {
     const formik = useFormik({
         initialValues:{
             name:"",
-            is_pasca:"",
+            product_class_id:"",
             image:"",
+            tax:""
         },
         validationSchema: Yup.object({
             name: Yup.string()
                 .min(4, 'isi nama minimal 4 karakter ya')
                 .required('isi nama dulu ya'),
-            is_pasca: Yup.boolean()
-                .required('isi is_pasca dulu ya'),
-            image: Yup.mixed().required("isi gambar dulu ya")
+            product_class_id: Yup.string()
+                .required('isi product class id dulu ya'),
+            image: Yup.mixed()
+                .required("isi gambar dulu ya"),
+            tax: Yup.string()
+                .min(1, 'isi tax minimal 1 karakter ya')
+                .required('isi tax dulu ya'),
         }),
         onSubmit:async ()=>{
             const formData = new FormData(formRef.current!)
             const response = await baseRequest({
                 method:"POST",
-                url:"/class",
+                url:"/categories",
                 acceptType:"form-data",
                 body:formData
             })
@@ -42,7 +47,7 @@ const CreateProductClass = () => {
                 response:response,
                 router:router,
                 toast:toast,
-                pathReload:"/admin/crud/product-class"
+                pathReload:"/admin/crud/product-categories"
             })
         }
     })
@@ -55,48 +60,41 @@ const CreateProductClass = () => {
         formik.setFieldValue("image", imageInputRef.current?.files)
     }
 
-    const { name, is_pasca } = formik.values
+    const { name, product_class_id, tax } = formik.values
 
     return(
         <form ref={formRef}>
             <Text as="h2" fontWeight="bold" className="my-text" color="base" fontSize="2xl" mb="10">
-                Create New Product Class
+                Create New Product Categories
             </Text>
             <FormControl isInvalid={formik.errors.name && formik.touched.name ? true : false}>
                 <FormLabel htmlFor="name" textColor="base" mt="3">name</FormLabel>
                 <Input
                     onChange={formik.handleChange} onBlur={formik.handleBlur} id="name" variant='outline'
-                    placeholder='ex: pulsa' shadow="base" size="lg" value={name} name="name"
+                    placeholder='ex: telkomsel' shadow="base" size="lg" value={name} name="name"
                 />
                 {
                     <FormErrorMessage>{formik.touched.name? formik.errors.name : ""}</FormErrorMessage>
                 }
             </FormControl>
-            <FormControl isInvalid={formik.errors.is_pasca && formik.touched.is_pasca ? true : false}>
-                <FormLabel htmlFor="name" textColor="base" mt="3">is pasca</FormLabel>
-                <RadioGroup onChange={formik.handleChange} value={formik.values.is_pasca} onBlur={formik.handleBlur}>
-                    <Stack direction='row'>
-                        <Radio
-                            onChange={formik.handleChange}
-                            value="1" checked={is_pasca==="1"}
-                            onBlur={formik.handleBlur}
-                            name="is_pasca"
-                        >
-                            true
-                        </Radio>
-                        <Radio
-                            onChange={formik.handleChange}
-                            value="0"
-                            checked={is_pasca==="0"}
-                            onBlur={formik.handleBlur}
-                            name="is_pasca"
-                        >
-                            false
-                        </Radio>
-                    </Stack>
-                </RadioGroup>
+            <FormControl isInvalid={formik.errors.product_class_id && formik.touched.product_class_id ? true : false}>
+                <FormLabel htmlFor="product_class_id" textColor="base" mt="3">product class id</FormLabel>
+                <Input
+                    onChange={formik.handleChange} onBlur={formik.handleBlur} id="product_class_id" variant='outline'
+                    placeholder='ex: 2' shadow="base" size="lg" value={product_class_id} name="product_class_id"
+                />
                 {
-                    <FormErrorMessage>{formik.touched.is_pasca? formik.errors.is_pasca : ""}</FormErrorMessage>
+                    <FormErrorMessage>{formik.touched.product_class_id? formik.errors.product_class_id : ""}</FormErrorMessage>
+                }
+            </FormControl>
+            <FormControl isInvalid={formik.errors.tax && formik.touched.tax ? true : false}>
+                <FormLabel htmlFor="tax" textColor="base" mt="3">tax</FormLabel>
+                <Input
+                    onChange={formik.handleChange} onBlur={formik.handleBlur} id="tax" variant='outline'
+                    placeholder='ex: 5 (in percent)' shadow="base" size="lg" value={tax} name="tax"
+                />
+                {
+                    <FormErrorMessage>{formik.touched.tax? formik.errors.tax : ""}</FormErrorMessage>
                 }
             </FormControl>
             <FormControl isInvalid={formik.errors.image && formik.touched.image ? true : false}>
@@ -140,6 +138,6 @@ const CreateProductClass = () => {
     )
 }
 
-export default CreateProductClass
+export default CreateProductCategories
 
-CreateProductClass.getLayout = AdminLayout
+CreateProductCategories.getLayout = AdminLayout

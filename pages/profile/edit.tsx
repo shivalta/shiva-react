@@ -57,7 +57,7 @@ const EditProfile = ()=>{
             })
             createToastChakra({
                 response:response,
-                path:"/profile",
+                pathReload:"/profile",
                 router:router,
                 toast:toast
             })

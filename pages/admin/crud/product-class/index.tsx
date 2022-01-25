@@ -39,7 +39,8 @@ const ProductClass = () => {
 
     return(
         <Box width="100%">
-            <AdminAlertDialog isOpen={isOpen} closeDialog={onClose} id={idSelectedDelete}/>
+            <AdminAlertDialog pathDelete={`/class/${idSelectedDelete}`}
+            isOpen={isOpen} closeDialog={onClose}/>
             <Text as="h2" fontWeight="bold" className="my-text" color="base" fontSize="2xl" mb="10">
                 Product Class
             </Text>
@@ -48,6 +49,7 @@ const ProductClass = () => {
                     <TableCaption>Data of product class</TableCaption>
                     <Thead>
                         <Tr>
+                            <Th>Id</Th>
                             <Th>Name</Th>
                             <Th>Is Pasca</Th>
                             <Th>Image</Th>
@@ -57,9 +59,10 @@ const ProductClass = () => {
                     </Thead>
                     <Tbody>
                         {
-                            listProductClass.map((productClass)=>{
+                            listProductClass?.map((productClass)=>{
                                 return(
                                     <Tr key={`product-class-${productClass.id}`}>
+                                        <Td>{productClass.id}</Td>
                                         <Td>{productClass.name}</Td>
                                         <Td>{productClass.is_pasca? "true" : "false"}</Td>
                                         <Td>

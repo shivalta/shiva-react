@@ -22,7 +22,7 @@ const Verify = ()=>{
                     }
                 })
                 createToastChakra({
-                    path:"/login",
+                    pathReload:"/login",
                     response:response,
                     router:router,
                     toast:toast

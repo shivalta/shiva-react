@@ -17,12 +17,12 @@ import { baseRequest } from "../../../helper/base-request"
 type PropsAdminAlertDialog = {
     closeDialog : () => void
     isOpen : boolean
-    id : number
+    pathDelete : string
 }
 
 const AdminAlertDialog = (props: PropsAdminAlertDialog) => {
 
-    const { closeDialog, isOpen, id } = props
+    const { closeDialog, isOpen, pathDelete } = props
     const router = useRouter()
     const toast = useToast()
     const cancelRef = useRef(null)
@@ -30,14 +30,13 @@ const AdminAlertDialog = (props: PropsAdminAlertDialog) => {
     const handleClickConfirm = async () => {
         const response = await baseRequest({
             method:"DELETE",
-            url:`/class/${id}`
+            url:pathDelete
         })
-        console.log(id)
         createToastChakra({
             response:response,
             router:router,
             toast:toast,
-            path:"/admin/crud/product-class"
+            isReload:true
         })
         closeDialog()
     }
@@ -50,7 +49,7 @@ const AdminAlertDialog = (props: PropsAdminAlertDialog) => {
             isOpen={isOpen}
             isCentered
         >
-            <AlertDialogOverlay />
+            <AlertDialogOverlay/>
             <AlertDialogContent>
                 <AlertDialogHeader>Delete Record?</AlertDialogHeader>
             <AlertDialogCloseButton />

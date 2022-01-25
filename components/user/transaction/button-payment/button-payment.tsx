@@ -10,11 +10,11 @@ import { Button } from "@chakra-ui/react"
 import { useEffect } from "react"
 import { BeliPDAM } from "../../global-state/pdam"
 
-type PropsButtonPayment<T> = {
+type PropsButtonPayment = {
     detailServiceState: RecordDetailTransaction[]
 }
 
-const ButtonPayment = <T extends BeliPulsa | BeliToken | BeliPDAM>(props:PropsButtonPayment<T>)=>{
+const ButtonPayment = (props:PropsButtonPayment)=>{
 
     const { detailServiceState } = props
     const [navigatorState, setterNavigatorState] = useRecoilState(navigator)
