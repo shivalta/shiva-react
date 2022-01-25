@@ -19,14 +19,14 @@ const InfoConFirmPayment = <T extends BeliPulsa | BeliToken | BeliPDAM>(props:Pr
             <Flex width="full" alignItems="center" py="4">
                 {/* <Image width={80} height={30} src={serviceState.paymentMethod?.logo} alt={serviceState.paymentMethod?.name}/> */}
                 <Text as="h3" px="4" className="my-text" fontWeight="bold" fontSize="sm">
-                    {serviceState.paymentMethod?.name}
+                    {serviceState.paymentMethod?.bank_name}
                 </Text>
             </Flex>
             <List spacing={3} width="full" pt="3" pb="6">
                 <ListItem className="my-text" fontSize="xs" display="flex">
                     <ListIcon as={MdCheckCircle} color='green.500' mt="1"/>
                     <Text>
-                        Transaksi ini akan otomatis menggantikan tagihan {serviceState.paymentMethod?.name} yang belum dibayar
+                        Transaksi ini akan otomatis menggantikan tagihan {serviceState.paymentMethod?.bank_name} yang belum dibayar
                     </Text>
                 </ListItem>
                 <ListItem className="my-text" fontSize="xs" display="flex">
