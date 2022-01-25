@@ -33,7 +33,7 @@ const Login = () => {
             afterLogin: Yup.string()
         }),
         onSubmit:async (values)=>{
-            const response = await baseRequest({
+            const response = await baseRequest<ResponseDataUser>({
                 url:"/auth/login",
                 method:"POST",
                 body:{

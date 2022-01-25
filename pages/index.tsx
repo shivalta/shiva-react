@@ -7,16 +7,33 @@ import { UserLayout } from './_app'
 import { User } from '../components/user/global-state/user'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
+import { baseRequest } from '../helper/base-request'
+
+type ServiceData = {
+  id: string
+  name: string
+  is_pasca: boolean
+  image: string
+  slug: string
+}
 
 const Home = () => {
 
   const [userPersisted, setUserPersisted] = useState<User>()
-
+  const [serviceData, setServiceData] = useState<ServiceData[]>()
 
   useEffect(()=>{
+    const getServiceData = async () => {
+      const response = await baseRequest<ServiceData[]>({
+        method:"GET",
+        url:"/class",
+      })
+      setServiceData(response.data)
+    }
     if(localStorage.getItem("user-persist")){
       setUserPersisted(JSON.parse(localStorage.getItem("user-persist") || ""))
     }
+    getServiceData()
   },[])
 
   return (
@@ -62,9 +79,11 @@ const Home = () => {
         }
 
         <SimpleGrid columns={3} spacing={5} my="8" px="8">
-            <Service title="pulsa" href="/transaction/pulsa" />
-            <Service title="token" href="/transaction/token"/>
-            <Service title="pdam" href="/transaction/pdam"/>
+          {
+            serviceData?.map(({ id, name, image })=>(
+              <Service key={`service-${id}`} title={name} href={`/transaction/${name}`} image={image} />
+            ))
+          }
         </SimpleGrid>
     </>
   )
