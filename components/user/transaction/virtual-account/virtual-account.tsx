@@ -3,6 +3,7 @@ import { MdOutlineFileCopy } from "react-icons/md"
 import { rupiahFormatter } from "../../../../helper/rupiah-formatter"
 import { BeliPulsa } from "../../global-state/pulsa"
 import { BeliToken } from "../../global-state/token"
+import { useState } from "react"
 import { BeliPDAM } from "../../global-state/pdam"
 
 type PropsVirtualAccount<T> = {
@@ -12,6 +13,8 @@ type PropsVirtualAccount<T> = {
 const VirtualAccount = <T extends BeliPulsa | BeliToken | BeliPDAM>(props:PropsVirtualAccount<T>) => {
 
     const {serviceState} = props
+    const [isCopied, setIsCopied] = useState(false)
+    console.log("halo")
 
     return(
         <Box p="5" borderRadius="xl" boxShadow="base" my="8">
