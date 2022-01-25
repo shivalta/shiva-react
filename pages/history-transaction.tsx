@@ -30,9 +30,8 @@ const mockDataHistory:DataHistoryTransaction= [
         total: 6000,
         virtualAccount: "23232323232",
         paymentMethod: {
-            id:"1",
-            name:"mandiri",
-            logo:"any"
+            bank_name:"Mandiri",
+            bank_code:"MANDIRI"
         }
     },
     {
@@ -47,9 +46,8 @@ const mockDataHistory:DataHistoryTransaction= [
         total: 6000,
         virtualAccount: "23232323232",
         paymentMethod: {
-            id:"1",
-            name:"mandiri",
-            logo:"any"
+            bank_name:"Mandiri",
+            bank_code:"MANDIRI"
         }
     }
 ]
