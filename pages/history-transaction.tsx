@@ -58,7 +58,7 @@ const HistoryTransaction = () => {
 
     const [navigatorState, setterNavigatorState] = useRecoilState(navigator)
     const setIsBlackScreenRender = useSetRecoilState(blackScreen)
-    const [dataHistory, setDataHistory] = useState<BaseResponse>()
+    const [dataHistory, setDataHistory] = useState<BaseResponse<any>>()
     const [userPersisted, setUserPersisted] = useState<User | null>()
 
     useEffect(()=>{
@@ -79,7 +79,7 @@ const HistoryTransaction = () => {
                 message: "suke",
                 data: mockDataHistory
             }
-            setDataHistory(dataHistory as BaseResponse)
+            setDataHistory(dataHistory as BaseResponse<any>)
         }
 
         getDataHistory()
