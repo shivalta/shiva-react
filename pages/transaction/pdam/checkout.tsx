@@ -75,7 +75,6 @@ const Checkout = () => {
             </Text>
             <DetailTransaction  detailTransaction={detailBeliPDAM}/>
             <ChoicePaymentMethod
-                listPaymentMethod={listPaymentMethod}
                 setterServiceState={setDataBeliPDAM}
                 serviceState={dataBeliPDAM}
             />

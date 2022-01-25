@@ -13,8 +13,6 @@ import ButtonCheckout from "../../../components/user/transaction/button-checkout
 import { navigator } from "../../../components/user/global-state/navigator"
 import InfoTotalPayment from "../../../components/user/transaction/info-total-payment/info-total-payment"
 import { useRouter } from "next/router"
-import logoMandiri from "../../../public/images/mandiri-2.png"
-import logoBCA from "../../../public/images/bca-2.png"
 
 const Checkout = () => {
 
@@ -53,19 +51,6 @@ const Checkout = () => {
         }
     },[dataBeliToken, dataBeliToken])
 
-    const listPaymentMethod = [
-        {
-            id:"BCA-1",
-            name:"BCA virtual account",
-            logo:"/../../../public/images/bca-2.png"
-        },
-        {
-            id:"MANDIRI-2",
-            name:"Mandiri virtual account",
-            logo:"/../../../public/images/mandiri-2.png"
-        }
-    ]
-
     return(
         <>
             <Service setting={{my:"8"}} title="token"/>
@@ -74,7 +59,6 @@ const Checkout = () => {
             </Text>
             <DetailTransaction  detailTransaction={detailBeliToken}/>
             <ChoicePaymentMethod
-                listPaymentMethod={listPaymentMethod}
                 setterServiceState={setDataBeliToken}
                 serviceState={dataBeliToken}
             />

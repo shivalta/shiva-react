@@ -1,27 +1,38 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Flex, Text, RadioGroup, Box, Radio, Divider } from "@chakra-ui/react"
 import Image from "next/image"
 import { BeliPulsa } from "../../global-state/pulsa"
 import { BeliToken } from "../../global-state/token"
 import { BeliPDAM } from "../../global-state/pdam"
 import { Fragment } from "react"
+import { baseRequest } from "../../../../helper/base-request"
 
 type PaymentMethod = {
-    id: string
-    name: string
-    logo: string
+    bank_name: string
+    bank_code: string
 }
 
 type PropsChoicePaymentMethod<T> = {
-    listPaymentMethod : PaymentMethod[]
     setterServiceState: (arg:T)=>void
     serviceState: T
 }
 
 const ChoicePaymentMethod =<T extends BeliPulsa | BeliToken | BeliPDAM>(props: PropsChoicePaymentMethod<T>)=>{
 
-    const {listPaymentMethod, setterServiceState, serviceState} = props
-    const currentPaymentMethod = serviceState.paymentMethod?.id || ""
+    const [listPaymentMethod, setListPaymentMethod] = useState<PaymentMethod[]>()
+    const {setterServiceState, serviceState} = props
+    const currentPaymentMethod = serviceState.paymentMethod?.bank_code || ""
+
+    useEffect(()=>{
+        const getDataPaymentMethod = async () => {
+            const response = await baseRequest<PaymentMethod[]>({
+                method:"GET",
+                url:"/payment-list"
+            })
+            setListPaymentMethod(response.data)
+        }
+        getDataPaymentMethod()
+    },[])
 
     return(
         <>
@@ -30,19 +41,17 @@ const ChoicePaymentMethod =<T extends BeliPulsa | BeliToken | BeliPDAM>(props: P
             </Text>
             <RadioGroup value={currentPaymentMethod}>
                 {
-                    listPaymentMethod.map(({id,name,logo})=>{
+                    listPaymentMethod?.map(({bank_name,bank_code})=>{
                         return(
-                            <Fragment key={id}>
+                            <Fragment key={bank_name}>
                                 <Flex alignItems="center" my="8">
-                                    {/* <Image src={logo} width={80} height={30} alt={name}/> */}
-                                    <Box px="4" className="my-text" fontWeight="semibold" flexGrow="1" fontSize="sm">{name}</Box>
-                                    <Radio value={id} onClick={()=>{
+                                    <Box px="2" className="my-text" fontWeight="semibold" flexGrow="1" fontSize="sm">{bank_name}</Box>
+                                    <Radio value={bank_code} onClick={()=>{
                                         setterServiceState({
                                             ...serviceState,
                                             paymentMethod:{
-                                                id:id,
-                                                name:name,
-                                                logo:logo
+                                                bank_name,
+                                                bank_code
                                             }
                                         })
                                     }}/>

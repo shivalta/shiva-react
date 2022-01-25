@@ -10,6 +10,7 @@ import { NextPage } from 'next'
 import { ReactElement, ReactNode,useEffect,useState } from 'react'
 import shivaLogo from '../public/images/shiva.png'
 import Navigator from '../components/user/general/navigator/navigator'
+import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 
@@ -178,6 +179,11 @@ const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
 
   return (
       <ChakraProvider theme={theme}>
+        <Head>
+          <title>Shiva | Solusi Pembayaran Masa Kini</title>
+          <meta name="description" content="Shiva" />
+          <link rel="icon" href="/images/shiva.png" />
+        </Head>
         <RecoilRoot>
           {page}
         </RecoilRoot>

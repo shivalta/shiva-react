@@ -38,11 +38,6 @@ const Home = () => {
 
   return (
     <>
-      <Head>
-        <title>Shiva | Solusi Pembayaran Masa Kini</title>
-        <meta name="description" content="Shiva" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
         <HomeSlider />
         <Text
             color="base"

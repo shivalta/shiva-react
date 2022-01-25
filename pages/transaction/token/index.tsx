@@ -24,7 +24,7 @@ const Index = () => {
         },
         validationSchema: Yup.object({
             noPLN: Yup.string()
-              .min(10, 'isi no PLN minimal 10 karakter ya')
+              .max(3, 'isi no PLN maximal 3 karakter ya')
               .required('isi no PLN dulu ya')
         }),
         onSubmit:(values:any) => {}
@@ -54,7 +54,7 @@ const Index = () => {
     }
 
     const setListNominal = (noPLN:string="") => {
-        if(noPLN.length === 10){
+        if(noPLN.length < 4 && noPLN.length > 0){
             getDataListNominal()
         }
         else{
@@ -70,8 +70,18 @@ const Index = () => {
     }
 
 
-    const handleClickNominal = ({name, price, adminFee, tax}:DataNominal)=>{
+    const handleClickNominal = async ({name, price, adminFee, tax}:DataNominal)=>{
+        const response = await baseRequest<any>({
+            method:"POST",
+            url:"/checkout",
+            body:{
+                user_value: formik.values.noPLN,
+                product_id: 27
+            }
+        })
+        const username = response.data.user_value
         setDataBeliToken({
+            username:username,
             nameProduct:name,
             price:price,
             adminFee:adminFee,
@@ -103,7 +113,7 @@ const Index = () => {
                 <FormLabel htmlFor="noPLN" textColor="base">No meter PLN / ID pelanggan</FormLabel>
                 <Input
                     type="tel" onChange={handleChange} onBlur={formik.handleBlur} id="noPLN" variant='outline'
-                    placeholder='1234xx' shadow="base" size="lg" value={noPLN} name="noPLN"
+                    placeholder='0-100' shadow="base" size="lg" value={noPLN} name="noPLN"
                 />
                 {
                     <FormErrorMessage>{formik.errors.noPLN}</FormErrorMessage>

@@ -5,6 +5,7 @@ import { rupiahFormatter } from "../../../helper/rupiah-formatter"
 export type BeliToken = {
     id? : string
     noPLN? : string
+    username?: string
     nameProduct? : string
     nameCategory?: string
     price? : number
@@ -15,9 +16,8 @@ export type BeliToken = {
     total?: number
     virtualAccount?: string
     paymentMethod?: {
-        id:string
-        name:string
-        logo:any
+        bank_name: string
+        bank_code: string
     }
 }
 
@@ -34,11 +34,15 @@ export const generateDetailBeliToken = (dataBeliToken:BeliToken) :RecordDetailTr
         },
         {
             name:"Metode Pembayaran",
-            value: dataBeliToken.paymentMethod? dataBeliToken.paymentMethod.name : "-"
+            value: dataBeliToken.paymentMethod? dataBeliToken.paymentMethod.bank_name : "-"
         },
         {
             name:"No PLN",
             value:dataBeliToken.noPLN? dataBeliToken.noPLN : "-"
+        },
+        {
+            name:"Nama Pengguna",
+            value:dataBeliToken.username? dataBeliToken.username : "-"
         },
         {
             name:"Harga",

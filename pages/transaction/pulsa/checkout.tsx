@@ -7,8 +7,6 @@ import { getDetailBeliPulsa } from "../../../components/user/global-state/pulsa"
 import ChoicePaymentMethod from "../../../components/user/transaction/choice-payment-method/choice-payment-method"
 import { backNavEffects } from "../../../components/user/global-state/back-nav-effects"
 import { UserLayout } from "../../_app"
-import logoMandiri from "../../../public/images/mandiri-2.png"
-import logoBCA from "../../../public/images/bca-2.png"
 import { useEffect } from "react"
 import { navigator } from "../../../components/user/global-state/navigator"
 import ButtonCheckout from "../../../components/user/transaction/button-checkout/button-checkout"
@@ -73,7 +71,6 @@ const Checkout = () => {
             </Text>
             <DetailTransaction detailTransaction={detailBeliPulsa}/>
             <ChoicePaymentMethod
-                listPaymentMethod={listPaymentMethod}
                 setterServiceState={setDataBeliPulsa}
                 serviceState={dataBeliPulsa}
             />

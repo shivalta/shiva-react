@@ -1,9 +1,8 @@
-import { Box, Flex, Icon, Text} from "@chakra-ui/react"
+import { Box, Flex, Icon, Text, useToast } from "@chakra-ui/react"
 import { MdOutlineFileCopy } from "react-icons/md"
 import { rupiahFormatter } from "../../../../helper/rupiah-formatter"
 import { BeliPulsa } from "../../global-state/pulsa"
 import { BeliToken } from "../../global-state/token"
-import { useState } from "react"
 import { BeliPDAM } from "../../global-state/pdam"
 
 type PropsVirtualAccount<T> = {
@@ -12,9 +11,26 @@ type PropsVirtualAccount<T> = {
 
 const VirtualAccount = <T extends BeliPulsa | BeliToken | BeliPDAM>(props:PropsVirtualAccount<T>) => {
 
-    const {serviceState} = props
-    const [isCopied, setIsCopied] = useState(false)
-    console.log("halo")
+    const { serviceState } = props
+    const toast = useToast()
+
+    const copyTextToClipboard = async (text:string) => {
+        return await navigator.clipboard.writeText(text)
+    }
+
+    const handleCopyClick = (copyText:string) => {
+        copyTextToClipboard(copyText)
+          .then(() => {
+            toast({
+                description: "virtual account berhasil disalin.",
+                status: 'success',
+                position: 'top'
+            })
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      }
 
     return(
         <Box p="5" borderRadius="xl" boxShadow="base" my="8">
@@ -29,7 +45,7 @@ const VirtualAccount = <T extends BeliPulsa | BeliToken | BeliPDAM>(props:PropsV
             <Text as="h3" className="my-text" color="base" fontSize="sm" fontWeight="bold" mt="4" mb="2">Nomor Virtual Account</Text>
             <Flex justifyContent="space-between">
                 <Text fontWeight="bold" className="my-text">80777082236486879</Text>
-                <Flex alignItems="center">
+                <Flex cursor="pointer" alignItems="center" onClick={()=>handleCopyClick("80777082236486879")}>
                     <Text className="my-text" fontSize="sm" mx="1">salin</Text>
                     <Icon as={MdOutlineFileCopy}></Icon>
                 </Flex>

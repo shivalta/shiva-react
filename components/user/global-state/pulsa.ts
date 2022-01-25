@@ -15,9 +15,8 @@ export type BeliPulsa = {
     total?: number
     virtualAccount?: string
     paymentMethod?: {
-        id:string
-        name:string
-        logo:any
+        bank_name: string
+        bank_code: string
     }
 }
 
@@ -34,7 +33,7 @@ export const generateDetailBeliPulsa = (dataBeliPulsa:BeliPulsa):RecordDetailTra
         },
         {
             name:"Metode Pembayaran",
-            value: dataBeliPulsa.paymentMethod? dataBeliPulsa.paymentMethod.name : "-"
+            value: dataBeliPulsa.paymentMethod? dataBeliPulsa.paymentMethod.bank_name : "-"
         },
         {
             name:"No handphone",
