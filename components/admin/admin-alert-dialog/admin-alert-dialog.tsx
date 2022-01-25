@@ -1,4 +1,4 @@
-import { useRef } from "react"
+import { useRef, useEffect } from "react"
 import {
     AlertDialog,
     AlertDialogOverlay,
@@ -13,6 +13,9 @@ import {
 import { createToastChakra } from "../../../helper/create-toast-chakra"
 import { useRouter } from "next/router"
 import { baseRequest } from "../../../helper/base-request"
+import { useRecoilState } from "recoil"
+import { admin } from "../../../components/user/global-state/admin"
+
 
 type PropsAdminAlertDialog = {
     closeDialog : () => void
@@ -23,14 +26,20 @@ type PropsAdminAlertDialog = {
 const AdminAlertDialog = (props: PropsAdminAlertDialog) => {
 
     const { closeDialog, isOpen, pathDelete } = props
+    const [adminState, setterAdminState] = useRecoilState(admin)
     const router = useRouter()
     const toast = useToast()
     const cancelRef = useRef(null)
 
+    useEffect(()=>{
+        setterAdminState(JSON.parse(localStorage.getItem("admin-persist") || ""))
+    },[])
+
     const handleClickConfirm = async () => {
         const response = await baseRequest({
             method:"DELETE",
-            url:pathDelete
+            url:pathDelete,
+            token:adminState.data?.token
         })
         createToastChakra({
             response:response,

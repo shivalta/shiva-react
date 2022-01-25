@@ -7,6 +7,8 @@ import { useEffect, useRef, useState } from "react"
 import { baseRequest } from "../../../../../helper/base-request"
 import { createToastChakra } from "../../../../../helper/create-toast-chakra"
 import * as Yup from "yup"
+import { useRecoilState } from "recoil"
+import { admin } from "../../../../../components/user/global-state/admin"
 import { useRouter } from "next/router"
 
 type DataProductClass = {
@@ -22,6 +24,7 @@ const EditProductClass = ()=>{
     const toast = useToast()
     const router = useRouter()
     const formRef = useRef<HTMLFormElement>(null)
+    const [adminState, setterAdminState] = useRecoilState(admin)
     const [dataProductClass, setDataProductClass] = useState<DataProductClass>()
     const formik = useFormik({
         initialValues:{
@@ -43,7 +46,8 @@ const EditProductClass = ()=>{
                 method:"PUT",
                 url:`/class/${router.query.id}`,
                 acceptType:"form-data",
-                body:formData
+                body:formData,
+                token:adminState.data?.token
             })
             createToastChakra({
                 response:response,
@@ -61,6 +65,10 @@ const EditProductClass = ()=>{
     const handleChangeUploadImage = () => {
         formik.setFieldValue("image", hiddenImageInput.current?.files)
     }
+
+    useEffect(()=>{
+        setterAdminState(JSON.parse(localStorage.getItem("admin-persist") || ""))
+    },[])
 
     // useEffect(()=>{
     //     const getImage = async()=>{

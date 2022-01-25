@@ -1,18 +1,21 @@
 import { useFormik } from "formik"
 import { FormControl, FormLabel, Input, FormErrorMessage,
-         Text, RadioGroup, Radio, Stack, Button, useToast, Flex } from "@chakra-ui/react"
+         Text, Button, useToast, Flex } from "@chakra-ui/react"
 import { AdminLayout } from "../../../_app"
 import { MdOutlineCreateNewFolder, MdCameraEnhance } from "react-icons/md"
-import { useRef } from "react"
+import { useRef, useEffect } from "react"
 import { baseRequest } from "../../../../helper/base-request"
 import { createToastChakra } from "../../../../helper/create-toast-chakra"
 import * as Yup from "yup"
 import { useRouter } from "next/router"
+import { useRecoilState } from "recoil"
+import { admin } from "../../../../components/user/global-state/admin"
 
 const CreateProductCategories = () => {
 
     const imageInputRef = useRef<HTMLInputElement>(null)
     const imageInputFiles:FileList = imageInputRef.current?.files!
+    const [adminState, setterAdminState] = useRecoilState(admin)
     const toast = useToast()
     const router = useRouter()
     const formRef = useRef<HTMLFormElement>(null)
@@ -41,7 +44,8 @@ const CreateProductCategories = () => {
                 method:"POST",
                 url:"/categories",
                 acceptType:"form-data",
-                body:formData
+                body:formData,
+                token:adminState.data?.token
             })
             createToastChakra({
                 response:response,
@@ -59,6 +63,10 @@ const CreateProductCategories = () => {
     const handleChangeUploadImage = () => {
         formik.setFieldValue("image", imageInputRef.current?.files)
     }
+
+    useEffect(()=>{
+        setterAdminState(JSON.parse(localStorage.getItem("admin-persist") || ""))
+    },[])
 
     const { name, product_class_id, tax } = formik.values
 

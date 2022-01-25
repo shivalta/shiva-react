@@ -37,6 +37,7 @@ const Profile = () => {
             const dataUser = await baseRequest<DataUser>({
                 url:`users/${userPersisted?.data?.user.id}`,
                 method:"GET",
+                token:userPersisted.data.token
             })
             setDataUser(dataUser)
         }

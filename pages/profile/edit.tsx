@@ -53,7 +53,8 @@ const EditProfile = ()=>{
             const response = await baseRequest({
                 url:`users/${userPersisted?.data?.user.id}`,
                 method:"PUT",
-                body:values
+                body:values,
+                token:userPersisted?.data?.token
             })
             createToastChakra({
                 response:response,
@@ -78,6 +79,7 @@ const EditProfile = ()=>{
             const dataUser = await baseRequest<DataUser>({
                 url:`users/${userPersisted?.data?.user.id}`,
                 method:"GET",
+                token:userPersisted?.data?.token
             })
             setDataUser(dataUser)
         }

@@ -9,6 +9,8 @@ import { createToastChakra } from "../../../../../helper/create-toast-chakra"
 import * as Yup from "yup"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/router"
+import { useRecoilState } from "recoil"
+import { admin } from "../../../../../components/user/global-state/admin"
 
 type DataProducts = {
     id: number
@@ -51,6 +53,7 @@ const EditProducts = () => {
     const toast = useToast()
     const router = useRouter()
     const formRef = useRef<HTMLFormElement>(null)
+    const [adminState, setterAdminState] = useRecoilState(admin)
     const [dataProductsFormik, setDataProductsFormik] = useState<DataProductsFormik>()
     const formik = useFormik({
         initialValues:{
@@ -98,7 +101,8 @@ const EditProducts = () => {
                     price,
                     admin_fee,
                     is_active
-                }
+                },
+                token:adminState.data?.token
             })
             createToastChakra({
                 response:response,
@@ -132,6 +136,10 @@ const EditProducts = () => {
             getDataProducts()
         }
     },[router])
+
+    useEffect(()=>{
+        setterAdminState(JSON.parse(localStorage.getItem("admin-persist") || ""))
+    },[])
 
     const { sku, name, admin_fee, stock, price, product_class_id, product_category_id } = formik.values
     const is_active = formik.values.is_active? "1" : "0"

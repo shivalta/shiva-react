@@ -1,4 +1,4 @@
-import { Box, Text, Flex, Button } from "@chakra-ui/react"
+import { Box, Flex, Button } from "@chakra-ui/react"
 import { MdProductionQuantityLimits } from "react-icons/md"
 import Link from "next/link"
 

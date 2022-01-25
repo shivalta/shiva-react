@@ -1,7 +1,7 @@
 import { ChakraProvider, extendTheme, Flex, Box, Text, Button } from '@chakra-ui/react'
-import { MdProductionQuantityLimits } from 'react-icons/md'
+import { MdLogout, MdProductionQuantityLimits } from 'react-icons/md'
 import type { AppProps } from 'next/app'
-import { RecoilRoot } from 'recoil'
+import { RecoilRoot, useRecoilState } from 'recoil'
 import '../styles/globals.css'
 import BackNav from '../components/user/general/back-nav/back-nav'
 import BlackScreen from '../components/user/general/black-screen/black-screen'
@@ -13,6 +13,7 @@ import Navigator from '../components/user/general/navigator/navigator'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { admin, ResponseDataAdmin } from '../components/user/global-state/admin'
 
 export type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode
@@ -64,6 +65,8 @@ export const UserLayout = (page: ReactElement) => {
 
 export const AdminLayout = (page: ReactElement) => {
 
+  const [adminState, setterAdminState] = useState<ResponseDataAdmin>()
+
   type ListKeyCRUD = {
     [key:string]:number
   }
@@ -98,6 +101,19 @@ export const AdminLayout = (page: ReactElement) => {
   useEffect(()=>{
     setActiveCRUD(listKeyCRUD[asPath.slice(12)])
   },[asPath])
+
+  useEffect(()=>{
+    const adminPersist = JSON.parse(localStorage.getItem("admin-persist") || "")
+    if(adminPersist && adminPersist.valid){
+      setterAdminState(JSON.parse(localStorage.getItem("admin-persist") || ""))
+    }else{
+      router.push("/admin/login")
+    }
+  },[])
+
+  if(adminState === undefined){
+    return null
+  }
 
   return(
     <Flex>
@@ -137,6 +153,24 @@ export const AdminLayout = (page: ReactElement) => {
         </Box>
       </Box>
       <Box width="calc(100% - 300px)" p="10">
+          <Button
+            className="my-text"
+            width="40"
+            justifyContent="flex-start"
+            textTransform="capitalize"
+            fontWeight="bold"
+            colorScheme="red"
+            leftIcon={<MdLogout/>}
+            my="2"
+            ml="auto"
+            display="block"
+            onClick={()=>{
+              localStorage.removeItem("admin-persist")
+              router.push("/admin/login")
+            }}
+          >
+            Logout
+          </Button>
         {page}
       </Box>
     </Flex>
