@@ -9,6 +9,7 @@ export type BeliToken = {
     nameCategory?: string
     price? : number
     adminFee? : number
+    tax?: number
     date?: string
     status?: boolean
     total?: number
@@ -46,6 +47,10 @@ export const generateDetailBeliToken = (dataBeliToken:BeliToken) :RecordDetailTr
         {
             name:"Biaya admin",
             value:dataBeliToken.adminFee? rupiahFormatter(dataBeliToken.adminFee,"Rp.") : "0"
+        },
+        {
+            name:"Pajak",
+            value:dataBeliToken.tax? `${dataBeliToken.tax}%` : "0%"
         },
         {
             name:"Total pembayaran",

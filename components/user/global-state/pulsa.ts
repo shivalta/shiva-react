@@ -9,6 +9,7 @@ export type BeliPulsa = {
     nameProduct? : string
     price? : number
     adminFee? : number
+    tax?: number
     date?: Date
     status?: boolean
     total?: number
@@ -46,6 +47,10 @@ export const generateDetailBeliPulsa = (dataBeliPulsa:BeliPulsa):RecordDetailTra
         {
             name:"Biaya admin",
             value:dataBeliPulsa.adminFee? rupiahFormatter(dataBeliPulsa.adminFee,"Rp.") : "0"
+        },
+        {
+            name:"Pajak",
+            value:dataBeliPulsa.tax? `${dataBeliPulsa.tax}%` : "0%"
         },
         {
             name:"Total pembayaran",

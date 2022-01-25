@@ -37,7 +37,6 @@ const ServiceIcon = (props:PropsService)=> {
     },[])
 
     let currentUrlImage = ""
-    console.log(urlImage)
     if(image){
         currentUrlImage = image
     }else if(urlImage){

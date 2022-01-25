@@ -9,29 +9,8 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import ChoiceNominal from '../../../components/user/transaction/choice-nominal/choice-nominal'
 import { UserLayout } from "../../_app"
+import { baseRequest } from '../../../helper/base-request'
 import { DataNominal,  ListDataNominal} from '../../../components/user/transaction/choice-nominal/choice-nominal'
-
-const listNominalToken = {
-    data:[
-        {
-            name: "Token Rp.5.000",
-            price: 6000,
-            adminFee: 1000
-        },
-        {
-            name: "Token Rp.10.000",
-            price: 11000,
-            adminFee: 1000
-        },
-        {
-            name: "Token Rp.20.000",
-            price: 21000,
-            adminFee: 1000
-        }
-    ]
-}
-
-
 
 const Index = () => {
 
@@ -53,10 +32,30 @@ const Index = () => {
 
     const noPLN = formik.values.noPLN
 
-    // in real case, check to db that noPLN valid
+    const getDataListNominal = async () => {
+        let idProvider = 10
+        const response = await baseRequest<any>({
+            method:"GET",
+            url:`/products?search=${idProvider}&key=product_category_id`
+        })
+        const listNominal = {
+            data: response.data.map((data:any)=>{
+                if(data.is_active){
+                    return {
+                        name: data.name,
+                        price: data.price,
+                        adminFee: data.admin_fee,
+                        tax: data.product_categories.tax
+                    }
+                }
+            })
+        }
+        setDataNominalToken(listNominal)
+    }
+
     const setListNominal = (noPLN:string="") => {
         if(noPLN.length === 10){
-            setDataNominalToken(listNominalToken)
+            getDataListNominal()
         }
         else{
             setDataNominalToken(undefined)
@@ -71,13 +70,14 @@ const Index = () => {
     }
 
 
-    const handleClickNominal = ({name, price, adminFee}:DataNominal)=>{
+    const handleClickNominal = ({name, price, adminFee, tax}:DataNominal)=>{
         setDataBeliToken({
             nameProduct:name,
             price:price,
             adminFee:adminFee,
             noPLN:noPLN,
-            total:price+adminFee
+            tax:tax,
+            total:price+(price*tax/100)+adminFee
         })
         router.push("/transaction/token/checkout")
     }

@@ -84,7 +84,7 @@ const EditProfile = ()=>{
         getDataUser()
     },[])
 
-    if(userPersisted === null){
+    if(userPersisted === null || userPersisted?.valid === false){
         return <BeforeLogin/>
     }
 

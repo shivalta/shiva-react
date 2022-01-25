@@ -4,6 +4,7 @@ export type DataNominal = {
     name:string
     price:number
     adminFee:number
+    tax:number
 }
 
 export type ListDataNominal = {
@@ -29,9 +30,9 @@ const ChoiceNominal = (props:PropsChoiceNominal)=>{
             </Text>
             {render? render() : null}
             {
-                dataNominal.map(({name,price,adminFee})=>{
+                dataNominal.map(({name,price,adminFee,tax})=>{
                     return(
-                        <Flex onClick={()=>handleClickNominal({name,price,adminFee})} key={name}
+                        <Flex onClick={()=>handleClickNominal({name,price,adminFee,tax})} key={name}
                             as="a" justify="space-between" alignItems="center" rounded="xl" shadow="base"
                             px="3" py="5" my="3" tabIndex={0} cursor="pointer"
                         >

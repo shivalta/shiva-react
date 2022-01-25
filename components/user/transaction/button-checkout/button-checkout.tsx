@@ -3,7 +3,7 @@ import { BeliPulsa } from "../../global-state/pulsa"
 import { BeliToken } from "../../global-state/token"
 import { RecordDetailTransaction } from "../detail-transaction/detail-transaction"
 import { useRecoilState, useSetRecoilState } from "recoil"
-import { user } from "../../global-state/user"
+import { user, User } from "../../global-state/user"
 import { navigator } from "../../global-state/navigator"
 import { useRouter } from "next/router"
 import PopUp from "../../general/navigator/pop-up"
@@ -13,7 +13,7 @@ import AlertPaymentMethod from "../alert-payment-method/alert-payment-method"
 import { BeliPDAM } from "../../global-state/pdam"
 import { blackScreen } from "../../global-state/black-screen"
 import InfoConFirmPayment from "../info-confirm-payment/info-confirm-payment"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 
 
 type PropsButtonCheckout<T> = {
@@ -26,12 +26,18 @@ const ButtonCheckout = <T extends BeliPulsa | BeliToken | BeliPDAM>(props:PropsB
 
     const { serviceState, serviceName, detailServiceState } = props
     const [navigatorState, setterNavigatorState] = useRecoilState(navigator)
+    const [userPersisted, setUserPersisted] = useState<User | null>()
     const [userState, setUserState] = useRecoilState(user)
     const setIsBlackScreenRender = useSetRecoilState(blackScreen)
     const router = useRouter()
     const { pathname } = router
 
     useEffect(()=>{
+        if(localStorage.getItem("user-persist")){
+            setUserPersisted(JSON.parse(localStorage.getItem("user-persist") || ""))
+          }else{
+              setUserPersisted(null)
+          }
         return ()=>{
             setIsBlackScreenRender({
                 isBlackScreenRender:false
@@ -41,7 +47,7 @@ const ButtonCheckout = <T extends BeliPulsa | BeliToken | BeliPDAM>(props:PropsB
 
     const handleClick = ()=>{
         if(navigatorState.isOpenPopUp){
-            if(userState.valid){
+            if(userPersisted?.valid){
                 router.push(`/transaction/${serviceName}/payment`)
             }
             else{

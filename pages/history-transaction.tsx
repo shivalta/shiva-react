@@ -107,7 +107,7 @@ const HistoryTransaction = () => {
         })
     }
 
-    if(userPersisted === null){
+    if(userPersisted === null || userPersisted?.valid === false){
         return <BeforeLogin/>
     }
 

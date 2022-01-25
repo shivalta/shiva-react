@@ -22,6 +22,7 @@ type AppPropsWithLayout = AppProps & {
 }
 
 export const UserLayout = (page: ReactElement) => {
+
   return(
     <Flex
       alignItems="center"

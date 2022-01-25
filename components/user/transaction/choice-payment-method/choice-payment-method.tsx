@@ -34,7 +34,7 @@ const ChoicePaymentMethod =<T extends BeliPulsa | BeliToken | BeliPDAM>(props: P
                         return(
                             <Fragment key={id}>
                                 <Flex alignItems="center" my="8">
-                                    <Image src={logo} width={80} height={30} alt={name}/>
+                                    {/* <Image src={logo} width={80} height={30} alt={name}/> */}
                                     <Box px="4" className="my-text" fontWeight="semibold" flexGrow="1" fontSize="sm">{name}</Box>
                                     <Radio value={id} onClick={()=>{
                                         setterServiceState({

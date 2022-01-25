@@ -11,48 +11,10 @@ import ChoiceNominal from '../../../components/user/transaction/choice-nominal/c
 import { DataNominal,  ListDataNominal} from '../../../components/user/transaction/choice-nominal/choice-nominal'
 import { UserLayout } from "../../_app"
 import Image from 'next/image'
+import { baseRequest } from '../../../helper/base-request'
 
-const listNominalPulsa = {
-    telkomsel:{
-        logo: "/../public/images/telkomsel.png",
-        data: [
-            {
-                name: "Telkomsel Rp.5.000",
-                price: 6000,
-                adminFee: 1000
-            },
-            {
-                name: "Telkomsel Rp.10.000",
-                price: 11000,
-                adminFee: 1000
-            },
-            {
-                name: "Telkomsel Rp.20.000",
-                price: 21000,
-                adminFee: 1000
-            },
-        ]
-    },
-    indosat:{
-        logo: "/../public/images/indosat.png",
-        data: [
-            {
-                name: "Indosat Rp.5.000",
-                price: 6000,
-                adminFee: 1000
-            },
-            {
-                name: "Indosat Rp.10.000",
-                price: 11000,
-                adminFee: 1000
-            },
-            {
-                name: "Indosat Rp.20.000",
-                price: 21000,
-                adminFee: 1000
-            },
-        ]
-    }
+type ListIdProvider = {
+    [key:string] : string
 }
 
 const Index = () => {
@@ -75,12 +37,38 @@ const Index = () => {
 
     const handphoneValue = formik.values.handphone
 
+    const getDataListNominal = async (provider:string) => {
+        const listIdProvider:ListIdProvider = {
+            telkomsel : "8",
+            indosat: "9"
+        }
+        let idProvider = listIdProvider[provider]
+        const response = await baseRequest<any>({
+            method:"GET",
+            url:`/products?search=${idProvider}&key=product_category_id`
+        })
+        const listNominal = {
+            logo: response.data[0].product_categories.image,
+            data: response.data.map((data:any)=>{
+                if(data.is_active){
+                    return {
+                        name: data.name,
+                        price: data.price,
+                        adminFee: data.admin_fee,
+                        tax: data.product_categories.tax
+                    }
+                }
+            })
+        }
+        setDataNominalPulsa(listNominal)
+    }
+
     const setListNominal = (handphone:string="") => {
         if(handphone.match(/0822/)){
-            setDataNominalPulsa(listNominalPulsa.telkomsel)
+            getDataListNominal("telkomsel")
         }
         else if(handphone.match(/0815/)){
-            setDataNominalPulsa(listNominalPulsa.indosat)
+            getDataListNominal("indosat")
         }
         else{
             setDataNominalPulsa(undefined)
@@ -94,14 +82,15 @@ const Index = () => {
         }
     }
 
-    const handleClickNominal = ({name, price, adminFee}:DataNominal)=>{
+    const handleClickNominal = ({name, price, adminFee, tax}:DataNominal)=>{
         if(!(formik.errors.handphone && formik.touched.handphone)){
             setDataBeliPulsa({
                 nameProduct:name,
                 price:price,
                 adminFee:adminFee,
                 noHandphone:handphoneValue,
-                total:price+adminFee
+                tax:tax,
+                total:price+(price*tax/100)+adminFee
             })
             router.push("/transaction/pulsa/checkout")
         }
