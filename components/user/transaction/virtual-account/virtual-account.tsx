@@ -3,6 +3,8 @@ import { MdOutlineFileCopy } from "react-icons/md"
 import { rupiahFormatter } from "../../../../helper/rupiah-formatter"
 import { BeliPulsa } from "../../global-state/pulsa"
 import { BeliToken } from "../../global-state/token"
+import { useEffect } from "react"
+import { useRouter } from "next/router"
 import { BeliPDAM } from "../../global-state/pdam"
 
 type PropsVirtualAccount<T> = {
@@ -11,6 +13,7 @@ type PropsVirtualAccount<T> = {
 
 const VirtualAccount = <T extends BeliPulsa | BeliToken | BeliPDAM>(props:PropsVirtualAccount<T>) => {
 
+    const router = useRouter()
     const { serviceState } = props
     const toast = useToast()
 
@@ -31,6 +34,12 @@ const VirtualAccount = <T extends BeliPulsa | BeliToken | BeliPDAM>(props:PropsV
             console.log(err)
           })
     }
+
+    useEffect(()=>{
+        if(serviceState.id === undefined){
+            router.push("/")
+        }
+    },[])
 
     return(
         <Box p="5" borderRadius="xl" boxShadow="base" my="8">
@@ -60,7 +69,7 @@ const VirtualAccount = <T extends BeliPulsa | BeliToken | BeliPDAM>(props:PropsV
             </Text> */}
             <Text as="h3" className="my-text" color="base" fontSize="sm" fontWeight="bold" my="2">Batas Akhir Pembayaran</Text>
             <Text as="h3" className="my-text" fontWeight="bold" my="2" color="base_second">
-                {serviceState.deadlinePayment}
+                {new Date(serviceState.deadlinePayment!).toLocaleString()}
             </Text>
         </Box>
     )

@@ -124,7 +124,8 @@ const HistoryTransaction = () => {
                 dataHistory?.data.map((history: any)=>{
                     const { id, status, total_price, detail_transaction, success_date_time,
                             pending_date_time, account_number, bank_code, expiration_payment } = history
-                    const { admin_fee, price, name, detail_product_class_name, detail_product_class_tax } = detail_transaction
+                    const { admin_fee, price, name, detail_product_class_name, detail_unique_value,
+                            detail_product_class_tax } = detail_transaction
                     let detailTransaction:RecordDetailTransaction[] = [
                         {name:"ID transaksi", value:id},
                         {name:"Nama produk", value:name},
@@ -221,6 +222,30 @@ const HistoryTransaction = () => {
                                                         fontSize="sm"
                                                     >
                                                         {new Date(success_date_time).toLocaleString()}
+                                                    </Text>
+                                                </Flex>
+                                            </Flex>
+                                        ) : null
+                                    }
+                                    {
+                                        detail_unique_value ? (
+                                            <Flex flexWrap="wrap" my="5">
+                                                <Text
+                                                    w="50%"
+                                                    fontWeight="bold"
+                                                    className="my-text"
+                                                    color="base"
+                                                    fontSize="sm"
+                                                >
+                                                    Token listrik
+                                                </Text>
+                                                <Flex w="50%" pl="2">
+                                                    <Text
+                                                        fontWeight="bold"
+                                                        className="my-text"
+                                                        fontSize="sm"
+                                                    >
+                                                        {detail_unique_value}
                                                     </Text>
                                                 </Flex>
                                             </Flex>
