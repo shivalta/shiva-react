@@ -3,7 +3,7 @@ import { RecordDetailTransaction } from "../transaction/detail-transaction/detai
 import { rupiahFormatter } from "../../../helper/rupiah-formatter"
 
 export type BeliPDAM = {
-    id? : string
+    id? : number
     noPDAM? : string
     region?: string
     username?: string
@@ -15,6 +15,7 @@ export type BeliPDAM = {
     status?: string
     tax?: number
     total?: number
+    deadlinePayment?: string
     virtualAccount?: string
     paymentMethod?: {
         bank_name: string
@@ -30,11 +31,15 @@ export const beliPDAM: RecoilState<BeliPDAM> = atom({
 export const generateDetailBeliPDAM = (dataBeliPDAM:BeliPDAM) :RecordDetailTransaction[]=> {
     const detailBeliPDAM:RecordDetailTransaction[] = [
         {
-            name:"Nama Produk",
+            name:"Jenis produk",
+            value:dataBeliPDAM.nameCategory? dataBeliPDAM.nameCategory : "-"
+        },
+        {
+            name:"Nama produk",
             value:dataBeliPDAM.nameProduct? dataBeliPDAM.nameProduct : "-"
         },
         {
-            name:"Metode Pembayaran",
+            name:"Metode pembayaran",
             value: dataBeliPDAM.paymentMethod? dataBeliPDAM.paymentMethod.bank_name : "-"
         },
         {
@@ -46,7 +51,7 @@ export const generateDetailBeliPDAM = (dataBeliPDAM:BeliPDAM) :RecordDetailTrans
             value:dataBeliPDAM.region? dataBeliPDAM.region : "-"
         },
         {
-            name:"Nama Pengguna",
+            name:"Nama pengguna",
             value:dataBeliPDAM.username? dataBeliPDAM.username : "-"
         },
         // {

@@ -13,8 +13,6 @@ import { UserLayout } from "../../_app"
 import ButtonCheckout from "../../../components/user/transaction/button-checkout/button-checkout"
 import InfoTotalPayment from "../../../components/user/transaction/info-total-payment/info-total-payment"
 import { useRouter } from "next/router"
-import logoMandiri from "../../../public/images/mandiri-2.png"
-import logoBCA from "../../../public/images/bca-2.png"
 
 
 const Checkout = () => {
@@ -34,7 +32,12 @@ const Checkout = () => {
     useEffect(()=>{
         setterNavigatorState({
             ...navigatorState,
-            button: <ButtonCheckout serviceState={dataBeliPDAM} detailServiceState={detailBeliPDAM} serviceName="pdam"/>,
+            button: <ButtonCheckout
+                setterServiceState={setDataBeliPDAM}
+                serviceState={dataBeliPDAM}
+                detailServiceState={detailBeliPDAM}
+                serviceName="pdam"
+            />,
             renderContent: <InfoTotalPayment total={dataBeliPDAM.total || 0}/>
         })
         setBackNavEffects({
@@ -53,19 +56,6 @@ const Checkout = () => {
             setterNavigatorState({})
         }
     },[dataBeliPDAM, detailBeliPDAM])
-
-    const listPaymentMethod = [
-        {
-            id:"BCA-1",
-            name:"BCA virtual account",
-            logo:"/../../../public/images/bca-2.png"
-        },
-        {
-            id:"MANDIRI-2",
-            name:"Mandiri virtual account",
-            logo:"/../../../public/images/mandiri-2.png"
-        }
-    ]
 
     return(
         <>

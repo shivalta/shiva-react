@@ -30,13 +30,20 @@ const Checkout = () => {
     useEffect(()=>{
         setterNavigatorState({
             ...navigatorState,
-            button: <ButtonCheckout serviceState={dataBeliPulsa} detailServiceState={detailBeliPulsa} serviceName="pulsa"/>,
+            button: <ButtonCheckout
+                setterServiceState={setDataBeliPulsa}
+                serviceState={dataBeliPulsa}
+                detailServiceState={detailBeliPulsa}
+                serviceName="pulsa"
+            />,
             renderContent: <InfoTotalPayment total={dataBeliPulsa.total || 0}/>
         })
         setBackNavEffects({
             effects:()=>{
                 setDataBeliPulsa({
                     ...dataBeliPulsa,
+                    id:0,
+                    nameCategory:"",
                     nameProduct:"",
                     price:0,
                     adminFee:0,
@@ -49,19 +56,6 @@ const Checkout = () => {
             setterNavigatorState({})
         }
     },[dataBeliPulsa, detailBeliPulsa])
-
-    const listPaymentMethod = [
-        {
-            id:"BCA-1",
-            name:"BCA virtual account",
-            logo:"/../../../public/images/bca-2.png"
-        },
-        {
-            id:"MANDIRI-2",
-            name:"Mandiri virtual account",
-            logo:"/../../../public/images/mandiri-2.png"
-        }
-    ]
 
     return(
         <>

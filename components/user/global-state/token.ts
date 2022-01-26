@@ -3,7 +3,7 @@ import { RecordDetailTransaction } from "../transaction/detail-transaction/detai
 import { rupiahFormatter } from "../../../helper/rupiah-formatter"
 
 export type BeliToken = {
-    id? : string
+    id? : number
     noPLN? : string
     username?: string
     nameProduct? : string
@@ -15,6 +15,7 @@ export type BeliToken = {
     status?: boolean
     total?: number
     virtualAccount?: string
+    deadlinePayment?: string
     paymentMethod?: {
         bank_name: string
         bank_code: string
@@ -29,11 +30,15 @@ export const beliToken: RecoilState<BeliToken> = atom({
 export const generateDetailBeliToken = (dataBeliToken:BeliToken) :RecordDetailTransaction[]=> {
     const detailBeliToken:RecordDetailTransaction[] = [
         {
-            name:"Nama Produk",
+            name:"Jenis produk",
+            value:dataBeliToken.nameCategory? dataBeliToken.nameCategory : "-"
+        },
+        {
+            name:"Nama produk",
             value:dataBeliToken.nameProduct? dataBeliToken.nameProduct : "-"
         },
         {
-            name:"Metode Pembayaran",
+            name:"Metode pembayaran",
             value: dataBeliToken.paymentMethod? dataBeliToken.paymentMethod.bank_name : "-"
         },
         {
@@ -41,7 +46,7 @@ export const generateDetailBeliToken = (dataBeliToken:BeliToken) :RecordDetailTr
             value:dataBeliToken.noPLN? dataBeliToken.noPLN : "-"
         },
         {
-            name:"Nama Pengguna",
+            name:"Nama pengguna",
             value:dataBeliToken.username? dataBeliToken.username : "-"
         },
         {

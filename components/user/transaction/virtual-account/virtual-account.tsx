@@ -30,7 +30,7 @@ const VirtualAccount = <T extends BeliPulsa | BeliToken | BeliPDAM>(props:PropsV
           .catch((err) => {
             console.log(err)
           })
-      }
+    }
 
     return(
         <Box p="5" borderRadius="xl" boxShadow="base" my="8">
@@ -43,8 +43,8 @@ const VirtualAccount = <T extends BeliPulsa | BeliToken | BeliPDAM>(props:PropsV
             </Flex>
             <Text as="h3" className="my-text" color="base" fontSize="sm" fontWeight="bold" mt="4" mb="2">Nomor Virtual Account</Text>
             <Flex justifyContent="space-between">
-                <Text fontWeight="bold" className="my-text">80777082236486879</Text>
-                <Flex cursor="pointer" alignItems="center" onClick={()=>handleCopyClick("80777082236486879")}>
+                <Text fontWeight="bold" className="my-text">{serviceState.virtualAccount}</Text>
+                <Flex cursor="pointer" alignItems="center" onClick={()=>handleCopyClick(serviceState.virtualAccount!)}>
                     <Text className="my-text" fontSize="sm" mx="1">salin</Text>
                     <Icon as={MdOutlineFileCopy}></Icon>
                 </Flex>
@@ -54,13 +54,13 @@ const VirtualAccount = <T extends BeliPulsa | BeliToken | BeliPDAM>(props:PropsV
                 {rupiahFormatter(serviceState.total?serviceState.total:0,"Rp.")}
             </Text>
             <Box height="0.1" width="full" background="gray.100" borderRadius="base" my="4"/>
-            <Text as="h3" className="my-text" color="base" fontSize="sm" fontWeight="bold" my="2">Pembayaran Berakhir Dalam</Text>
+            {/* <Text as="h3" className="my-text" color="base" fontSize="sm" fontWeight="bold" my="2">Pembayaran Berakhir Dalam</Text>
             <Text as="h3" className="my-text" fontWeight="bold" my="2" color="base_second">
                 23:40:45
-            </Text>
+            </Text> */}
             <Text as="h3" className="my-text" color="base" fontSize="sm" fontWeight="bold" my="2">Batas Akhir Pembayaran</Text>
             <Text as="h3" className="my-text" fontWeight="bold" my="2" color="base_second">
-                Rabu, 15 Desember 2021 16:11
+                {serviceState.deadlinePayment}
             </Text>
         </Box>
     )

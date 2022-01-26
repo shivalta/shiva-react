@@ -42,6 +42,8 @@ const Index = () => {
             data: response.data.map((data:any)=>{
                 if(data.is_active){
                     return {
+                        id:data.id,
+                        category: data.product_class.name,
                         name: data.name,
                         price: data.price,
                         adminFee: data.admin_fee,
@@ -70,7 +72,7 @@ const Index = () => {
     }
 
 
-    const handleClickNominal = async ({name, price, adminFee, tax}:DataNominal)=>{
+    const handleClickNominal = async ({name, price, adminFee, tax, id, category}:DataNominal)=>{
         const response = await baseRequest<any>({
             method:"POST",
             url:"/checkout",
@@ -81,6 +83,8 @@ const Index = () => {
         })
         const username = response.data.user_value
         setDataBeliToken({
+            id:id,
+            nameCategory:category,
             username:username,
             nameProduct:name,
             price:price,

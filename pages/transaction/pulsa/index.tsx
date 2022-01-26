@@ -52,6 +52,8 @@ const Index = () => {
             data: response.data.map((data:any)=>{
                 if(data.is_active){
                     return {
+                        id: data.id,
+                        category: data.product_class.name,
                         name: data.name,
                         price: data.price,
                         adminFee: data.admin_fee,
@@ -82,9 +84,11 @@ const Index = () => {
         }
     }
 
-    const handleClickNominal = ({name, price, adminFee, tax}:DataNominal)=>{
+    const handleClickNominal = ({name, price, adminFee, tax, id, category}:DataNominal)=>{
         if(!(formik.errors.handphone && formik.touched.handphone)){
             setDataBeliPulsa({
+                id:id,
+                nameCategory:category,
                 nameProduct:name,
                 price:price,
                 adminFee:adminFee,

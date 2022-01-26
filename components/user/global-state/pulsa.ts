@@ -3,7 +3,7 @@ import { RecordDetailTransaction } from "../transaction/detail-transaction/detai
 import { rupiahFormatter } from "../../../helper/rupiah-formatter"
 
 export type BeliPulsa = {
-    id? : string
+    id? : number
     noHandphone? : string
     nameCategory?: string
     nameProduct? : string
@@ -14,6 +14,7 @@ export type BeliPulsa = {
     status?: boolean
     total?: number
     virtualAccount?: string
+    deadlinePayment?: string
     paymentMethod?: {
         bank_name: string
         bank_code: string
@@ -28,11 +29,15 @@ export const beliPulsa: RecoilState<BeliPulsa> = atom({
 export const generateDetailBeliPulsa = (dataBeliPulsa:BeliPulsa):RecordDetailTransaction[]=> {
     const detailBeliPulsa:RecordDetailTransaction[] = [
         {
-            name:"Nama Produk",
+            name:"Jenis produk",
+            value:dataBeliPulsa.nameCategory? dataBeliPulsa.nameCategory : "-"
+        },
+        {
+            name:"Nama produk",
             value:dataBeliPulsa.nameProduct? dataBeliPulsa.nameProduct : "-"
         },
         {
-            name:"Metode Pembayaran",
+            name:"Metode pembayaran",
             value: dataBeliPulsa.paymentMethod? dataBeliPulsa.paymentMethod.bank_name : "-"
         },
         {

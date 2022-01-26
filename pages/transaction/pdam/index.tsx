@@ -49,6 +49,8 @@ const Index = () => {
             const total_tax = response.data.total_tax
             const { noPDAM, region } = values
             setDataBeliPDAM({
+                id:27,
+                nameCategory: "pdam",
                 nameProduct:"PDAM",
                 noPDAM:noPDAM,
                 adminFee:total_admin,

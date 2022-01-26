@@ -31,13 +31,20 @@ const Checkout = () => {
     useEffect(()=>{
         setterNavigatorState({
             ...navigatorState,
-            button: <ButtonCheckout serviceState={dataBeliToken} detailServiceState={detailBeliToken} serviceName="token"/>,
+            button: <ButtonCheckout
+                setterServiceState={setDataBeliToken}
+                serviceState={dataBeliToken}
+                detailServiceState={detailBeliToken}
+                serviceName="token"
+            />,
             renderContent: <InfoTotalPayment total={dataBeliToken.total || 0}/>
         })
         setBackNavEffects({
             effects:()=>{
                 setDataBeliToken({
                     ...dataBeliToken,
+                    id:0,
+                    nameCategory:"",
                     nameProduct:"",
                     price:0,
                     adminFee:0,
