@@ -22,7 +22,7 @@ const VirtualAccount = <T extends BeliPulsa | BeliToken | BeliPDAM>(props:PropsV
         copyTextToClipboard(copyText)
           .then(() => {
             toast({
-                description: "virtual account berhasil disalin.",
+                description: "virtual akun berhasil disalin.",
                 status: 'success',
                 position: 'top'
             })
@@ -41,7 +41,7 @@ const VirtualAccount = <T extends BeliPulsa | BeliToken | BeliPDAM>(props:PropsV
             <Flex justifyContent="space-between">
                 <Text fontWeight="bold" className="my-text" fontSize="sm">{serviceState.paymentMethod?.bank_name}</Text>
             </Flex>
-            <Text as="h3" className="my-text" color="base" fontSize="sm" fontWeight="bold" mt="4" mb="2">Nomor Virtual Account</Text>
+            <Text as="h3" className="my-text" color="base" fontSize="sm" fontWeight="bold" mt="4" mb="2">Nomor Virtual Akun</Text>
             <Flex justifyContent="space-between">
                 <Text fontWeight="bold" className="my-text">{serviceState.virtualAccount}</Text>
                 <Flex cursor="pointer" alignItems="center" onClick={()=>handleCopyClick(serviceState.virtualAccount!)}>
