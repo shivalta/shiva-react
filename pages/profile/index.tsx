@@ -37,13 +37,14 @@ const Profile = () => {
             const dataUser = await baseRequest<DataUser>({
                 url:`users/${userPersisted?.data?.user.id}`,
                 method:"GET",
+                token:userPersisted.data.token
             })
             setDataUser(dataUser)
         }
         getDataUser()
     },[])
 
-    if(userPersisted === null){
+    if(userPersisted === null || userPersisted?.valid === false){
         return <BeforeLogin/>
     }
 

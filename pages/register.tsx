@@ -53,7 +53,9 @@ const Register = () => {
                 router:router,
                 toast:toast
             })
-            setFinishedRegister(true)
+            if(response.status === "success"){
+                setFinishedRegister(true)
+            }
         }
     })
 

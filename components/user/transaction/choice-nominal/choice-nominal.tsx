@@ -1,9 +1,12 @@
 import { Text, Flex } from '@chakra-ui/react'
 
 export type DataNominal = {
+    id:number
+    category:string
     name:string
     price:number
     adminFee:number
+    tax:number
 }
 
 export type ListDataNominal = {
@@ -29,9 +32,9 @@ const ChoiceNominal = (props:PropsChoiceNominal)=>{
             </Text>
             {render? render() : null}
             {
-                dataNominal.map(({name,price,adminFee})=>{
+                dataNominal.map(({name,price,adminFee,tax,id,category})=>{
                     return(
-                        <Flex onClick={()=>handleClickNominal({name,price,adminFee})} key={name}
+                        <Flex onClick={()=>handleClickNominal({name,price,adminFee,tax,id,category})} key={name}
                             as="a" justify="space-between" alignItems="center" rounded="xl" shadow="base"
                             px="3" py="5" my="3" tabIndex={0} cursor="pointer"
                         >

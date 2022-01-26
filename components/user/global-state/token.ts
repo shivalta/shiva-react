@@ -3,20 +3,22 @@ import { RecordDetailTransaction } from "../transaction/detail-transaction/detai
 import { rupiahFormatter } from "../../../helper/rupiah-formatter"
 
 export type BeliToken = {
-    id? : string
+    id? : number
     noPLN? : string
+    username?: string
     nameProduct? : string
     nameCategory?: string
     price? : number
     adminFee? : number
+    tax?: number
     date?: string
     status?: boolean
     total?: number
     virtualAccount?: string
+    deadlinePayment?: string
     paymentMethod?: {
-        id:string
-        name:string
-        logo:any
+        bank_name: string
+        bank_code: string
     }
 }
 
@@ -28,16 +30,24 @@ export const beliToken: RecoilState<BeliToken> = atom({
 export const generateDetailBeliToken = (dataBeliToken:BeliToken) :RecordDetailTransaction[]=> {
     const detailBeliToken:RecordDetailTransaction[] = [
         {
-            name:"Nama Produk",
+            name:"Jenis produk",
+            value:dataBeliToken.nameCategory? dataBeliToken.nameCategory : "-"
+        },
+        {
+            name:"Nama produk",
             value:dataBeliToken.nameProduct? dataBeliToken.nameProduct : "-"
         },
         {
-            name:"Metode Pembayaran",
-            value: dataBeliToken.paymentMethod? dataBeliToken.paymentMethod.name : "-"
+            name:"Metode pembayaran",
+            value: dataBeliToken.paymentMethod? dataBeliToken.paymentMethod.bank_name : "-"
         },
         {
             name:"No PLN",
             value:dataBeliToken.noPLN? dataBeliToken.noPLN : "-"
+        },
+        {
+            name:"Nama pengguna",
+            value:dataBeliToken.username? dataBeliToken.username : "-"
         },
         {
             name:"Harga",
@@ -46,6 +56,10 @@ export const generateDetailBeliToken = (dataBeliToken:BeliToken) :RecordDetailTr
         {
             name:"Biaya admin",
             value:dataBeliToken.adminFee? rupiahFormatter(dataBeliToken.adminFee,"Rp.") : "0"
+        },
+        {
+            name:"Pajak",
+            value:dataBeliToken.tax? `${dataBeliToken.tax}%` : "0%"
         },
         {
             name:"Total pembayaran",

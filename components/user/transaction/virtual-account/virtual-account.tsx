@@ -1,9 +1,10 @@
-import { Box, Flex, Icon, Text} from "@chakra-ui/react"
+import { Box, Flex, Icon, Text, useToast } from "@chakra-ui/react"
 import { MdOutlineFileCopy } from "react-icons/md"
-import Image from "next/image"
 import { rupiahFormatter } from "../../../../helper/rupiah-formatter"
 import { BeliPulsa } from "../../global-state/pulsa"
 import { BeliToken } from "../../global-state/token"
+import { useEffect } from "react"
+import { useRouter } from "next/router"
 import { BeliPDAM } from "../../global-state/pdam"
 
 type PropsVirtualAccount<T> = {
@@ -12,7 +13,33 @@ type PropsVirtualAccount<T> = {
 
 const VirtualAccount = <T extends BeliPulsa | BeliToken | BeliPDAM>(props:PropsVirtualAccount<T>) => {
 
-    const {serviceState} = props
+    const router = useRouter()
+    const { serviceState } = props
+    const toast = useToast()
+
+    const copyTextToClipboard = async (text:string) => {
+        return await navigator.clipboard.writeText(text)
+    }
+
+    const handleCopyClick = (copyText:string) => {
+        copyTextToClipboard(copyText)
+          .then(() => {
+            toast({
+                description: "virtual akun berhasil disalin.",
+                status: 'success',
+                position: 'top'
+            })
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+    }
+
+    useEffect(()=>{
+        if(serviceState.id === undefined){
+            router.push("/")
+        }
+    },[])
 
     return(
         <Box p="5" borderRadius="xl" boxShadow="base" my="8">
@@ -21,13 +48,12 @@ const VirtualAccount = <T extends BeliPulsa | BeliToken | BeliPDAM>(props:PropsV
             </Text>
             <Box height="0.1" width="full" background="gray.100" borderRadius="base" my="4"/>
             <Flex justifyContent="space-between">
-                <Image width={80} height={30} src={serviceState.paymentMethod?.logo || ""} alt={serviceState.paymentMethod?.name}/>
-                <Text fontWeight="bold" className="my-text" fontSize="sm">{serviceState.paymentMethod?.name}</Text>
+                <Text fontWeight="bold" className="my-text" fontSize="sm">{serviceState.paymentMethod?.bank_name}</Text>
             </Flex>
-            <Text as="h3" className="my-text" color="base" fontSize="sm" fontWeight="bold" mt="4" mb="2">Nomor Virtual Account</Text>
+            <Text as="h3" className="my-text" color="base" fontSize="sm" fontWeight="bold" mt="4" mb="2">Nomor Virtual Akun</Text>
             <Flex justifyContent="space-between">
-                <Text fontWeight="bold" className="my-text">80777082236486879</Text>
-                <Flex alignItems="center">
+                <Text fontWeight="bold" className="my-text">{serviceState.virtualAccount}</Text>
+                <Flex cursor="pointer" alignItems="center" onClick={()=>handleCopyClick(serviceState.virtualAccount!)}>
                     <Text className="my-text" fontSize="sm" mx="1">salin</Text>
                     <Icon as={MdOutlineFileCopy}></Icon>
                 </Flex>
@@ -37,13 +63,13 @@ const VirtualAccount = <T extends BeliPulsa | BeliToken | BeliPDAM>(props:PropsV
                 {rupiahFormatter(serviceState.total?serviceState.total:0,"Rp.")}
             </Text>
             <Box height="0.1" width="full" background="gray.100" borderRadius="base" my="4"/>
-            <Text as="h3" className="my-text" color="base" fontSize="sm" fontWeight="bold" my="2">Pembayaran Berakhir Dalam</Text>
+            {/* <Text as="h3" className="my-text" color="base" fontSize="sm" fontWeight="bold" my="2">Pembayaran Berakhir Dalam</Text>
             <Text as="h3" className="my-text" fontWeight="bold" my="2" color="base_second">
                 23:40:45
-            </Text>
+            </Text> */}
             <Text as="h3" className="my-text" color="base" fontSize="sm" fontWeight="bold" my="2">Batas Akhir Pembayaran</Text>
             <Text as="h3" className="my-text" fontWeight="bold" my="2" color="base_second">
-                Rabu, 15 Desember 2021 16:11
+                {new Date(serviceState.deadlinePayment!).toLocaleString()}
             </Text>
         </Box>
     )

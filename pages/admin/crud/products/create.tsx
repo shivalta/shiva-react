@@ -1,19 +1,23 @@
 import { useFormik } from "formik"
 import { FormControl, FormLabel, Input, FormErrorMessage,
-         Text, RadioGroup, Radio, Stack, Button, useToast, Flex } from "@chakra-ui/react"
+         Text, RadioGroup, Radio, Stack, Button, useToast } from "@chakra-ui/react"
 import { AdminLayout } from "../../../_app"
-import { MdOutlineCreateNewFolder, MdCameraEnhance } from "react-icons/md"
+import { MdOutlineCreateNewFolder } from "react-icons/md"
 import { useRef } from "react"
 import { baseRequest } from "../../../../helper/base-request"
 import { createToastChakra } from "../../../../helper/create-toast-chakra"
 import * as Yup from "yup"
 import { useRouter } from "next/router"
+import { useRecoilState } from "recoil"
+import { useEffect } from "react"
+import { admin } from "../../../../components/user/global-state/admin"
 
 const CreateProducts = () => {
 
     const toast = useToast()
     const router = useRouter()
     const formRef = useRef<HTMLFormElement>(null)
+    const [adminState, setterAdminState] = useRecoilState(admin)
     const formik = useFormik({
         initialValues:{
             sku:"",
@@ -66,7 +70,8 @@ const CreateProducts = () => {
                     price,
                     admin_fee,
                     is_active
-                }
+                },
+                token:adminState.data?.token
             })
             createToastChakra({
                 response:response,
@@ -76,6 +81,10 @@ const CreateProducts = () => {
             })
         }
     })
+
+    useEffect(()=>{
+        setterAdminState(JSON.parse(localStorage.getItem("admin-persist") || ""))
+    },[])
 
     const { sku, name, admin_fee, stock, is_active, price, product_class_id, product_category_id } = formik.values
 

@@ -1,7 +1,7 @@
 import { ChakraProvider, extendTheme, Flex, Box, Text, Button } from '@chakra-ui/react'
-import { MdProductionQuantityLimits } from 'react-icons/md'
+import { MdLogout, MdProductionQuantityLimits } from 'react-icons/md'
 import type { AppProps } from 'next/app'
-import { RecoilRoot } from 'recoil'
+import { RecoilRoot, useRecoilState } from 'recoil'
 import '../styles/globals.css'
 import BackNav from '../components/user/general/back-nav/back-nav'
 import BlackScreen from '../components/user/general/black-screen/black-screen'
@@ -10,8 +10,10 @@ import { NextPage } from 'next'
 import { ReactElement, ReactNode,useEffect,useState } from 'react'
 import shivaLogo from '../public/images/shiva.png'
 import Navigator from '../components/user/general/navigator/navigator'
+import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { admin, ResponseDataAdmin } from '../components/user/global-state/admin'
 
 export type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode
@@ -22,6 +24,7 @@ type AppPropsWithLayout = AppProps & {
 }
 
 export const UserLayout = (page: ReactElement) => {
+
   return(
     <Flex
       alignItems="center"
@@ -62,6 +65,8 @@ export const UserLayout = (page: ReactElement) => {
 
 export const AdminLayout = (page: ReactElement) => {
 
+  const [adminState, setterAdminState] = useState<ResponseDataAdmin>()
+
   type ListKeyCRUD = {
     [key:string]:number
   }
@@ -94,8 +99,21 @@ export const AdminLayout = (page: ReactElement) => {
   ]
 
   useEffect(()=>{
+    const adminPersist = JSON.parse(localStorage.getItem("admin-persist") || "{}")
+    if(adminPersist && adminPersist.valid){
+      setterAdminState(JSON.parse(localStorage.getItem("admin-persist") || "{}"))
+    }else{
+      router.push("/admin/login")
+    }
+  },[])
+
+  useEffect(()=>{
     setActiveCRUD(listKeyCRUD[asPath.slice(12)])
   },[asPath])
+
+  if(adminState === undefined){
+    return null
+  }
 
   return(
     <Flex>
@@ -135,6 +153,24 @@ export const AdminLayout = (page: ReactElement) => {
         </Box>
       </Box>
       <Box width="calc(100% - 300px)" p="10">
+          <Button
+            className="my-text"
+            width="40"
+            justifyContent="flex-start"
+            textTransform="capitalize"
+            fontWeight="bold"
+            colorScheme="red"
+            leftIcon={<MdLogout/>}
+            my="2"
+            ml="auto"
+            display="block"
+            onClick={()=>{
+              localStorage.removeItem("admin-persist")
+              router.push("/admin/login")
+            }}
+          >
+            Logout
+          </Button>
         {page}
       </Box>
     </Flex>
@@ -177,6 +213,11 @@ const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
 
   return (
       <ChakraProvider theme={theme}>
+        <Head>
+          <title>Shiva | Solusi Pembayaran Masa Kini</title>
+          <meta name="description" content="Shiva" />
+          <link rel="icon" href="/images/shiva.png" />
+        </Head>
         <RecoilRoot>
           {page}
         </RecoilRoot>

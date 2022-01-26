@@ -3,21 +3,23 @@ import { RecordDetailTransaction } from "../transaction/detail-transaction/detai
 import { rupiahFormatter } from "../../../helper/rupiah-formatter"
 
 export type BeliPDAM = {
-    id? : string
+    id? : number
     noPDAM? : string
     region?: string
+    username?: string
     nameProduct? : string
     nameCategory?: string
     bill? : number
     adminFee? : number
     date?: string
     status?: string
+    tax?: number
     total?: number
+    deadlinePayment?: string
     virtualAccount?: string
     paymentMethod?: {
-        id:string
-        name:string
-        logo:any
+        bank_name: string
+        bank_code: string
     }
 }
 
@@ -29,12 +31,16 @@ export const beliPDAM: RecoilState<BeliPDAM> = atom({
 export const generateDetailBeliPDAM = (dataBeliPDAM:BeliPDAM) :RecordDetailTransaction[]=> {
     const detailBeliPDAM:RecordDetailTransaction[] = [
         {
-            name:"Nama Produk",
+            name:"Jenis produk",
+            value:dataBeliPDAM.nameCategory? dataBeliPDAM.nameCategory : "-"
+        },
+        {
+            name:"Nama produk",
             value:dataBeliPDAM.nameProduct? dataBeliPDAM.nameProduct : "-"
         },
         {
-            name:"Metode Pembayaran",
-            value: dataBeliPDAM.paymentMethod? dataBeliPDAM.paymentMethod.name : "-"
+            name:"Metode pembayaran",
+            value: dataBeliPDAM.paymentMethod? dataBeliPDAM.paymentMethod.bank_name : "-"
         },
         {
             name:"No PDAM",
@@ -45,12 +51,20 @@ export const generateDetailBeliPDAM = (dataBeliPDAM:BeliPDAM) :RecordDetailTrans
             value:dataBeliPDAM.region? dataBeliPDAM.region : "-"
         },
         {
-            name:"Tagihan",
-            value:dataBeliPDAM.bill? rupiahFormatter(dataBeliPDAM.bill,"Rp.") : "0"
+            name:"Nama pengguna",
+            value:dataBeliPDAM.username? dataBeliPDAM.username : "-"
         },
+        // {
+        //     name:"Tagihan",
+        //     value:dataBeliPDAM.bill? rupiahFormatter(dataBeliPDAM.bill,"Rp.") : "0"
+        // },
         {
             name:"Biaya admin",
             value:dataBeliPDAM.adminFee? rupiahFormatter(dataBeliPDAM.adminFee,"Rp.") : "0"
+        },
+        {
+            name:"Pajak",
+            value:dataBeliPDAM.tax? `${dataBeliPDAM.tax}%` : "0%"
         },
         {
             name:"Total pembayaran",

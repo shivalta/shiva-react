@@ -24,7 +24,7 @@ const ProductClass = () => {
         const getDataProductClass = async () => {
             const dataProductClass = await baseRequest<DataProductClass[]>({
                 method:"GET",
-                url:"/class"
+                url:"/class",
             })
             setDataProductClass(dataProductClass)
         }

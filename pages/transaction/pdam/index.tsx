@@ -8,6 +8,7 @@ import { useRouter } from 'next/router'
 import { useFormik } from 'formik';
 import { UserLayout } from "../../_app"
 import * as Yup from 'yup';
+import { baseRequest } from '../../../helper/base-request'
 
 const listRegion = ["Sidoarjo", "Surabaya", "Malang"]
 
@@ -28,22 +29,35 @@ const Index = () => {
         },
         validationSchema: Yup.object({
             noPDAM: Yup.string()
-              .min(10, 'isi no PDAM minimal 10 karakter ya')
+              .max(3, 'isi no PDAM max 3 karakter ya')
               .required('isi no PDAM dulu ya'),
             region:Yup.string()
             .required('pilih wilayah pengguna dulu ya'),
         }),
-        onSubmit:(values:FormPDAM) => {
-            const {noPDAM, region} = values
-            const randomBill = Math.floor(Math.random() * 101) + 100000
-            const adminFee = 2000
+        onSubmit:async (values:FormPDAM) => {
+            const response = await baseRequest<any>({
+                method:"POST",
+                url:"/checkout",
+                body:{
+                    user_value: values.noPDAM,
+                    product_id: 27
+                }
+            })
+            const username = response.data.user_value
+            const total_price = response.data.total_price
+            const total_admin = response.data.total_admin
+            const total_tax = response.data.total_tax
+            const { noPDAM, region } = values
             setDataBeliPDAM({
+                id:27,
+                nameCategory: "pdam",
                 nameProduct:"PDAM",
                 noPDAM:noPDAM,
-                bill:randomBill,
-                adminFee:adminFee,
+                adminFee:total_admin,
                 region:region,
-                total:randomBill+adminFee
+                username:username,
+                total:total_price,
+                tax:total_tax
             })
             router.push("/transaction/pdam/checkout")
         }
@@ -74,7 +88,7 @@ const Index = () => {
                 <FormLabel htmlFor="noPDAM" textColor="base">No PDAM</FormLabel>
                 <Input
                     type="tel" onChange={handleChange} onBlur={formik.handleBlur} id="noPDAM" variant='outline'
-                    placeholder='12xx' shadow="base" size="lg" value={noPDAM} name="noPDAM"
+                    placeholder='0-100' shadow="base" size="lg" value={noPDAM} name="noPDAM"
                 />
                 {
                     <FormErrorMessage>{formik.touched.noPDAM? formik.errors.noPDAM : ""}</FormErrorMessage>

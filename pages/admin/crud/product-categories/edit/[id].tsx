@@ -8,6 +8,8 @@ import { baseRequest } from "../../../../../helper/base-request"
 import { createToastChakra } from "../../../../../helper/create-toast-chakra"
 import * as Yup from "yup"
 import { useRouter } from "next/router"
+import { useRecoilState } from "recoil"
+import { admin } from "../../../../../components/user/global-state/admin"
 
 type DataProductCategories = {
     id: number
@@ -24,6 +26,7 @@ const EditProductCategories = ()=>{
     const toast = useToast()
     const router = useRouter()
     const formRef = useRef<HTMLFormElement>(null)
+    const [adminState, setterAdminState] = useRecoilState(admin)
     const [dataProductCategories, setDataProductCategories] = useState<DataProductCategories>()
     const formik = useFormik({
         initialValues:{
@@ -48,7 +51,8 @@ const EditProductCategories = ()=>{
                 method:"PUT",
                 url:`/categories/${router.query.id}`,
                 acceptType:"form-data",
-                body:formData
+                body:formData,
+                token:adminState.data?.token
             })
             createToastChakra({
                 response:response,
@@ -65,6 +69,10 @@ const EditProductCategories = ()=>{
     const handleChangeUploadImage = () => {
         formik.setFieldValue("image", imageInputRef.current?.files)
     }
+
+    useEffect(()=>{
+        setterAdminState(JSON.parse(localStorage.getItem("admin-persist") || ""))
+    },[])
 
     // useEffect(()=>{
     //     const getImage = async()=>{
