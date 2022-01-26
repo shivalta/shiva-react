@@ -42,10 +42,13 @@ const LoginAdmin = () => {
             })
             if(response.status === "success"){
                 setterAdminState({
-                    ...adminState,
                     data:response.data,
                     valid:true
                 })
+                localStorage.setItem("admin-persist", JSON.stringify({
+                    data:response.data,
+                    valid:true
+                }))
                 router.push("/admin/crud/products")
             }
             else{
@@ -59,8 +62,12 @@ const LoginAdmin = () => {
     })
 
     useEffect(()=>{
-        localStorage.setItem("admin-persist", JSON.stringify(adminState))
-    },[adminState])
+        if(localStorage.getItem("admin-persist") === null){
+            localStorage.setItem("admin-persist", JSON.stringify({
+                valid:false
+            }))
+        }
+    },[])
 
     const { email, password } = formik.values
 

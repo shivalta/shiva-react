@@ -99,17 +99,17 @@ export const AdminLayout = (page: ReactElement) => {
   ]
 
   useEffect(()=>{
-    setActiveCRUD(listKeyCRUD[asPath.slice(12)])
-  },[asPath])
-
-  useEffect(()=>{
-    const adminPersist = JSON.parse(localStorage.getItem("admin-persist") || "")
+    const adminPersist = JSON.parse(localStorage.getItem("admin-persist") || "{}")
     if(adminPersist && adminPersist.valid){
-      setterAdminState(JSON.parse(localStorage.getItem("admin-persist") || ""))
+      setterAdminState(JSON.parse(localStorage.getItem("admin-persist") || "{}"))
     }else{
       router.push("/admin/login")
     }
   },[])
+
+  useEffect(()=>{
+    setActiveCRUD(listKeyCRUD[asPath.slice(12)])
+  },[asPath])
 
   if(adminState === undefined){
     return null
